@@ -2,8 +2,11 @@ body{
     color: gray;
     background-color: white;
     font-family: Arial, Helvetica, sans-serif;
+    margin: 0;
 }
 
+
+/*CABEÇALHO*/
 ul {
     display: flex;
     justify-content: flex-end; /* Joga todos os itens para o final (direita) */
@@ -19,10 +22,7 @@ a {
     text-decoration: none;
 }
 
-h1{
-    color: black;
-    
-}
+
 
 header {
     display: flex;
@@ -30,4 +30,10 @@ header {
     max-width: 900px;        /* limita a largura do bloco */
     margin: 0 auto;          /* centraliza o bloco na página */
     padding: 40px 20px;      /* espaçamento interno */
+}
+h1{
+    color: black;
+}
+h2{
+    color: black;
 }
