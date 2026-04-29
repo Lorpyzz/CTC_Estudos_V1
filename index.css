@@ -1,4 +1,3 @@
-
 body{
     color: gray;
     background-color: white;
@@ -53,4 +52,76 @@ main {
     align-items: center;
     gap: 20px;
 }
+
+
+.btn-explorar {
+    display: inline-block;
+    background-color: #4A90D9;
+    color: white;
+    padding: 12px 28px;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+
+  .btn-login{
+    display: inline-block;
+    background-color: black;
+    color: white;
+    padding: 12px 28px;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .row {
+    display: flex;
+    gap: 12px;
+  }
+
+  h2{
+    text-align: center;
+    font-size: 30px;
+    font-weight: 600;
+    padding: 60px 24px;
+    margin: 0;
+    color: black;
+
+  }
+
+  .features {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+  }
+
+
+  .feature-card {
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 32px 24px;
+    max-width: 320px;
+    flex: 1;
+  }
+  
+  .feature-card h3 {
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: black;
+  }
+  
+  .feature-card p {
+    color: #666;
+    font-size: 0.95rem;
+  }
+
+  .footer{
+    padding: 14px;
+    text-align: center;
+    color: rgb(58, 58, 58);
+    font-size: 0.9rem;
+  }
 
