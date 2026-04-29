@@ -7,22 +7,17 @@
   overflow-x: hidden;
 }
 
-/* NAVBAR - Para os links ficarem lado a lado e brancos */
 .navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  
-  /* ESTAS SÃO AS LINHAS CHAVE: */
-  width: 100%;           /* Ocupa toda a largura */
+  width: 100%;          
   max-height: 100px;
-  padding: 20px 5%;      /* Dá um respiro nas laterais (5%) para o logo não colar no canto */
-  position: absolute;    /* Garante que ela fique por cima do fundo azul */
+  padding: 20px 5%;     
+  position: absolute;    
   top: 0;
   left: 0;
-  z-index: 1000;         /* Mantém ela sempre visível */
-  
-  /* Caso queira um fundo leve em toda a barra: */
+  z-index: 1000;        
   background: rgba(255, 255, 255, 0.05); 
   backdrop-filter: blur(5px);
 }
@@ -31,14 +26,13 @@
   display: flex;
   align-items: center;
   gap: 20px;
-  /* Se você quiser o fundo branco pegando só os links, mantenha o padding e border-radius aqui */
   background-color: white; 
   padding: 10px 25px;
   border-radius: 50px;
 }
 
 .nav-link {
-  color: #050a0f !important; /* Texto escuro se o fundo for branco sólido */
+  color: #050a0f !important; 
   text-decoration: none;
   font-weight: 600;
   white-space: nowrap;
@@ -65,16 +59,15 @@
   display: flex;
   align-items: center;
   gap: 15px;
-  /* Fundo branco com transparência para não ficar "chapado" */
   background-color: rgba(255, 255, 255, 0.15); 
   padding: 8px 20px;
-  border-radius: 50px; /* Deixa as bordas bem arredondadas */
-  backdrop-filter: blur(10px); /* Efeito de desfoque atrás (vidro) */
+  border-radius: 50px; 
+  backdrop-filter: blur(10px); 
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .nav-link {
-  color: white !important; /* Texto branco */
+  color: white !important; 
   text-decoration: none;
   font-size: 0.85rem;
   font-weight: 500;
@@ -83,13 +76,13 @@
 }
 
 .nav-link:hover {
-  opacity: 0.7; /* Efeito ao passar o mouse */
+  opacity: 0.7; 
 }
 
-/* O botão "Entrar" dentro da Navbar */
+
 .btn-entrar-nav {
   background-color: white;
-  color: #1a3a5a; /* Cor do fundo da página */
+  color: #1a3a5a; 
   border: none;
   padding: 6px 15px;
   border-radius: 20px;
@@ -98,7 +91,6 @@
   margin-left: 10px;
 }
 
-/* HERO SECTION - Centralizando e dando espaço */
 .hero-section {
   flex: 1;
   display: flex;

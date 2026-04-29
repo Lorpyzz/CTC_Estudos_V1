@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import './DisciplinasPage.css';
 
-// Definindo o tipo para garantir a segurança do TypeScript
+
 interface Disciplina {
   id: number;
   nome: string;
@@ -23,7 +23,6 @@ const DisciplinasPage: React.FC = () => {
 
   return (
     <div className="disciplinas-wrapper">
-      {/* Reutilizando a lógica da Navbar da Landing Page */}
       <nav className="disciplinas-nav">
         <span className="logo" onClick={() => navigate('/')}>CTC Estudos</span>
         <button className="btn-voltar" onClick={() => navigate(-1)}>Voltar</button>

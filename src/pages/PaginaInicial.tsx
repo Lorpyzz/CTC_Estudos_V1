@@ -25,7 +25,6 @@ const LandingPage: React.FC = () => {
         </div>
       </nav>
 
-      {/* --- HERO SECTION --- */}
       <header className="hero-section">
         <h1>
           Seu portal de estudos <br /> 

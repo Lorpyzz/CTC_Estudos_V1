@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { FaLock } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
-import './HomePage.css'; // Importando o novo arquivo
+import './HomePage.css'; 
 
 const HomePage: React.FC = () => {
   const navigate = useNavigate();
