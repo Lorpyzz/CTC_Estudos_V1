@@ -1,0 +1,149 @@
+.landing-wrapper {
+  min-height: 100vh;
+  width: 100%;
+  background: radial-gradient(circle at top, #1a3a5a 0%, #050a0f 100%);
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+}
+
+/* NAVBAR - Para os links ficarem lado a lado e brancos */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  
+  /* ESTAS SÃO AS LINHAS CHAVE: */
+  width: 100%;           /* Ocupa toda a largura */
+  max-height: 100px;
+  padding: 20px 5%;      /* Dá um respiro nas laterais (5%) para o logo não colar no canto */
+  position: absolute;    /* Garante que ela fique por cima do fundo azul */
+  top: 0;
+  left: 0;
+  z-index: 1000;         /* Mantém ela sempre visível */
+  
+  /* Caso queira um fundo leve em toda a barra: */
+  background: rgba(255, 255, 255, 0.05); 
+  backdrop-filter: blur(5px);
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  /* Se você quiser o fundo branco pegando só os links, mantenha o padding e border-radius aqui */
+  background-color: white; 
+  padding: 10px 25px;
+  border-radius: 50px;
+}
+
+.nav-link {
+  color: #050a0f !important; /* Texto escuro se o fundo for branco sólido */
+  text-decoration: none;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo-img {
+  width: 40px; 
+  height: auto;
+}
+
+.logo-text {
+  color: white;
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  /* Fundo branco com transparência para não ficar "chapado" */
+  background-color: rgba(255, 255, 255, 0.15); 
+  padding: 8px 20px;
+  border-radius: 50px; /* Deixa as bordas bem arredondadas */
+  backdrop-filter: blur(10px); /* Efeito de desfoque atrás (vidro) */
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.nav-link {
+  color: white !important; /* Texto branco */
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: opacity 0.2s;
+  white-space: nowrap;
+}
+
+.nav-link:hover {
+  opacity: 0.7; /* Efeito ao passar o mouse */
+}
+
+/* O botão "Entrar" dentro da Navbar */
+.btn-entrar-nav {
+  background-color: white;
+  color: #1a3a5a; /* Cor do fundo da página */
+  border: none;
+  padding: 6px 15px;
+  border-radius: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+/* HERO SECTION - Centralizando e dando espaço */
+.hero-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.hero-section h1 {
+  color: white !important;
+  font-size: 3.5rem;
+  margin-bottom: 20px;
+  max-width: 800px;
+}
+
+.hero-section p {
+  color: #cbd5e0 !important;
+  font-size: 1.2rem;
+  max-width: 600px;
+  margin-bottom: 40px;
+}
+
+/* BOTÕES */
+.hero-buttons {
+  display: flex;
+  gap: 20px;
+}
+
+.btn-primary, .btn-secondary {
+  padding: 12px 24px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  border: none;
+}
+
+.btn-primary {
+  background-color: white;
+  color: #050a0f;
+}
+
+.btn-secondary {
+  background-color: transparent;
+  border: 1px solid white;
+  color: white;
+}
