@@ -1,38 +1,54 @@
-body{
-    color: gray;
-    background-color: white;
-    font-family: Arial, Helvetica, sans-serif;
-    margin: 0;
+html { overflow-y: scroll; }
+* { box-sizing: border-box; }
+
+body {
+    color: gray; background-color: white;
+    font-family: Arial, Helvetica, sans-serif; margin: 0;
 }
-
-
-/*CABEÇALHO*/
 ul {
-    display: flex;
-    justify-content: flex-end; /* Joga todos os itens para o final (direita) */
-    gap: 30px; /* Define o espaço entre cada link */
-    list-style-type: none;
-    align-items: center; /* 'center' costuma alinhar melhor o texto verticalmente do que 'flex-end' */
-    padding: 24px;
-    margin: 0; /* É uma boa prática zerar a margem padrão da tag ul */
+    display: flex; justify-content: flex-end; gap: 30px;
+    list-style-type: none; align-items: center; padding: 24px; margin: 0;
+}
+a { color: gray; text-decoration: none; font-size: 14px; }
+
+.main-container {
+    max-width: 900px; margin: 40px auto; padding: 0 20px;
+    font-family: 'Inter', sans-serif;
 }
 
-a {
-    color: gray;
-    text-decoration: none;
-}
+.header-section { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 30px; }
+.icon-title { display: flex; align-items: center; gap: 12px; }
+.blue-icon { background-color: #3b82f6; color: white; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; }
+.icon-title h1 { font-size: 32px; color: #111; margin: 0; font-weight: 700; }
+.subtitle { color: #666; margin-top: 8px; }
 
+.btn-blue { background-color: #3b82f6; color: white; border: none; padding: 10px 22px; border-radius: 8px; font-weight: 600; cursor: pointer; }
 
+.form-card { border: 1px solid #e5e7eb; border-radius: 12px; padding: 25px; margin-bottom: 30px; }
+.form-input, .form-select, .form-textarea { width: 100%; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px; margin-bottom: 15px; outline: none; font-family: inherit; }
+.btn-publicar { background-color: #3b82f6; color: white; border: none; padding: 12px 25px; border-radius: 8px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; }
+.send-icon { transform: rotate(-45deg); display: inline-block; }
 
-h1{
-    color: black;
-    
-}
+.filter-row { display: flex; align-items: center; gap: 12px; margin-bottom: 30px; }
+.funnel-icon { color: #94a3b8; display: flex; }
+.custom-select { border: 1px solid #e2e8f0; padding: 8px 16px; border-radius: 8px; background-color: white; min-width: 160px; outline: none; }
 
-header {
-    display: flex;
-    flex-direction: column;
-    max-width: 900px;        /* limita a largura do bloco */
-    margin: 0 auto;          /* centraliza o bloco na página */
-    padding: 40px 20px;      /* espaçamento interno */
-}
+.doubt-card { border: 1px solid #e5e7eb; border-radius: 12px; padding: 24px; margin-bottom: 16px; cursor: pointer; background: white; }
+.card-header { display: flex; justify-content: space-between; margin-bottom: 12px; }
+.subject-tag { background-color: #f3f4f6; padding: 4px 10px; border-radius: 6px; font-weight: 700; font-size: 12px; color: #374151; }
+.post-date { color: #9ca3af; font-size: 13px; margin-left: 10px; }
+.card-stats { color: #6b7280; font-size: 14px; display: flex; gap: 15px; }
+.card-title { font-size: 20px; color: #111; margin: 0 0 10px 0; font-weight: 700; }
+.card-description { color: #6b7280; font-size: 15px; margin: 0; }
+
+.card-expanded { display: none; margin-top: 20px; }
+.doubt-card.active .card-expanded { display: block; }
+.doubt-card.active .card-description { display: none; }
+.separator { height: 1px; background-color: #e5e7eb; margin-bottom: 20px; }
+.response-bubble { background-color: #f0f7ff; border-radius: 12px; padding: 20px; margin: 15px 0; }
+.response-footer { display: flex; justify-content: space-between; margin-top: 15px; font-size: 13px; color: #64748b; }
+.login-footer { font-size: 12px; font-style: italic; color: #94a3b8; margin-top: 20px; }
+
+.error-toast { position: fixed; bottom: 25px; right: 25px; background-color: #ef4444; color: white; padding: 16px 24px; border-radius: 12px; display: flex; align-items: center; gap: 40px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); z-index: 1000; opacity: 0; visibility: hidden; transition: all 0.3s; transform: translateY(20px); }
+.error-toast.show { opacity: 1; visibility: visible; transform: translateY(0); }
+.close-toast { background: none; border: none; color: white; font-size: 20px; cursor: pointer; }

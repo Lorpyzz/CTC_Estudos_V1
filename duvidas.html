@@ -5,30 +5,168 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CTC-ESTUDOS</title>
     <link rel="stylesheet" href="duvidas.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <nav>
         <ul>
-            <li>
-                <a href="index.html">Inicio</a>
-            </li>
-            <li>
-                <a href="disciplinas.html">Disciplina</a>
-            </li>
-            <li>
-                <a href="flashcards.html">Flashcards</a>
-            </li>
-            <li>
-                <a href="duvidas.html">Central de Dúvidas</a>
-            </li>
-            <li>
-                <a href="chat.html">Chat</a>
-            </li>
+            <li><a href="index.html">Inicio</a></li>
+            <li><a href="disciplinas.html">Disciplina</a></li>
+            <li><a href="flashcards.html">Flashcards</a></li>
+            <li><a href="duvidas.html">Central de Dúvidas</a></li>
+            <li><a href="chat.html">Chat</a></li>
         </ul>
     </nav>
-    <header>
-        <h1>Dúvidas</h1>
-        <p>Pergunte, responda e aprenda com a comunidade.</p>
-    </header>
+
+    <div class="main-container">
+        <header class="header-section">
+            <div class="title-group">
+                <div class="icon-title">
+                    <span class="blue-icon">?</span>
+                    <h1>Central de Dúvidas</h1>
+                </div>
+                <p class="subtitle">Pergunte, responda e aprenda com a comunidade.</p>
+            </div>
+            <button id="btn-toggle-form" class="btn-blue" onclick="toggleForm()">Nova Dúvida</button>
+        </header>
+
+        <!-- FORMULÁRIO DE NOVA DÚVIDA -->
+        <section id="form-nova-duvida" class="form-card" style="display: none;">
+            <input type="text" placeholder="Título da dúvida" class="form-input">
+            
+            <select class="form-select">
+                <option value="" disabled selected>Selecione a disciplina</option>
+                <option>INF1007 — Programação II</option>
+                <option>INF1631 — Estruturas de Dados</option>
+                <option>INF1010 — Estruturas de Dados Avançadas</option>
+                <option>MAT1161 — Cálculo I</option>
+                <option>MAT1162 — Cálculo II</option>
+                <option>FIS1033 — Física I</option>
+                <option>FIS1034 — Física II</option>
+                <option>INF1636 — Programação Orientada a Objetos</option>
+                <option>ENG1419 — Álgebra Linear</option>
+                <option>INF1018 — Software Básico</option>
+                <option>INF1301 — Programação Modular</option>
+                <option>ELE1601 — Circuitos Elétricos I</option>
+            </select>
+
+            <textarea placeholder="Descreva sua dúvida..." class="form-textarea" rows="5"></textarea>
+            
+            <button class="btn-publicar" onclick="showError()">
+                <span class="send-icon">➤</span> Publicar
+            </button>
+        </section>
+
+        <!-- FILTROS -->
+        <div class="filter-row">
+            <span class="funnel-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
+            </span>
+            <select class="custom-select">
+                <option>Mais recentes</option>
+                <option>Mais avaliadas</option>
+                <option>Menos avaliadas</option>
+            </select>
+            <select class="custom-select">
+                <option>Todas as disciplinas</option>
+                <option>INF1007</option>
+                <option>INF1631</option>
+                <option>INF1010</option>
+                <option>MAT1161</option>
+                <option>MAT1162</option>
+                <option>FIS1033</option>
+                <option>INF1636</option>
+            </select>
+        </div>
+
+        <!-- FEED DE DÚVIDAS -->
+        <div class="doubts-feed">
+            <!-- Card 1: Recursão -->
+            <div class="doubt-card" onclick="toggleCard(this)">
+                <div class="card-header">
+                    <div class="meta-info">
+                        <span class="subject-tag">INF1007</span>
+                        <span class="post-date">2026-04-05</span>
+                    </div>
+                    <div class="card-stats">
+                        <span>👍 8</span>
+                        <span class="resp-count">1 resp. <span class="arrow">⌄</span></span>
+                    </div>
+                </div>
+                <h2 class="card-title">Como funciona recursão em C?</h2>
+                <p class="card-description">Estou com dificuldade de entender como funciona a pilha de chamadas em funções recursivas.</p>
+                
+                <div class="card-expanded">
+                    <div class="separator"></div>
+                    <p class="full-text">Estou com dificuldade de entender como funciona a pilha de chamadas em funções recursivas.</p>
+                    <span class="author-info">Perguntado por Aluno A</span>
+                    <h3>Respostas</h3>
+                    <div class="response-bubble">
+                        <p>A cada chamada recursiva, um novo frame é empilhado na stack. Quando a função retorna, o frame é removido. Tente desenhar a pilha passo a passo!</p>
+                        <div class="response-footer"><span>— Monitor B</span><span>👍 5</span></div>
+                    </div>
+                    <p class="login-footer">Faça login para responder e avaliar.</p>
+                </div>
+            </div>
+
+            <!-- Card 2: Teorema de Bolzano -->
+            <div class="doubt-card" onclick="toggleCard(this)">
+                <div class="card-header">
+                    <div class="meta-info">
+                        <span class="subject-tag">MAT1161</span>
+                        <span class="post-date">2026-04-04</span>
+                    </div>
+                    <div class="card-stats">
+                        <span>👍 3</span>
+                        <span class="resp-count">0 resp. <span class="arrow">⌄</span></span>
+                    </div>
+                </div>
+                <h2 class="card-title">Dúvida sobre o Teorema de Bolzano</h2>
+                <p class="card-description">Alguém pode explicar a intuição por trás do teorema do valor intermediário?</p>
+                <div class="card-expanded">
+                    <div class="separator"></div>
+                    <p class="full-text">Alguém pode explicar a intuição por trás do teorema do valor intermediário?</p>
+                    <span class="author-info">Perguntado por Aluno C</span>
+                    <p class="no-response">Nenhuma resposta ainda.</p>
+                    <p class="login-footer">Faça login para responder e avaliar.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MENSAGEM DE ERRO (ALERTA VERMELHO) -->
+    <div id="error-toast" class="error-toast">
+        <span>Faça login para publicar</span>
+        <button class="close-toast" onclick="hideError()">×</button>
+    </div>
+
+    <script>
+        function toggleForm() {
+            const form = document.getElementById('form-nova-duvida');
+            const btn = document.getElementById('btn-toggle-form');
+            if (form.style.display === 'none') {
+                form.style.display = 'block';
+                btn.innerText = 'Cancelar';
+            } else {
+                form.style.display = 'none';
+                btn.innerText = 'Nova Dúvida';
+            }
+        }
+
+        function toggleCard(card) {
+            card.classList.toggle('active');
+        }
+
+        function showError() {
+            const toast = document.getElementById('error-toast');
+            toast.classList.add('show');
+            setTimeout(hideError, 4000);
+        }
+
+        function hideError() {
+            const toast = document.getElementById('error-toast');
+            toast.classList.remove('show');
+        }
+    </script>
 </body>
 </html>
