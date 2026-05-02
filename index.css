@@ -118,6 +118,24 @@ main {
     font-size: 0.95rem;
   }
 
+  .icon-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  background-color: #EFF6FF;
+  border-radius: 12px;
+  }
+
+  .icon-wrapper i {
+  color: #4A90D9;
+  font-size: 22px;
+  }
+
+
+
+
   .footer{
     padding: 14px;
     text-align: center;
