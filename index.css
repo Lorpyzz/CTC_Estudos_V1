@@ -143,3 +143,12 @@ main {
     font-size: 0.9rem;
   }
 
+  .footer-logo {
+  width: 80px;         
+}
+
+
+  .divider {
+    border-top: 1px solid #e0e0e0;
+    margin: 0;
+  }
