@@ -32,16 +32,34 @@
             <div class="col"></div>
                 <button class="btn1" onclick="document.location='disciplinas.html'"> &#8592 Voltar para disciplinas</button>
             <div class="col"></div>    
-                <button class="btn1" onclick="document.location='programacao.html'"> &#8592 Voltar para materiais</button>
+                <button class="btn1" onclick="document.location='estrutura_de_dados.html'"> &#8592 Voltar para materiais</button>
     </div>
-    Lista 2 — Structs
+    Árvores Binárias de Busca
 
-<br>Exercício 1: Defina uma struct Aluno com campos: nome (string), matrícula (int) e CR (float). Crie funções para ler e imprimir dados de um aluno.
-
-<br>Exercício 2: Usando a struct Aluno, crie um programa que mantém um cadastro dinâmico de alunos com operações de inserir, buscar por matrícula e remover.
-
-<br>Exercício 3: Defina uma struct Ponto2D e implemente funções para calcular distância entre dois pontos e verificar se três pontos formam um triângulo.
-
-<br>Exercício 4: Crie uma struct Data (dia, mês, ano) e implemente uma função que calcula a diferença em dias entre duas datas.
+    <br>Uma Árvore Binária de Busca (ABB) é uma árvore binária onde, para cada nó:
+    
+    <br>• Todos os valores na subárvore esquerda são menores
+    
+    <br>• Todos os valores na subárvore direita são maiores
+    
+    <br> Operações e complexidade (caso médio):
+    
+    <br>• Busca: O(log n)
+    
+    <br>• Inserção: O(log n)
+    
+    <br>• Remoção: O(log n)
+    
+    <br>Percursos:
+    
+    <br>• In-ordem (esquerda, raiz, direita): produz sequência ordenada
+    
+    <br>• Pré-ordem (raiz, esquerda, direita)
+    
+    <br>• Pós-ordem (esquerda, direita, raiz)
+    
+    <br>Caso degenerado: Se os elementos são inseridos em ordem, a árvore degenera em uma lista, e as operações passam a ser O(n).
+    
+    <br>Solução: Árvores balanceadas (AVL, Rubro-Negra).
 </body>
 </html>

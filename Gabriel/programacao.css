@@ -54,6 +54,7 @@ p{
 .btn1{
     background-color: white;
     border-style: none;
+    cursor:pointer;
 
 }
 
@@ -71,4 +72,5 @@ p{
     border-radius: 5px;
     padding: 10px;
     margin: 10px;
+    cursor:pointer;
 }
