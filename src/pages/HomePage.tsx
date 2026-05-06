@@ -1,16 +1,15 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import './HomePage.css'; 
 
 const Cadastro: React.FC = () => {
-  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     console.log('Login:', { email, password });
-    navigate('/disciplinas');
+    // Força o carregamento da página HTML servida pelo Django
+    window.location.href = '/disciplinas/';
   };
 
   return (

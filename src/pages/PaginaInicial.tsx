@@ -35,7 +35,7 @@ const Inicial: React.FC = () => {
         </p>
 
         <div className="hero-buttons">
-          <button className="btn-primary" onClick={() => navigate('/disciplinas/')}>
+          <button className="btn-primary" onClick={() => window.location.href = '/disciplinas/'}>
             Explorar Disciplinas &rarr;
           </button>
           <button className="btn-secondary" onClick={() => navigate('/cadastro/')}>
