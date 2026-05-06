@@ -1,8 +1,8 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 
-import LandingPage from './pages/PaginaInicial';
-import HomePage from './pages/HomePage'; 
+import Inicial from './pages/PaginaInicial';
+import Cadastro from './pages/HomePage'; 
 import DisciplinasPage from './pages/DisciplinasPage';
 
 const App: React.FC = () => {
@@ -10,11 +10,11 @@ const App: React.FC = () => {
     <Router>
       <Routes>
   
-        <Route path="/" element={<LandingPage />} />
+        <Route path="/" element={<Inicial />} />
 
-        <Route path="/auth" element={<HomePage />} />
+        <Route path="/cadastro/" element={<Cadastro />} />
 
-        <Route path="/disciplinas" element={<DisciplinasPage />} />
+        <Route path="/disciplinas/" element={<DisciplinasPage />} />
 
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>

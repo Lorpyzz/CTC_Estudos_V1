@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './HomePage.css'; 
 
-const HomePage: React.FC = () => {
+const Cadastro: React.FC = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -59,4 +59,4 @@ const HomePage: React.FC = () => {
   );
 };
 
-export default HomePage;
+export default Cadastro;

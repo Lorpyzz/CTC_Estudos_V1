@@ -1,0 +1,80 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CTC-ESTUDOS</title>
+    <!-- Se for usar a versão React, o Django deve servir o dist/index.html -->
+    <!-- Se for usar esta página HTML pura, corrija os links de arquivos estáticos -->
+    <link rel="stylesheet" href="{% static 'index.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+    <nav>
+        <ul>
+            <li>
+                <a href="/">Inicio</a>
+            </li>
+            <li>
+                <a href="/disciplinas/">Disciplina</a>
+            </li>
+            <li>
+                <a href="/flashcards/">Flashcards</a>
+            </li>
+            <li>
+                <a href="/duvidas/">Central de Dúvidas</a>
+            </li>
+            <li>
+                <a href="/chat/">Chat</a>
+            </li>
+        </ul>
+    </nav>
+    <main>
+      <h1>Seu portal de estudos<br>do CTC – PUC-Rio</h1>
+      <p>Materiais, resumos e uma comunidade colaborativa para você ir mais<br>longe nas suas disciplinas.</p>
+      <div class="row">
+        <a href="/disciplinas/" class="btn-explorar">Explorar Disciplinas →</a>
+        <a href="/cadastro/" class="btn-login">Fazer Login</a>
+      </div>
+    </main>
+
+    <div>
+      <h2>Por que usar o CTC Estudos?</h2>
+    </div>
+
+    <div class="features">
+      <div class="feature-card">
+        <div class="icon-wrapper">
+          <i class="fa-solid fa-book"></i>
+        </div>
+        <h3>Disciplinas Organizadas</h3>
+        <p>Acesse materiais, resumos e exercícios de todas as disciplinas do CTC.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon-wrapper">
+          <i class="fa-solid fa-users"></i>
+        </div>
+        <h3>Comunidade Ativa</h3>
+        <p>Conecte-se com colegas e monitores para aprender em conjunto.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon-wrapper">
+          <i class="fa-solid fa-circle-question"></i>
+        </div>
+        <h3>Central de Dúvidas</h3>
+        <p>Tire suas dúvidas e ajude outros alunos com respostas verificadas.</p>
+      </div>
+    </div>
+
+    <br>
+    <br>
+    <br>
+    <br>
+
+    <footer class="footer">
+      <p class="footer">© 2026 CTC Estudos – PUC-Rio. Feito por alunos, para alunos.</p>
+    </footer>
+    
+</body>
+</html>
