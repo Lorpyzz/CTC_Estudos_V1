@@ -63,7 +63,9 @@ p{
     margin: 30px 0;
     border-radius: 30px;
   }
-
+.titulo{
+    padding-left:320px;
+}
 .row{
     position:relative;
     left:300px

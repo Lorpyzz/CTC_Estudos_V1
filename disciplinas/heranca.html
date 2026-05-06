@@ -32,30 +32,42 @@
             <div class="col"></div>
                 <button class="btn1" onclick="document.location='disciplinas.html'"> &#8592 Voltar para disciplinas</button>
             <div class="col"></div>    
-                <button class="btn1" onclick="document.location='estrutura_de_dados.html'"> &#8592 Voltar para materiais</button>
+                <button class="btn1" onclick="document.location='programacao_o_o.html'"> &#8592 Voltar para materiais</button>
     </div>
-    Aula: Grafos e Algoritmos de Busca
+    <br>Herança e Polimorfismo
 
-<br>Tópicos:
-
-<br>1. Definição de grafos (dirigidos e não-dirigidos)
-
-<br>2. Representações: matriz de adjacência vs lista de adjacência
-
-<br>3. BFS (Busca em Largura): usa fila, encontra menor caminho
-
-<br>4. DFS (Busca em Profundidade): usa pilha/recursão
-
-<br>5. Aplicações: componentes conexos, ciclos, ordenação topológica
-
-<br>Complexidade:
-
-<br>• BFS e DFS: O(V + E) com lista de adjacência
-
-<br>• BFS e DFS: O(V²) com matriz de adjacência
-
-<br>Duração: ~60 minutos
-
-<br>*Material complementar da disciplina INF1631 — PUC-Rio*
+    <br>Herança permite que uma classe (filha) herde atributos e métodos de outra (pai).
+    
+    <br>public class Animal {
+    
+        <br>protected String nome;
+    
+        <br>public void falar() { System.out.println("..."); }
+    
+        <br>}
+    
+        <br> public class Cachorro extends Animal {
+    
+            <br>@Override
+    
+            <br> public void falar() { System.out.println("Au au!"); }
+    
+            <br> }
+    
+            <br>Polimorfismo: objetos de classes diferentes respondem à mesma mensagem de formas diferentes.
+    
+            <br>Animal a = new Cachorro();
+    
+            <br>a.falar();
+    
+            <br>Tipos:
+    
+            <br>• Polimorfismo de subtipo (herança)
+    
+            <br>• Polimorfismo paramétrico (generics)
+    
+            <br>• Sobrecarga (overloading)
+    
+            <br>Princípio de Substituição de Liskov: objetos de uma classe filha devem poder substituir objetos da classe pai sem alterar o comportamento correto do programa.
 </body>
 </html>
