@@ -1,38 +1,198 @@
-body{
-    color: gray;
-    background-color: white;
-    font-family: Arial, Helvetica, sans-serif;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+body {
+    background-color: #fff;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* Header */
+.main-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 30px;
+    border-bottom: 1px solid #eee;
+    background: #fff;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: bold;
+}
+
+ul {
+    display: flex;
+    justify-content: flex-end; 
+    gap: 30px; 
+    list-style-type: none;
+    align-items: center;
+    padding: 24px;
     margin: 0;
 }
 
+.active-nav {
+    color: #00a0ff;
+    font-weight: bold;
+}
 
-/*CABEÇALHO*/
-ul {
+.user-profile {
     display: flex;
-    justify-content: flex-end; /* Joga todos os itens para o final (direita) */
-    gap: 30px; /* Define o espaço entre cada link */
-    list-style-type: none;
-    align-items: center; /* 'center' costuma alinhar melhor o texto verticalmente do que 'flex-end' */
-    padding: 24px;
-    margin: 0; /* É uma boa prática zerar a margem padrão da tag ul */
+    align-items: center;
+    gap: 8px;
+    border: 1px solid #eee;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.9rem;
 }
 
-a {
-    color: gray;
-    text-decoration: none;
+/* Layout Principal */
+.app-container {
+    display: flex;
+    flex: 1;
 }
 
-
-
-h1{
-    color: black;
-    
-}
-
-header {
+/* Sidebar */
+.sidebar {
+    width: 280px;
+    border-right: 1px solid #eee;
     display: flex;
     flex-direction: column;
-    max-width: 900px;        /* limita a largura do bloco */
-    margin: 0 auto;          /* centraliza o bloco na página */
-    padding: 40px 20px;      /* espaçamento interno */
+}
+
+.sidebar-header {
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.sidebar-header h2 {
+    font-size: 0.9rem;
+    color: #333;
+}
+
+.btn-plus {
+    background: #e1f3ff;
+    border: none;
+    color: #00a0ff;
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.chat-item {
+    display: flex;
+    padding: 15px 20px;
+    gap: 12px;
+    cursor: pointer;
+}
+
+.chat-item.active { background-color: #ebf7ff; }
+.chat-info { flex: 1; overflow: hidden; }
+.chat-top { display: flex; justify-content: space-between; }
+.chat-top strong { font-size: 0.9rem; }
+.time { font-size: 0.7rem; color: #999; }
+.preview { font-size: 0.8rem; color: #777; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 4px; }
+
+/* Avatares */
+.avatar, .avatar-small {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-weight: bold;
+}
+
+.avatar { width: 40px; height: 40px; font-size: 0.8rem; }
+.avatar-small { width: 30px; height: 30px; font-size: 0.7rem; }
+.user-blue { background-color: #3498db; color: white; width: 28px; height: 28px; }
+.light-blue { background-color: #d1ecff; color: #3498db; }
+.gray { background-color: #f0f0f0; color: #888; }
+
+/* Chat Window */
+.chat-window {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.chat-header {
+    padding: 12px 20px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.chat-header i { color: #666; }
+.chat-header h3 { font-size: 0.95rem; }
+
+.messages-container {
+    flex: 1;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Bolha da Imagem 1 */
+.message-row {
+    display: flex;
+    gap: 10px;
+    margin-top: auto; /* Posiciona no fundo */
+}
+
+.sender-name { font-size: 0.8rem; color: #666; margin-bottom: 4px; display: block; }
+.bubble {
+    background-color: #f1f3f5;
+    padding: 10px 15px;
+    border-radius: 0 15px 15px 15px;
+    font-size: 0.9rem;
+}
+
+/* Texto da Imagem 2 */
+.empty-msg {
+    margin: auto;
+    color: #999;
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+/* Footer Input */
+.chat-input-area {
+    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    border-top: 1px solid #eee;
+}
+
+.icon-btn { background: none; border: none; color: #888; font-size: 1.1rem; cursor: pointer; }
+.chat-input-area input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    outline: none;
+}
+
+.send-btn {
+    background-color: #00a0ff;
+    color: white;
+    border: none;
+    width: 38px;
+    height: 38px;
+    border-radius: 8px;
+    cursor: pointer;
 }
