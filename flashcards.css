@@ -6,21 +6,38 @@ body{
 }
 
 
+
 /*CABEÇALHO*/
 ul {
     display: flex;
-    justify-content: flex-end; /* Joga todos os itens para o final (direita) */
-    gap: 30px; /* Define o espaço entre cada link */
+    justify-content: flex-end;
+    gap: 30px;
     list-style-type: none;
-    align-items: center; /* 'center' costuma alinhar melhor o texto verticalmente do que 'flex-end' */
+    align-items: center;
     padding: 24px;
-    margin: 0; /* É uma boa prática zerar a margem padrão da tag ul */
-}
-
-a {
+    margin: 0;
+  }
+  
+  ul a {
     color: gray;
     text-decoration: none;
-}
+    transition: color 0.2s ease; /* transição suave */
+  }
+  
+  /* Hover: azul bebê */
+  ul a:hover {
+    color: #89CFF0;
+  }
+  
+  /* Página atual: adicione class="active" no <a> da página */
+  ul a.active {
+    color: #89CFF0;
+    font-weight: 500;
+    border-bottom: 2px solid #89CFF0;
+  }
+
+  
+
 
 h1{
     color: black;
@@ -35,3 +52,8 @@ header {
     padding: 40px 20px;      /* espaçamento interno */
 }
 
+
+.divider {
+    border-top: 1px solid #e0e0e0;
+    margin: 0;
+  }
