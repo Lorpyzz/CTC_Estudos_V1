@@ -1,0 +1,69 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="UFT-8">
+    <title>Programacao</title>
+    <link rel="stylesheet" href = "programacao.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+</head>
+<body>
+
+
+    <div class="container">
+        <div class="navbar">
+            <div class = logo>
+                <img src = "site-logo.png"width = "60px">
+                <h2>CTC estudos</h2>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="../index.html">Início</a></li>
+                    <li><a href="disciplinas.html">Disciplinas</a></li>
+                    <li><a href="../flashcards.html">Flashcards</a></li>
+                    <li><a href="../duvidas.html">Central de dúvidas</a></li>
+                    <li><a href="../chat.html">Chat</a></li>
+                    <li><a href=""class = "btn">Entrar</a></li>
+                </ul>
+            </nav>
+        </div>
+        <div class=""row>
+            <div class="col"></div>
+                <button class="btn1" onclick="document.location='disciplinas.html'"> &#8592 Voltar para disciplinas</button>
+            <div class="col"></div>    
+                <button class="btn1" onclick="document.location='programacao.html'"> &#8592 Voltar para materiais</button>
+    </div>
+    Ponteiros e Alocação Dinâmica<br>
+
+                Ponteiros são variáveis que armazenam endereços de memória. Em C, declaramos um ponteiro usando o operador *. Por exemplo: int *p; declara um ponteiro para inteiro.<br>
+                
+                Operadores fundamentais:<br>
+                
+                • & (endereço de): obtém o endereço de uma variável<br>
+                
+                • * (desreferência): acessa o valor apontado<br>
+                
+                Alocação dinâmica:<br>
+                
+                • malloc(size): aloca 'size' bytes na heap<br>
+                
+                • calloc(n, size): aloca e inicializa com zero<br>
+                
+                • realloc(ptr, size): redimensiona bloco alocado<br>
+                
+                • free(ptr): libera memória alocada<br>
+                
+                Exemplo:<br>
+                
+                int *arr = (int*)malloc(10 * sizeof(int));<br>
+                
+                if (arr == NULL) { printf("Erro de alocação"); exit(1); }<br>
+                
+                for (int i = 0; i < 10; i++) arr[i] = i * 2;<br>
+                
+                free(arr);<br>
+                
+                Sempre verifique se malloc retornou NULL e sempre libere a memória com free para evitar memory leaks.
+</body>
+</html>
