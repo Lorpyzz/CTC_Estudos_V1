@@ -1,33 +1,165 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CTC-ESTUDOS</title>
     <link rel="stylesheet" href="chat.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <nav>
+        <nav>
         <ul>
-            <li>
-                <a href="index.html">Inicio</a>
-            </li>
-            <li>
-                <a href="disciplinas.html">Disciplina</a>
-            </li>
-            <li>
-                <a href="flashcards.html">Flashcards</a>
-            </li>
-            <li>
-                <a href="duvidas.html">Central de Dúvidas</a>
-            </li>
-            <li>
-                <a href="chat.html">Chat</a>
-            </li>
+            <li><a href="index.html">Inicio</a></li>
+            <li><a href="disciplinas.html">Disciplina</a></li>
+            <li><a href="flashcards.html">Flashcards</a></li>
+            <li><a href="duvidas.html">Central de Dúvidas</a></li>
+            <li><a href="chat.html">Chat</a></li>
         </ul>
     </nav>
-    <header>
-        <h1>Chat</h1>
+        <div class="user-profile">
+            <div class="avatar user-blue">AP</div>
+            <span>Aluno</span>
+        </div>
     </header>
+
+    <div class="app-container">
+        <!-- Barra Lateral de Conversas -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>Conversas</h2>
+                <button id="add-chat" class="btn-plus">+</button>
+            </div>
+            <div class="chat-list" id="chat-list">
+                <!-- Chat 1 -->
+                <div class="chat-item active" onclick="selectChat(this, 'Chat Geral', 'CG', true)">
+                    <div class="avatar light-blue">CG</div>
+                    <div class="chat-info">
+                        <div class="chat-top">
+                            <strong>Chat Geral</strong>
+                            <span class="time">21:56</span>
+                        </div>
+                        <p class="preview">Bem-vindo ao chat do CTC Estudos!</p>
+                    </div>
+                </div>
+                <!-- Chat 2 -->
+                <div class="chat-item" onclick="selectChat(this, 'Cálculo I', 'C1', false)">
+                    <div class="avatar light-blue">C1</div>
+                    <div class="chat-info">
+                        <div class="chat-top">
+                            <strong>Cálculo I</strong>
+                            <span class="time">20:56</span>
+                        </div>
+                        <p class="preview">Alguém entendeu a lista 3?</p>
+                    </div>
+                </div>
+                <!-- Chat 3 -->
+                <div class="chat-item" onclick="selectChat(this, 'Programação', 'PR', false)">
+                    <div class="avatar light-blue">PR</div>
+                    <div class="chat-info">
+                        <div class="chat-top">
+                            <strong>Programação</strong>
+                            <span class="time">19:56</span>
+                        </div>
+                        <p class="preview">O trabalho é em dupla?</p>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Janela do Chat -->
+        <main class="chat-window">
+            <header class="chat-header">
+                <i class="fa-regular fa-comment-dots"></i>
+                <div class="avatar-small light-blue" id="header-avatar">CG</div>
+                <h3 id="chat-title">Chat Geral</h3>
+            </header>
+
+            <div class="messages-container" id="messages-container">
+                <!-- Mensagem do Sistema (Imagem 1) -->
+                <div class="message-row" id="system-msg">
+                    <div class="avatar-small gray">S</div>
+                    <div class="message-content">
+                        <span class="sender-name">Sistema <small>21:56</small></span>
+                        <div class="bubble">
+                            Bem-vindo ao chat do CTC Estudos! Use este espaço para trocar ideias com outros alunos.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Texto Centralizado (Imagem 2) -->
+                <div id="empty-placeholder" class="empty-msg" style="display: none;">
+                    Nenhuma mensagem ainda. Comece a conversa!
+                </div>
+            </div>
+
+            <!-- Rodapé de Input -->
+            <footer class="chat-input-area">
+                <div class="input-actions">
+                    <button class="icon-btn"><i class="fa-regular fa-image"></i></button>
+                    <button class="icon-btn"><i class="fa-solid fa-paperclip"></i></button>
+                </div>
+                <input type="text" placeholder="Digite sua mensagem...">
+                <button class="send-btn"><i class="fa-solid fa-paper-plane"></i></button>
+            </footer>
+        </main>
+    </div>
+
+    <!-- JAVASCRIPT INTEGRADO -->
+    <script>
+        const addChatBtn = document.getElementById('add-chat');
+        const chatList = document.getElementById('chat-list');
+        const chatTitle = document.getElementById('chat-title');
+        const headerAvatar = document.getElementById('header-avatar');
+        const systemMsg = document.getElementById('system-msg');
+        const emptyPlaceholder = document.getElementById('empty-placeholder');
+
+        // Lógica para o botão "+" (Imagem 2)
+        addChatBtn.addEventListener('click', () => {
+            const newItem = document.createElement('div');
+            newItem.className = 'chat-item active';
+            newItem.innerHTML = `
+                <div class="avatar light-blue">NC</div>
+                <div class="chat-info">
+                    <div class="chat-top">
+                        <strong>Novo Chat</strong>
+                        <span class="time">22:00</span>
+                    </div>
+                    <p class="preview">Nenhuma mensagem ainda</p>
+                </div>
+            `;
+            
+            newItem.onclick = function() { selectChat(this, 'Novo Chat', 'NC', false); };
+
+            // Desativar chats anteriores
+            document.querySelectorAll('.chat-item').forEach(item => item.classList.remove('active'));
+            // Adiciona no topo da lista
+            chatList.prepend(newItem);
+
+            // Trocar visão para estado vazio
+            chatTitle.innerText = "Novo Chat";
+            headerAvatar.innerText = "NC";
+            systemMsg.style.display = "none";
+            emptyPlaceholder.style.display = "block";
+        });
+
+        // Função para trocar entre chats existentes
+        function selectChat(element, name, initial, isSystemChat) {
+            document.querySelectorAll('.chat-item').forEach(item => item.classList.remove('active'));
+            element.classList.add('active');
+
+            chatTitle.innerText = name;
+            headerAvatar.innerText = initial;
+
+            if (isSystemChat) {
+                systemMsg.style.display = "flex";
+                emptyPlaceholder.style.display = "none";
+            } else {
+                systemMsg.style.display = "none";
+                emptyPlaceholder.style.display = "block";
+            }
+        }
+    </script>
 </body>
 </html>
