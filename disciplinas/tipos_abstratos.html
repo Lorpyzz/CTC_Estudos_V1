@@ -28,19 +28,42 @@
                 </ul>
             </nav>
         </div>
-            <div class="col">
-                <button class="btn1" onclick="document.location='disciplinas.html'">&#8592 Voltar para disciplinas</button>
-                
-                    <h5>ENG1419 2º período · Matemática</h5>
-                    <h1>Álgebra Linear</h1>
-                    <p>Vetores, matrizes, sistemas lineares, autovalores e transformações lineares.</p>
-                <div class="col-1"></div>
-                    <button class="btn2" onclick="document.location='espacos_vetoriais.html'">Espaços vetoriais</button>
-                <div class="col-1"></div>    
-                    <button class="btn2" onclick="document.location='matrizes.html'">Lista 1- Matrizes</button>
-                <div class="col-1"></div>    
-                    <button class="btn2" onclick="document.location='autovalores.html'">Aula: Autovalores e Autovetores</button>
-        </div>
+        <div class=""row>
+            <div class="col"></div>
+                <button class="btn1" onclick="document.location='disciplinas.html'"> &#8592 Voltar para disciplinas</button>
+            <div class="col"></div>    
+                <button class="btn1" onclick="document.location='programacao_modular.html'"> &#8592 Voltar para materiais</button>
     </div>
+    Tipos Abstratos de Dados
+
+    <br>TAD (Tipo Abstrato de Dados) separa a interface (o quê) da implementação (como).
+    
+    <br>Princípios:
+    
+    <br>• Encapsulamento:: dados internos são ocultos
+    
+    <br>• Interface pública:: funções que o usuário pode chamar
+    
+    <br>• Implementação privada:: detalhes internos
+    
+    <br>Em C, usando ponteiros opacos:
+    
+    <br>typedef struct lista Lista;
+    
+    <br>Lista* lst_criar(void);
+    
+    <br>void lst_inserir(Lista* l, int val);
+    
+    <br>int lst_remover(Lista* l);
+    
+    <br>void lst_destruir(Lista* l);
+    
+    <br>Vantagens:
+    
+    <br>• Mudança de implementação não afeta clientes
+    
+    <br>• Facilita manutenção e testes
+    
+    <br>• Permite múltiplas implementações da mesma interface
 </body>
 </html>
