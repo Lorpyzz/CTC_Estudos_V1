@@ -1,165 +1,269 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
+    <meta charset="UTF-8"> <!-- DEFINE O PADRÃO DE CARACTERES (ACEITA ACENTOS) -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- DEIXA RESPONSIVO -->
+    <title>CTC-ESTUDOS</title> <!-- TÍTULO DA ABA -->
 
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CTC-ESTUDOS</title>
+    <!-- IMPORTA ÍCONES (EX: AVIÃOZINHO, CLIP, ETC) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- IMPORTA SEU CSS -->
     <link rel="stylesheet" href="chat.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
+
 <body>
-        <nav>
+
+    <!-- MENU DE NAVEGAÇÃO -->
+    <nav class="main-nav">
         <ul>
             <li><a href="index.html">Inicio</a></li>
             <li><a href="disciplinas/disciplinas.html">Disciplina</a></li>
             <li><a href="flashcards.html">Flashcards</a></li>
             <li><a href="duvidas.html">Central de Dúvidas</a></li>
-            <li><a href="chat.html">Chat</a></li>
+            <li><a href="chat.html" class="active-link">Chat</a></li> <!-- LINK ATIVO -->
         </ul>
     </nav>
-        <div class="user-profile">
-            <div class="avatar user-blue">AP</div>
-            <span>Aluno</span>
-        </div>
-    </header>
 
-    <div class="app-container">
-        <!-- Barra Lateral de Conversas -->
+    <div class="app-container"> <!-- CONTAINER PRINCIPAL -->
+
+        <!-- SIDEBAR (LISTA DE CHATS) -->
         <aside class="sidebar">
             <div class="sidebar-header">
                 <h2>Conversas</h2>
-                <button id="add-chat" class="btn-plus">+</button>
+                <!-- BOTÃO PARA CRIAR NOVO CHAT -->
+                <button class="btn-plus" onclick="createNewChat()">+</button>
             </div>
+
+            <!-- LISTA DE CHATS -->
             <div class="chat-list" id="chat-list">
-                <!-- Chat 1 -->
-                <div class="chat-item active" onclick="selectChat(this, 'Chat Geral', 'CG', true)">
+
+                <!-- CHAT 1 -->
+                <div class="chat-item active"
+                     onclick="selectChat(this, 'Chat Geral', 'CG', 'Bem-vindo ao chat do CTC Estudos!', '10:09')">
+
                     <div class="avatar light-blue">CG</div>
+
                     <div class="chat-info">
                         <div class="chat-top">
                             <strong>Chat Geral</strong>
-                            <span class="time">21:56</span>
+                            <span class="time">10:09</span>
                         </div>
                         <p class="preview">Bem-vindo ao chat do CTC Estudos!</p>
                     </div>
                 </div>
-                <!-- Chat 2 -->
-                <div class="chat-item" onclick="selectChat(this, 'Cálculo I', 'C1', false)">
+
+                <!-- CHAT 2 -->
+                <div class="chat-item"
+                     onclick="selectChat(this, 'Cálculo I', 'C1', 'Alguém entendeu a lista 3?', '09:09')">
+
                     <div class="avatar light-blue">C1</div>
+
                     <div class="chat-info">
                         <div class="chat-top">
                             <strong>Cálculo I</strong>
-                            <span class="time">20:56</span>
+                            <span class="time">09:09</span>
                         </div>
                         <p class="preview">Alguém entendeu a lista 3?</p>
                     </div>
                 </div>
-                <!-- Chat 3 -->
-                <div class="chat-item" onclick="selectChat(this, 'Programação', 'PR', false)">
+
+                <!-- CHAT 3 -->
+                <div class="chat-item"
+                     onclick="selectChat(this, 'Programação', 'PR', 'O trabalho é em dupla?', '08:09')">
+
                     <div class="avatar light-blue">PR</div>
+
                     <div class="chat-info">
                         <div class="chat-top">
                             <strong>Programação</strong>
-                            <span class="time">19:56</span>
+                            <span class="time">08:09</span>
                         </div>
                         <p class="preview">O trabalho é em dupla?</p>
                     </div>
                 </div>
+
             </div>
         </aside>
 
-        <!-- Janela do Chat -->
+        <!-- ÁREA PRINCIPAL DO CHAT -->
         <main class="chat-window">
+
+            <!-- CABEÇALHO DO CHAT -->
             <header class="chat-header">
-                <i class="fa-regular fa-comment-dots"></i>
-                <div class="avatar-small light-blue" id="header-avatar">CG</div>
-                <h3 id="chat-title">Chat Geral</h3>
+                <i class="fa-regular fa-comment"></i> <!-- ÍCONE -->
+                <div class="avatar-small light-blue" id="header-avatar">CG</div> <!-- FOTO -->
+                <h3 id="chat-title">Chat Geral</h3> <!-- NOME DO CHAT -->
             </header>
 
+            <!-- ÁREA DAS MENSAGENS -->
             <div class="messages-container" id="messages-container">
-                <!-- Mensagem do Sistema (Imagem 1) -->
-                <div class="message-row" id="system-msg">
-                    <div class="avatar-small gray">S</div>
-                    <div class="message-content">
-                        <span class="sender-name">Sistema <small>21:56</small></span>
-                        <div class="bubble">
-                            Bem-vindo ao chat do CTC Estudos! Use este espaço para trocar ideias com outros alunos.
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Texto Centralizado (Imagem 2) -->
-                <div id="empty-placeholder" class="empty-msg" style="display: none;">
-                    Nenhuma mensagem ainda. Comece a conversa!
-                </div>
+                <!-- MENSAGENS SERÃO INSERIDAS VIA JS -->
             </div>
 
-            <!-- Rodapé de Input -->
+            <!-- INPUT PARA ENVIAR MENSAGEM -->
             <footer class="chat-input-area">
+
+                <!-- BOTÕES (IMAGEM E ANEXO) -->
                 <div class="input-actions">
                     <button class="icon-btn"><i class="fa-regular fa-image"></i></button>
                     <button class="icon-btn"><i class="fa-solid fa-paperclip"></i></button>
                 </div>
-                <input type="text" placeholder="Digite sua mensagem...">
-                <button class="send-btn"><i class="fa-solid fa-paper-plane"></i></button>
+
+                <!-- CAMPO DE TEXTO -->
+                <input type="text" id="message-input"
+                       placeholder="Digite sua mensagem..."
+                       onkeypress="handleKeyPress(event)"> <!-- ENTER ENVIA -->
+
+                <!-- BOTÃO ENVIAR -->
+                <button class="send-btn" onclick="sendMessage()">
+                    <i class="fa-solid fa-paper-plane"></i>
+                </button>
             </footer>
+
         </main>
     </div>
 
-    <!-- JAVASCRIPT INTEGRADO -->
     <script>
-        const addChatBtn = document.getElementById('add-chat');
-        const chatList = document.getElementById('chat-list');
-        const chatTitle = document.getElementById('chat-title');
-        const headerAvatar = document.getElementById('header-avatar');
-        const systemMsg = document.getElementById('system-msg');
-        const emptyPlaceholder = document.getElementById('empty-placeholder');
 
-        // Lógica para o botão "+" (Imagem 2)
-        addChatBtn.addEventListener('click', () => {
-            const newItem = document.createElement('div');
-            newItem.className = 'chat-item active';
-            newItem.innerHTML = `
+        // FUNÇÃO PARA TROCAR DE CHAT
+        function selectChat(element, name, initial, messageText, time) {
+
+            // REMOVE A CLASSE ACTIVE DE TODOS
+            document.querySelectorAll('.chat-item')
+                .forEach(item => item.classList.remove('active'));
+
+            // ADICIONA ACTIVE NO CLICADO
+            element.classList.add('active');
+
+            // ATUALIZA NOME E AVATAR NO TOPO
+            document.getElementById('chat-title').innerText = name;
+            document.getElementById('header-avatar').innerText = initial;
+
+            const container = document.getElementById('messages-container');
+
+            // LIMPA AS MENSAGENS ANTIGAS
+            container.innerHTML = "";
+
+            // SE TIVER MENSAGEM INICIAL
+            if (messageText !== "") {
+                addMessageToUI("Sistema", messageText, time, "received");
+            } else {
+                // SE NÃO, MOSTRA MENSAGEM VAZIA
+                container.innerHTML =
+                    `<div class="empty-msg">Nenhuma mensagem ainda. Comece a conversa!</div>`;
+            }
+        }
+
+        // CRIA UM NOVO CHAT
+        function createNewChat() {
+
+            const chatList = document.getElementById('chat-list');
+
+            const newChat = document.createElement('div');
+
+            const now = new Date();
+
+            // FORMATA HORA
+            const timeStr = now.getHours() + ":" +
+                now.getMinutes().toString().padStart(2, '0');
+
+            newChat.className = 'chat-item';
+
+            // DEFINE O QUE ACONTECE AO CLICAR
+            newChat.onclick = function() {
+                selectChat(this, 'Novo Chat', 'NC', '', timeStr);
+            };
+
+            // HTML DO NOVO CHAT
+            newChat.innerHTML = `
                 <div class="avatar light-blue">NC</div>
                 <div class="chat-info">
                     <div class="chat-top">
                         <strong>Novo Chat</strong>
-                        <span class="time">22:00</span>
+                        <span class="time">${timeStr}</span>
                     </div>
                     <p class="preview">Nenhuma mensagem ainda</p>
                 </div>
             `;
-            
-            newItem.onclick = function() { selectChat(this, 'Novo Chat', 'NC', false); };
 
-            // Desativar chats anteriores
-            document.querySelectorAll('.chat-item').forEach(item => item.classList.remove('active'));
-            // Adiciona no topo da lista
-            chatList.prepend(newItem);
+            // COLOCA NO TOPO
+            chatList.prepend(newChat);
 
-            // Trocar visão para estado vazio
-            chatTitle.innerText = "Novo Chat";
-            headerAvatar.innerText = "NC";
-            systemMsg.style.display = "none";
-            emptyPlaceholder.style.display = "block";
-        });
+            // ABRE AUTOMATICAMENTE
+            newChat.click();
+        }
 
-        // Função para trocar entre chats existentes
-        function selectChat(element, name, initial, isSystemChat) {
-            document.querySelectorAll('.chat-item').forEach(item => item.classList.remove('active'));
-            element.classList.add('active');
+        // ENVIA MENSAGEM
+        function sendMessage() {
 
-            chatTitle.innerText = name;
-            headerAvatar.innerText = initial;
+            const input = document.getElementById('message-input');
 
-            if (isSystemChat) {
-                systemMsg.style.display = "flex";
-                emptyPlaceholder.style.display = "none";
-            } else {
-                systemMsg.style.display = "none";
-                emptyPlaceholder.style.display = "block";
+            const text = input.value.trim(); // REMOVE ESPAÇOS
+
+            if (text !== "") {
+
+                const now = new Date();
+
+                const timeStr = now.getHours() + ":" +
+                    now.getMinutes().toString().padStart(2, '0');
+
+                // REMOVE MENSAGEM "VAZIA"
+                const emptyMsg = document.querySelector('.empty-msg');
+                if (emptyMsg) emptyMsg.remove();
+
+                // ADICIONA NA TELA
+                addMessageToUI("Você", text, timeStr, "sent");
+
+                input.value = ""; // LIMPA INPUT
+
+                // SCROLL AUTOMÁTICO
+                const container = document.getElementById('messages-container');
+                container.scrollTop = container.scrollHeight;
             }
         }
+
+        // CRIA A MENSAGEM VISUALMENTE
+        function addMessageToUI(sender, text, time, type) {
+
+            const container = document.getElementById('messages-container');
+
+            const messageDiv = document.createElement('div');
+
+            messageDiv.className = `message-row ${type}`;
+
+            // HTML DA MENSAGEM
+            messageDiv.innerHTML = `
+                <div class="avatar-small ${type === 'sent' ? 'user-blue' : 'gray'}">
+                    ${sender[0]} <!-- PRIMEIRA LETRA -->
+                </div>
+
+                <div class="message-content">
+                    <span class="sender-name">
+                        ${sender} <small>${time}</small>
+                    </span>
+
+                    <div class="bubble">${text}</div>
+                </div>
+            `;
+
+            // ADICIONA NO FINAL
+            container.appendChild(messageDiv);
+        }
+
+        // ENVIA COM ENTER
+        function handleKeyPress(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        // AO CARREGAR A PÁGINA
+        window.onload = () => {
+            const firstChat = document.querySelector('.chat-item');
+            if(firstChat) firstChat.click(); // ABRE O PRIMEIRO CHAT
+        }
+
     </script>
 </body>
 </html>
