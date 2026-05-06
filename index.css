@@ -17,7 +17,7 @@ ul {
     margin: 0; /* É uma boa prática zerar a margem padrão da tag ul */
 }
 
-a {
+ul a {
     color: gray;
     text-decoration: none;
 }

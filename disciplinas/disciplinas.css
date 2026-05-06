@@ -20,19 +20,25 @@ body{
     gap: 10px; 
 }
 
-nav{
-    flex: 1;
-    text-align: right;
-}
-nav ul{
-    display:inline-block;
+
+
+
+ul {
+    display: flex;
+    justify-content: flex-end; /* Joga todos os itens para o final (direita) */
+    gap: 30px; /* Define o espaço entre cada link */
     list-style-type: none;
+    align-items: center; /* 'center' costuma alinhar melhor o texto verticalmente do que 'flex-end' */
+    padding: 24px;
+    margin: 0; /* É uma boa prática zerar a margem padrão da tag ul */
 }
 
-nav ul li{
-    display: inline-block;
-    margin-right: 20px
+ul a {
+    color: gray;
+    text-decoration: none;
 }
+
+
 
 a{
     text-decoration: none;
