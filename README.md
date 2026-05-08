@@ -1,77 +1,27 @@
-# React + TypeScript + Vite
+CTC-Estudo é uma plataforma de estudos feita por alunos do Centro Técnico-Científico (CTC) da PUC-Rio. A plataforma foi desenvolvida com o proposito de ajudar alunos a estudarem com o conteúdo da própria disciplina, por exemplo, testes e provas antigas, listas de exercicios, mas também é possível personalizar com o uso de flashcards, e tirar dúvidas por meio da aba comentários/dúvidas.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Desenvolvedores responsáveis pela plataforma:
+- Gabriel Novais
+- Heloysa Aguiar
+- Isabele Viana
+- João Lopes
 
-Currently, two official plugins are available:
+Algumas páginas foram feitas em REACT e outras em HTML, então foi necessário conectar todas essas páginas soltas com o framework Django.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Para buildar o projeto:
+- É preciso clonar o repositório (git clone >colocar o link do repositorio<) via terminal;
 
-## React Compiler
+* Caso utilize Windows:
+- O comando para ativar o ambiente virtual é: .\venv\Scripts\activate;
+caso nao queira digitar todo esse caminho, basta fazer: 
+.\aa, o arquivo aa.ps1 possui o comando de ativar o ambiente virtual, reduzindo esse processo de digitação.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+* Caso utilize Linux ou MacOS:
+- O comando para ativar o ambiente virtual é: source venv/bin/activate;
 
-## Compilando as páginas com o uso do Django:
-- ativar o venv (.\venv\Scripts\activate)
-- python manage.py runserver
+Para saber se o ambiente virtual está ativo, basta verificar no terminal se aparece (venv) ao lado do caminho. 
+- Após ativar o venv, é necessário buildar com o seguinte comando: 
+python manage.py runserver 
+vai aparecer o localhost no terminal.
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+O arquivo requirements.txt é responsável por todas as dependências que o projeto necessita para funcionar. Logo, é importante que usuários utilizem as mesmas versões para que não ocorra eventuais erros por incompatibilidade de versões.
