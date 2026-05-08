@@ -5,19 +5,41 @@ body{
     margin: 0;
 }
 
+html {
+  overflow-y: scroll;
+}
 
 
 /*CABEÇALHO*/
+nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* logo na esquerda, links na direita */
+  padding: 0 24px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo-nome {
+  color: black;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0;
+}
+
 ul {
-    display: flex;
-    justify-content: flex-end;
-    gap: 30px;
-    list-style-type: none;
-    align-items: center;
-    padding: 24px;
-    margin: 0;
-  }
-  
+  display: flex;
+  gap: 30px;
+  list-style-type: none;
+  align-items: center;
+  padding: 12px 0;
+  margin: 0;
+}
+
   ul a {
     color: gray;
     text-decoration: none;
@@ -47,9 +69,10 @@ h1{
 header {
     display: flex;
     flex-direction: column;
-    max-width: 900px;        /* limita a largura do bloco */
-    margin: 0 auto;          /* centraliza o bloco na página */
-    padding: 40px 20px;      /* espaçamento interno */
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    min-height: 200px; /* reserva espaço antes do conteúdo carregar */
 }
 
 

@@ -13,19 +13,40 @@ body {
     background-color: white;
 }
 
-
+html {
+  overflow-y: scroll;
+}
 
 /* MENU SUPERIOR */
+nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* logo na esquerda, links na direita */
+  padding: 0 24px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo-nome {
+  color: black;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0;
+}
+
 ul {
-    display: flex;
-    justify-content: flex-end;
-    gap: 30px;
-    list-style-type: none;
-    align-items: center;
-    padding: 24px;
-    margin: 0;
-  }
-  
+  display: flex;
+  gap: 30px;
+  list-style-type: none;
+  align-items: center;
+  padding: 12px 0;
+  margin: 0;
+}
+
   ul a {
     color: gray;
     text-decoration: none;

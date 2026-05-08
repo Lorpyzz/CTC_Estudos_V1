@@ -11,33 +11,39 @@ body{
     margin: 0;
 }
 
-.navbar{
-    display: flex;
-    align-items: center;
-    padding: 20px;
+html {
+  overflow-y: scroll;
+}
+
+
+nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* logo na esquerda, links na direita */
+  padding: 0 24px;
 }
 
 .logo {
-    display: flex;
-    align-items: center; 
-    padding-right: 800px;
-    gap: 10px; 
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
-
-
-
-
+.logo-nome {
+  color: black;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0;
+}
 
 ul {
-    display: flex;
-    justify-content: flex-end;
-    gap: 30px;
-    list-style-type: none;
-    align-items: center;
-    padding: 24px;
-    margin: 0;
-  }
+  display: flex;
+  gap: 30px;
+  list-style-type: none;
+  align-items: center;
+  padding: 12px 0;
+  margin: 0;
+}
 
   ul a {
     color: gray;
@@ -85,14 +91,17 @@ p{
     margin: 30px 0;
     border-radius: 30px;
   }
-.titulo{
-    padding-left:320px;
-}
-.row{
-    position:relative;
-    left:300px
+  
+.titulo {
+    padding: 40px 24px 20px 24px; /* espaço normal, sem empurrar para direita */
 }
 
+.row {
+    display: flex;
+    flex-wrap: wrap; /* botões quebram linha automaticamente */
+    justify-content: center;
+    padding: 20px;
+}
 
   .btn1{
     background-color: white;
