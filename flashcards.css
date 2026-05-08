@@ -60,20 +60,40 @@ ul {
 
   
 
-
-h1{
-    color: black;
-    
-}
-
 header {
-    display: flex;
-    flex-direction: column;
     max-width: 900px;
     margin: 0 auto;
     padding: 40px 20px;
-    min-height: 200px; /* reserva espaço antes do conteúdo carregar */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
+
+header h1 {
+    color: black;
+}
+
+.btn-criar-deck {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background-color: #4A90D9;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 18px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+
+
+
+
+
+
+
+
 
 
 .divider {
