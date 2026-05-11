@@ -3,7 +3,8 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>CTC-ESTUDOS</title>
+        {% load static %}
+
     </head>
     
     <nav>
@@ -12,8 +13,8 @@
             <span class="logo-nome">CTC estudos</span>
         </div>
         <ul>
-            <li><a href="index.html" class="active">Inicio</a></li>
-            <li><a href="disciplinas/disciplinas.html">Disciplina</a></li>
+            <li><a href="{% url 'home' %}" class="active">Inicio</a></li>
+            <li><a href="{% url 'lista_disciplinas' %}">Disciplina</a></li>
             <li><a href="flashcards.html">Flashcards</a></li>
             <li><a href="duvidas.html">Central de Dúvidas</a></li>
             <li><a href="chat.html">Chat</a></li>
@@ -21,7 +22,9 @@
     </nav>
 
     <body>
-
+        {% block content %}
+        <!-- Conteúdo das páginas filhas aparece aqui -->
+        {% endblock %}
     </body>
     
     <footer>
