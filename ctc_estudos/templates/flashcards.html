@@ -5,14 +5,49 @@
 
 <link rel="stylesheet" href="{% static 'css/flashcards.css' %}">
 
+<hr class="divider">
 <header>
     <div>
         <h1>Flashcards</h1>
         <p>Crie decks por disciplina e revise com repetição espaçada inteligente.</p>
     </div>
-    <button class="btn-criar-deck">+ Criar Deck</button>
+    <button class="btn-criar-deck" onclick="abrirModal()">+ Criar Deck</button>
 </header>
+<hr class="divider">
 
 <main></main>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modalOverlay" onclick="fecharModal(event)">
+    <div class="modal">
+        <button class="modal-fechar" onclick="fecharModal()">✕</button>
+        <h2>Novo Deck</h2>
+
+        <label>Disciplina</label>
+        <select>
+            <option value="">Selecione a disciplina</option>
+            <option>INF1007 — Programação II</option>
+            <option>INF1631 — Estruturas de Dados</option>
+            <option>MAT1161 — Cálculo I</option>
+        </select>
+
+        <label>Nome do Deck</label>
+        <input type="text" placeholder="Ex: Ponteiros e Memória">
+
+        <button class="btn-criar-deck btn-modal">Criar Deck</button>
+    </div>
+</div>
+
+<script>
+    function abrirModal() {
+        document.getElementById('modalOverlay').classList.add('ativo');
+    }
+
+    function fecharModal(e) {
+        if (!e || e.target === document.getElementById('modalOverlay')) {
+            document.getElementById('modalOverlay').classList.remove('ativo');
+        }
+    }
+</script>
 
 {% endblock %}
