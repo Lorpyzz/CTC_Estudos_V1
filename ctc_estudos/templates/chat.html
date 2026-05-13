@@ -1,30 +1,15 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8"> 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
-    <title>CTC-ESTUDOS</title> 
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Duvidas{% endblock %}
+
+{% block content %}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="chat.css">
+    <link rel="stylesheet" href="{% static 'css/chat.css' %}">
 </head>
 
 <body>
 
-
-
-    <nav>
-        <div class="logo">
-            <img src="disciplinas/site-logo.png" width="60px">
-            <span class="logo-nome">CTC estudos</span>
-        </div>
-        <ul>
-            <li><a href="index.html">Inicio</a></li>
-            <li><a href="disciplinas/disciplinas.html">Disciplina</a></li>
-            <li><a href="flashcards.html">Flashcards</a></li>
-            <li><a href="duvidas.html">Central de Dúvidas</a></li>
-            <li><a href="chat.html" class="active">Chat</a></li>
-        </ul>
-    </nav>
     <hr class="divider">
 
 
@@ -261,4 +246,5 @@
 
     </script>
 </body>
+{% endblock %}
 </html>
