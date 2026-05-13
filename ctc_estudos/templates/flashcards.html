@@ -13,28 +13,27 @@
     </div>
     <button class="btn-criar-deck" onclick="abrirModal()">+ Criar Deck</button>
 </header>
-<hr class="divider">
 
-<main></main>
 
-<!-- Modal -->
+<div class="decks-container" id="decksContainer"></div>
+
 <div class="modal-overlay" id="modalOverlay" onclick="fecharModal(event)">
     <div class="modal">
         <button class="modal-fechar" onclick="fecharModal()">✕</button>
         <h2>Novo Deck</h2>
 
         <label>Disciplina</label>
-        <select>
+        <select id="selectDisciplina">
             <option value="">Selecione a disciplina</option>
-            <option>INF1007 — Programação II</option>
-            <option>INF1631 — Estruturas de Dados</option>
-            <option>MAT1161 — Cálculo I</option>
+            {% for disciplina in disciplinas %}
+                <option value="{{ disciplina.id }}" data-codigo="{{ disciplina.codigo }}">{{ disciplina.nome }}</option>
+            {% endfor %}
         </select>
 
         <label>Nome do Deck</label>
-        <input type="text" placeholder="Ex: Ponteiros e Memória">
+        <input type="text" id="inputNomeDeck" placeholder="Ex: Ponteiros e Memória">
 
-        <button class="btn-criar-deck btn-modal">Criar Deck</button>
+        <button class="btn-criar-deck btn-modal" onclick="criarDeck()">Criar Deck</button>
     </div>
 </div>
 
@@ -48,6 +47,38 @@
             document.getElementById('modalOverlay').classList.remove('ativo');
         }
     }
+
+    function criarDeck() {
+        const select = document.getElementById('selectDisciplina');
+        const input  = document.getElementById('inputNomeDeck');
+
+        const nomeDeck        = input.value.trim();
+        const opcao           = select.options[select.selectedIndex];
+        const nomeDisciplina  = opcao.text;
+        const codigoDisciplina = opcao.getAttribute('data-codigo');
+
+        console.log('nome:', nomeDeck, '| codigo:', codigoDisciplina);
+
+        if (!nomeDeck || !codigoDisciplina) {
+            alert('Preencha todos os campos.');
+            return;
+        }
+
+        const card = document.createElement('div');
+        card.classList.add('deck-card');
+        card.innerHTML = `
+            <span class="deck-card-codigo">${codigoDisciplina}</span>
+            <h3 class="deck-card-nome">${nomeDeck}</h3>
+            <p class="deck-card-disciplina">${nomeDisciplina}</p>
+        `;
+
+        document.getElementById('decksContainer').appendChild(card);
+
+        input.value = '';
+        select.selectedIndex = 0;
+        fecharModal();
+    }
 </script>
+<hr class="divider">
 
 {% endblock %}
