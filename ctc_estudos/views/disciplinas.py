@@ -29,8 +29,8 @@ def lista_disciplinas(request):
         },
         {
           "id": 5,
-          "nome": "Projetos",
-          "descricao": "Matéria legal de projetos."
+          "nome": "Cálculo II",
+          "descricao": "Séries, equações diferenciais e funções de várias variáveis."
         }
       ]
     }
