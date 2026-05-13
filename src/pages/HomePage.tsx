@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import './HomePage.css'; 
 
-const Cadastro: React.FC = () => {
+const Login: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     console.log('Login:', { email, password });
-    // Força o carregamento da página HTML servida pelo Django
+    
     window.location.href = '/disciplinas/';
   };
 
@@ -51,11 +51,11 @@ const Cadastro: React.FC = () => {
 
         <div className="login-footer">
           <a href="#">Esqueceu a senha?</a>
-          <a href="#">Cadastre-se</a>
+          <a href="/templates/forms">Cadastre-se</a>
         </div>
       </form>
     </div>
   );
 };
 
-export default Cadastro;
+export default Login;

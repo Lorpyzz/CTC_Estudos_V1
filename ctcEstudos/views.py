@@ -1,17 +1,25 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from ctcEstudos.models import Aluno, Disciplina
+from ctcEstudos.forms import AlunoForm
 
 # Create your views here.
 
 def paginaInicial(request):
     return render(request, "home.html")
 
-def paginaCadastro(request, email = None, password = None):
-    # Renderiza o template específico para React
-    return render(request, "react_index.html")
+def paginaCadastro(request):
+    if request.method == "POST":
+        form = AlunoForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('home')
+    else:
+        form = AlunoForm()
+    return render(request, "forms.html", {"form": form})
 
 def paginaDisciplinas(request):
-    # Renderiza a página HTML pura em vez do React
-    return render(request, "disciplinas.html")
+    disciplina = Disciplina.objects.all()
+    return render(request, "disciplinas.html", context={"disciplina": disciplina})
 
 def paginaFlashcards(request):
     return render(request, "flashcards.html")
@@ -23,5 +31,16 @@ def paginaChat(request):
     return render(request, "chat.html")
 
 def paginaDisciplinaDetalhe(request, nome):
-    # Renderiza o arquivo HTML correspondente (Django procura nas pastas configuradas)
+    
     return render(request, f"{nome}.html")
+
+
+# def create_disciplina(request):
+#     if request.method == "POST":
+#         Disciplina.objects.create(
+#             nome = request.POST['nome'],
+#             codigo = request.POST['codigo'],
+#             disciplina = request.POST['descricao'],
+#             departamento = request.POST['departamento'],
+#         )
+#     return render(request, "")

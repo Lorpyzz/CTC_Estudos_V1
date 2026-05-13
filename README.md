@@ -25,3 +25,11 @@ python manage.py runserver
 vai aparecer o localhost no terminal.
 
 O arquivo requirements.txt é responsável por todas as dependências que o projeto necessita para funcionar. Logo, é importante que usuários utilizem as mesmas versões para que não ocorra eventuais erros por incompatibilidade de versões.
+
+* Banco de Dados
+- As entidades presente no models.py serão nossas tabelas no banco de dados. Para que seja mais intuitivo, será interessante imaginar, por exemplo, a entidade Aluno como uma tabela, a entidade Disciplinas como uma tabela que possui relacionamentos, por exemplo, cada disciplina possui N tópicos/temas a serem estudados. Álgebra possui alguns dos seguintes tópicos: espaços vetoriais, matriz, autovetor e autovalor; Todos esses tópicos estão relacionados com a disciplina. Cada tópico possui uma relação com a disciplina (relacionamento: 1:1), mas no nosso exemplo, algebra possui relacionamento 1:3, 3 tópicos.
+
+Relacionamento 1:N - Uma disciplina tem vários tópicos
+--Criando o banco de dados--
+Como mencionado, o models.py é responsável por criar as entidades. Após definir todas as entidades e seus atributos, é necessário criar o banco, e o comando responsável por essa função é python manage.py migrate, ou seja, migra os dados da models para o BD.
+
