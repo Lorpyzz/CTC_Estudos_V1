@@ -14,8 +14,10 @@ def paginaCadastro(request):
             form.save()
             return redirect('home')
     else:
+        alunos = Aluno.objects.all()
         form = AlunoForm()
-    return render(request, "forms.html", {"form": form})
+    return render(request, "forms.html", {"form": form, "alunos": alunos})
+
 
 def paginaDisciplinas(request):
     disciplina = Disciplina.objects.all()
