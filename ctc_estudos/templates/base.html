@@ -1,33 +1,34 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        {% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+</head>
+<body>
 
-    </head>
-    
     <nav>
         <div class="logo">
-            <img src="disciplinas/site-logo.png" width="60px">
+            <img src="{% static 'img/site-logo.png' %}" width="60px">
             <span class="logo-nome">CTC estudos</span>
         </div>
         <ul>
-            <li><a href="{% url 'home' %}" class="active">Inicio</a></li>
+            <li><a href="{% url 'home' %}">Inicio</a></li>
             <li><a href="{% url 'lista_disciplinas' %}">Disciplina</a></li>
-            <li><a href="flashcards.html">Flashcards</a></li>
+            <li><a href="{% url 'flashcards' %}">Flashcards</a></li>
             <li><a href="duvidas.html">Central de Dúvidas</a></li>
             <li><a href="chat.html">Chat</a></li>
         </ul>
     </nav>
 
-    <body>
-        {% block content %}
-        <!-- Conteúdo das páginas filhas aparece aqui -->
-        {% endblock %}
-    </body>
-    
+    {% block content %}
+    {% endblock %}
+
     <footer>
-        <img src="imagens/logo-puc-rio.png" alt="Logo PUC-Rio" class="footer-logo">
-        <p class="footer">© 2026 CTC Estudos – PUC-Rio. Feito por alunos, para alunos.</p>
+        <img src="{% static 'img/logo-puc-rio.png' %}" alt="Logo PUC-Rio" class="footer-logo">
+        <p>© 2026 CTC Estudos – PUC-Rio. Feito por alunos, para alunos.</p>
     </footer>
+
+</body>
+</html>

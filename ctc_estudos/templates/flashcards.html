@@ -1,48 +1,18 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CTC-ESTUDOS</title>
-    <link rel="stylesheet" href="flashcards.css">
-</head>
-<body>
+{% extends 'base.html' %}
+{% load static %}
 
-    <nav>
-        <div class="logo">
-            <img src="disciplinas/site-logo.png" width="60px">
-            <span class="logo-nome">CTC estudos</span>
-        </div>
-        <ul>
-            <li><a href="index.html">Inicio</a></li>
-            <li><a href="disciplinas/disciplinas.html">Disciplina</a></li>
-            <li><a href="flashcards.html" class="active">Flashcards</a></li>
-            <li><a href="duvidas.html">Central de Dúvidas</a></li>
-            <li><a href="chat.html">Chat</a></li>
-        </ul>
-    </nav>
-    <hr class="divider">
+{% block content %}
 
-    <header>
-        <div>
-            <h1>Flashcards</h1>
-            <p>Crie decks por disciplina e revise com repetição espaçada inteligente.</p>
-        </div>
-            <button class="btn-criar-deck">
-                + Criar Deck
-            </button>
-    </header>
-    
+<link rel="stylesheet" href="{% static 'css/flashcards.css' %}">
 
-    
-    
-    <main>
+<header>
+    <div>
+        <h1>Flashcards</h1>
+        <p>Crie decks por disciplina e revise com repetição espaçada inteligente.</p>
+    </div>
+    <button class="btn-criar-deck">+ Criar Deck</button>
+</header>
 
+<main></main>
 
-
-    </main> 
-
-
-
-</body>
-</html>
+{% endblock %}
