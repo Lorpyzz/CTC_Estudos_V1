@@ -21,10 +21,12 @@
             <li><a href="{% url 'chat' %}">Chat</a></li>
         </ul>
     </nav>
+    <hr class="divider">
 
     {% block content %}
     {% endblock %}
 
+    <hr class="divider">
     <footer>
         <img src="{% static 'img/logo-puc-rio.png' %}" alt="Logo PUC-Rio" class="footer-logo">
         <p>© 2026 CTC Estudos – PUC-Rio. Feito por alunos, para alunos.</p>
