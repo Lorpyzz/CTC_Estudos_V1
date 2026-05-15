@@ -105,7 +105,9 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# ctcEstudos/settings.py
 
+AUTH_USER_MODEL = 'ctcEstudos.User'
 # Internationalization
 # https://docs.djangoproject.com/en/6.0/topics/i18n/
 
