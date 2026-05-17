@@ -48,15 +48,15 @@ ul {
   ul a {
     color: gray;
     text-decoration: none;
-    transition: color 0.2s ease; /* transição suave */
+    transition: color 0.2s ease; 
   }
-  
-  /* Hover: azul bebê */
+
+
   ul a:hover {
     color: #89CFF0;
   }
   
-  /* Página atual: adicione class="active" no <a> da página */
+  
   ul a.active {
     color: #89CFF0;
     font-weight: 500;
@@ -93,27 +93,31 @@ p{
   }
   
 .titulo {
-    padding: 40px 24px 20px 24px; /* espaço normal, sem empurrar para direita */
+    padding: 40px 24px 20px 24px; 
+}
+
+.disciplinas {
+    width: 100%;
+    max-width: 1300px;
+    margin: auto;
 }
 
 .row {
-    display: flex;
-    flex-wrap: wrap; /* botões quebram linha automaticamente */
-    justify-content: center;
-    padding-right: 1000px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    padding: 20px;
 }
 
-  .btn1{
+.btn1 {
     background-color: white;
-    width: 350px;
-    border-width: 1px;
+    width: 100%;
     border: 5px solid #e2e6e9;
     border-radius: .75rem;
     padding: 1.5rem;
-    margin: 20px;
     text-align: left;
     cursor: pointer;
-  }
+}
   
   .codigo{
     background-color: #f3f5f7;

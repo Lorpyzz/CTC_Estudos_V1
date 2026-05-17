@@ -17,10 +17,11 @@
     <p>Encontre materiais e recursos para suas disciplinas do CTC</p>
 </div>
 
-{% for disciplina in disciplinas %}
+
 <div class="disciplinas">
     <div class="row">
-        <div class="col-3"></div>
+
+        {% for disciplina in disciplinas %}
 
         <button class="btn1"
                 onclick="location.href=''">
@@ -45,9 +46,11 @@
 
         </button>
 
+        {% endfor %}
+
     </div>
 </div>
-{% endfor %}
+
 
 
 {% endblock %}
