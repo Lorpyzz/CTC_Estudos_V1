@@ -1,145 +1,110 @@
 {% extends "base.html" %}
 {% load static %}
-
+ 
 {% block content %}
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="{% static 'css/chat.css' %}">
-
-
-
-    <div class="app-container"> 
-        <aside class="sidebar">
-            <div class="sidebar-header">
-                <h2>Conversas</h2>
-                <button class="btn-plus" onclick="createNewChat()">+</button>
-            </div>
-            <div class="chat-list" id="chat-list">
-                <div class="chat-item active" onclick="selectChat(this, 'Chat Geral', 'CG', 'Bem-vindo ao chat do CTC Estudos!', '10:09')">
-                    <div class="avatar light-blue">CG</div>
-                    <div class="chat-info">
-                        <div class="chat-top">
-                            <strong>Chat Geral</strong>
-                            <span class="time">10:09</span>
-                        </div>
-                        <p class="preview">Bem-vindo ao chat do CTC Estudos!</p>
-                    </div>
-                </div>
-                <div class="chat-item" onclick="selectChat(this, 'Cálculo I', 'C1', 'Alguém entendeu a lista 3?', '09:09')">
-                    <div class="avatar light-blue">C1</div>
-                    <div class="chat-info">
-                        <div class="chat-top">
-                            <strong>Cálculo I</strong>
-                            <span class="time">09:09</span>
-                        </div>
-                        <p class="preview">Alguém entendeu a lista 3?</p>
-                    </div>
-                </div>
-                <div class="chat-item" onclick="selectChat(this, 'Programação', 'PR', 'O trabalho é em dupla?', '08:09')">
-                    <div class="avatar light-blue">PR</div>
-                    <div class="chat-info">
-                        <div class="chat-top">
-                            <strong>Programação</strong>
-                            <span class="time">08:09</span>
-                        </div>
-                        <p class="preview">O trabalho é em dupla?</p>
-                    </div>
-                </div>
-            </div>
-        </aside>
-
-        <main class="chat-window">
-            <header class="chat-header">
-                <i class="fa-regular fa-comment"></i> 
-                <div class="avatar-small light-blue" id="header-avatar">CG</div> 
-                <h3 id="chat-title">Chat Geral</h3> 
-            </header>
-            <div class="messages-container" id="messages-container"></div>
-            <div class="chat-input-area">
-                <div class="input-actions">
-                    <button class="icon-btn"><i class="fa-regular fa-image"></i></button>
-                    <button class="icon-btn"><i class="fa-solid fa-paperclip"></i></button>
-                </div>
-                <input type="text" id="message-input" placeholder="Digite sua mensagem..." onkeypress="handleKeyPress(event)">
-                <button class="send-btn" onclick="sendMessage()">
-                    <i class="fa-solid fa-paper-plane"></i>
-                </button>
-            </div>
-        </main>
-    </div>
-
-    <script>
-        function selectChat(element, name, initial, messageText, time) {
-            document.querySelectorAll('.chat-item').forEach(item => item.classList.remove('active'));
-            element.classList.add('active');
-            document.getElementById('chat-title').innerText = name;
-            document.getElementById('header-avatar').innerText = initial;
-            const container = document.getElementById('messages-container');
-            container.innerHTML = "";
-            if (messageText !== "") {
-                addMessageToUI("Sistema", messageText, time, "received");
-            } else {
-                container.innerHTML = `<div class="empty-msg">Nenhuma mensagem ainda. Comece a conversa!</div>`;
-            }
-        }
-
-        function createNewChat() {
-            const chatList = document.getElementById('chat-list');
-            const newChat = document.createElement('div');
-            const now = new Date();
-            const timeStr = now.getHours() + ":" + now.getMinutes().toString().padStart(2, '0');
-            newChat.className = 'chat-item';
-            newChat.onclick = function() { selectChat(this, 'Novo Chat', 'NC', '', timeStr); };
-            newChat.innerHTML = `
-                <div class="avatar light-blue">NC</div>
+ 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="{% static 'css/chat.css' %}">
+ 
+<div class="app-container">
+ 
+    <aside class="sidebar">
+ 
+        <div class="sidebar-header">
+            <h2>Conversas</h2>
+            <button class="btn-plus" onclick="createNewChat()">+</button>
+        </div>
+ 
+        <div class="chat-list" id="chat-list">
+ 
+            <div class="chat-item active" onclick="selectChat(this, 'Chat Geral', 'CG')">
+                <div class="avatar light-blue">CG</div>
                 <div class="chat-info">
-                    <div class="chat-top">
-                        <strong>Novo Chat</strong>
-                        <span class="time">${timeStr}</span>
+                    <div class="chat-top"><strong>Chat Geral</strong></div>
+                    <p class="preview">Chat principal</p>
+                </div>
+            </div>
+
+        </div>
+    </aside>
+
+    <main class="chat-window">
+ 
+        <header class="chat-header">
+            <i class="fa-regular fa-comment"></i>
+            <div class="avatar-small light-blue" id="header-avatar">CG</div>
+            <h3 id="chat-title">Chat Geral</h3>
+        </header>
+
+        <!-- container com as msgs -->
+        <div class="messages-container" id="messages-container">
+            {% for msg in mensagens %}
+                <div class="message-row sent">
+
+                    <div class="avatar-small user-blue">{{ msg.usuario|first }}</div>
+ 
+                    <div class="message-content">
+                        <span class="sender-name">
+                            {{ msg.usuario }}
+                            <small>{{ msg.horario }}</small>
+                        </span>
+                        <div class="bubble">{{ msg.mensagem }}</div>
                     </div>
-                    <p class="preview">Nenhuma mensagem ainda</p>
                 </div>
-            `;
-            chatList.prepend(newChat);
-            newChat.click();
-        }
 
-        function sendMessage() {
-            const input = document.getElementById('message-input');
-            const text = input.value.trim();
-            if (text !== "") {
-                const now = new Date();
-                const timeStr = now.getHours() + ":" + now.getMinutes().toString().padStart(2, '0');
-                const emptyMsg = document.querySelector('.empty-msg');
-                if (emptyMsg) emptyMsg.remove();
-                addMessageToUI("Você", text, timeStr, "sent");
-                input.value = "";
-                const container = document.getElementById('messages-container');
-                container.scrollTop = container.scrollHeight;
-            }
-        }
+            {% endfor %}
+        </div>
 
-        function addMessageToUI(sender, text, time, type) {
-            const container = document.getElementById('messages-container');
-            const messageDiv = document.createElement('div');
-            messageDiv.className = `message-row ${type}`;
-            messageDiv.innerHTML = `
-                <div class="avatar-small ${type === 'sent' ? 'user-blue' : 'gray'}">${sender[0]}</div>
-                <div class="message-content">
-                    <span class="sender-name">${sender} <small>${time}</small></span>
-                    <div class="bubble">${text}</div>
+        <div class="chat-input-area">
+            <form method="POST" style="display:flex; width:100%; gap:10px;">  <!-- envia msg pro jango -->
+                {% csrf_token %}
+ 
+                <div class="input-actions">
+                    <button type="button" class="icon-btn"><i class="fa-regular fa-image"></i></button>
+                    <button type="button" class="icon-btn"><i class="fa-s olid fa-paperclip"></i></button>
                 </div>
-            `;
-            container.appendChild(messageDiv);
-        }
+ 
+                <input type="text" name="mensagem" id="message-input" placeholder="Digite sua mensagem...">
+ 
+                <button type="submit" class="send-btn"><i class="fa-solid fa-paper-plane"></i></button>
+            </form>
+        </div>
 
-        function handleKeyPress(e) {
-            if (e.key === 'Enter') sendMessage();
-        }
+    </main>
+</div>
+ 
+<script>
 
-        window.onload = () => {
-            const firstChat = document.querySelector('.chat-item');
-            if (firstChat) firstChat.click();
-        }
-    </script>
+    function selectChat(element, name, initial) {
+        document.querySelectorAll('.chat-item')
+            .forEach(
+                item => item.classList.remove('active')
+            );
 
+        element.classList.add('active');
+        document.getElementById('chat-title').innerText = name;
+        document.getElementById('header-avatar').innerText = initial;
+    }
+
+    function createNewChat() { 
+        const chatList = document.getElementById('chat-list');
+        const newChat = document.createElement('div');
+
+        newChat.className = 'chat-item';
+        newChat.onclick = function() {
+            selectChat(this, 'Novo Chat', 'NC');
+
+        };
+
+        newChat.innerHTML = `
+            <div class="avatar light-blue">NC</div>
+            <div class="chat-info">
+                <div class="chat-top"><strong>Novo Chat</strong></div>
+                <p class="preview">Chat vazio</p>
+            </div>
+        `;
+        chatList.prepend(newChat);
+        newChat.click();
+    }
+</script>
 {% endblock %}
