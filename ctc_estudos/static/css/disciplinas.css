@@ -139,4 +139,8 @@ p{
     margin: 0;
   }
 
-  .btn1:hover{color:#2b9dee;}
+  .btn1:hover{
+    color:#2b9dee;
+    scale:1.05;
+  
+  }
