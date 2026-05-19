@@ -1,48 +1,84 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CTC-ESTUDOS</title>
-    <link rel="stylesheet" href="flashcards.css">
-</head>
-<body>
+{% extends 'base.html' %}
+{% load static %}
 
-    <nav>
-        <div class="logo">
-            <img src="disciplinas/site-logo.png" width="60px">
-            <span class="logo-nome">CTC estudos</span>
-        </div>
-        <ul>
-            <li><a href="index.html">Inicio</a></li>
-            <li><a href="disciplinas/disciplinas.html">Disciplina</a></li>
-            <li><a href="flashcards.html" class="active">Flashcards</a></li>
-            <li><a href="duvidas.html">Central de Dúvidas</a></li>
-            <li><a href="chat.html">Chat</a></li>
-        </ul>
-    </nav>
-    <hr class="divider">
+{% block content %}
 
-    <header>
-        <div>
-            <h1>Flashcards</h1>
-            <p>Crie decks por disciplina e revise com repetição espaçada inteligente.</p>
-        </div>
-            <button class="btn-criar-deck">
-                + Criar Deck
-            </button>
-    </header>
-    
-
-    
-    
-    <main>
+<link rel="stylesheet" href="{% static 'css/flashcards.css' %}">
 
 
+<header>
+    <div>
+        <h1>Flashcards</h1>
+        <p>Crie decks por disciplina e revise com repetição espaçada inteligente.</p>
+    </div>
+    <button class="btn-criar-deck" onclick="abrirModal()">+ Criar Deck</button>
+</header>
 
-    </main> 
+
+<div class="decks-container" id="decksContainer"></div>
+
+<div class="modal-overlay" id="modalOverlay" onclick="fecharModal(event)">
+    <div class="modal">
+        <button class="modal-fechar" onclick="fecharModal()">✕</button>
+        <h2>Novo Deck</h2>
+
+        <label>Disciplina</label>
+        <select id="selectDisciplina">
+            <option value="">Selecione a disciplina</option>
+            {% for disciplina in disciplinas %}
+                <option value="{{ disciplina.id }}" data-codigo="{{ disciplina.codigo }}">{{ disciplina.nome }}</option>
+            {% endfor %}
+        </select>
+
+        <label>Nome do Deck</label>
+        <input type="text" id="inputNomeDeck" placeholder="Ex: Ponteiros e Memória">
+
+        <button class="btn-criar-deck btn-modal" onclick="criarDeck()">Criar Deck</button>
+    </div>
+</div>
+
+<script>
+    function abrirModal() {
+        document.getElementById('modalOverlay').classList.add('ativo');
+    }
+
+    function fecharModal(e) {
+        if (!e || e.target === document.getElementById('modalOverlay')) {
+            document.getElementById('modalOverlay').classList.remove('ativo');
+        }
+    }
+
+    function criarDeck() {
+        const select = document.getElementById('selectDisciplina');
+        const input  = document.getElementById('inputNomeDeck');
+
+        const nomeDeck        = input.value.trim();
+        const opcao           = select.options[select.selectedIndex];
+        const nomeDisciplina  = opcao.text;
+        const codigoDisciplina = opcao.getAttribute('data-codigo');
+
+        console.log('nome:', nomeDeck, '| codigo:', codigoDisciplina);
+
+        if (!nomeDeck || !codigoDisciplina) {
+            alert('Preencha todos os campos.');
+            return;
+        }
+
+        const card = document.createElement('div');
+        card.classList.add('deck-card');
+        card.innerHTML = `
+            <span class="deck-card-codigo">${codigoDisciplina}</span>
+            <h3 class="deck-card-nome">${nomeDeck}</h3>
+            <p class="deck-card-disciplina">${nomeDisciplina}</p>
+        `;
+
+        document.getElementById('decksContainer').appendChild(card);
+
+        input.value = '';
+        select.selectedIndex = 0;
+        fecharModal();
+    }
+</script>
 
 
-
-</body>
-</html>
+{% endblock %}

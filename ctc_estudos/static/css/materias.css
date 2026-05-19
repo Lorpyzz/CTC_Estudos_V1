@@ -103,10 +103,14 @@ p{
 }
 .btn2{
     background-color: white;
-    width: 300px;
-    border: 5px solid #3cdfff;
-    border-radius: 5px;
-    padding: 10px;
-    margin: 10px;
-    cursor:pointer;
-}
+    width: 350px;
+    border-width: 1px;
+    border: 5px solid #e2e6e9;
+    border-radius: .75rem;
+    padding: 1.5rem;
+    margin: 20px;
+    text-align: left;
+    cursor: pointer;
+  }
+
+  .btn2:hover{color: #2b9dee;}

@@ -3,28 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CTC-ESTUDOS</title>
-    <link rel="stylesheet" href="login.css">
+    {% load static %}
+    <title>Login</title>
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
 </head>
 <body>
     <div class="login-box">
-        <img src="imagens/logo-puc-rio.png" width="60px">
+        <img src="{% static 'img/logo-puc-rio.png' %}" width="60px">
         <h2>Entrar no CTC Estudos</h2>
         <p>Use sua matrícula da PUC-Rio para acessar</p>
 
-        <div class="campo">
-            <label>Matrícula</label>
-            <input type="text" placeholder="Ex: 2310000" required>
-        </div>
+        <form action="{% url 'home' %}">
+            <div class="campo">
+                <label>Matrícula</label>
+                <input type="text" placeholder="Ex: 2310000" required>
+            </div>
 
-        <div class="campo">
-            <label>Senha</label>
-            <input type="password" placeholder="••••••••" required>
-        </div>
+            <div class="campo">
+                <label>Senha</label>
+                <input type="password" placeholder="••••••••" required>
+            </div>
 
-        <a href="index.html" class="btn-entrar">Entrar</a>
+            <button type="submit" class="btn-entrar">Entrar</button>
+        </form>
+
     </div>
 </body>
-
-
 </html>

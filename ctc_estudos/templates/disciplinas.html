@@ -10,17 +10,18 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
 
-<hr class="divider">
+
 
 <div class="titulo">
     <h1><b>Disciplinas</b></h1>
     <p>Encontre materiais e recursos para suas disciplinas do CTC</p>
 </div>
 
-{% for disciplina in disciplinas %}
+
 <div class="disciplinas">
     <div class="row">
-        <div class="col-3"></div>
+
+        {% for disciplina in disciplinas %}
 
         <button class="btn1"
                 onclick="location.href=''">
@@ -45,8 +46,11 @@
 
         </button>
 
+        {% endfor %}
+
     </div>
 </div>
-{% endfor %}
+
+
 
 {% endblock %}

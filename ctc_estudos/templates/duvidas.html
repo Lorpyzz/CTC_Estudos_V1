@@ -1,28 +1,15 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CTC-ESTUDOS</title>
-    <link rel="stylesheet" href="duvidas.css">
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Duvidas{% endblock %}
+
+{% block content %}
+    <link rel="stylesheet" href="{% static 'css/duvidas.css' %}">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     
-    <nav>
-        <div class="logo">
-            <img src="disciplinas/site-logo.png" width="60px">
-            <span class="logo-nome">CTC estudos</span>
-        </div>
-        <ul>
-            <li><a href="index.html">Inicio</a></li>
-            <li><a href="disciplinas/disciplinas.html">Disciplina</a></li>
-            <li><a href="flashcards.html">Flashcards</a></li>
-            <li><a href="duvidas.html" class="active">Central de Dúvidas</a></li>
-            <li><a href="chat.html">Chat</a></li>
-        </ul>
-    </nav>
-    <hr class="divider">
+
 
     <div class="main-container">
         <header class="header-section">
@@ -199,4 +186,5 @@
     </script>
 
 </body>
+{% endblock %}
 </html>
