@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from views.cadastro import usuarios
 
 ADMIN_MOCK = {
     "matricula": "admin2025",
@@ -14,7 +15,16 @@ def login(request):
         senha = request.POST.get("senha", "")
 
         if tipo == "aluno":
-            return redirect("home")
+            usuario = None
+            for u in usuarios:
+                if (u['matricula'] == matricula and u['senha'] == senha):
+                    usuario = u
+                    break
+
+            if usuario:
+                return redirect("home")
+            else:
+                erro = "Matrícula ou senha inválidos."
 
         elif tipo == "admin":
             if matricula == ADMIN_MOCK["matricula"] and senha == ADMIN_MOCK["senha"]:
