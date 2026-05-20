@@ -39,7 +39,7 @@ header h1 {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: 20px;
-  min-height: 470px;
+  min-height: calc(100vh - 450px);
 }
 
 /* Card individual */
@@ -52,6 +52,7 @@ header h1 {
   flex-direction: column;
   gap: 8px;
   cursor: pointer;
+  height: fit-content;
 }
 
 
