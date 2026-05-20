@@ -9,24 +9,53 @@
 </head>
 <body>
     <div class="login-box">
-        <img src="{% static 'img/logo-puc-rio.png' %}" width="60px">
+        <img src="{% static 'img/logo-puc-rio.png' %}">
         <h2>Entrar no CTC Estudos</h2>
         <p>Use sua matrícula da PUC-Rio para acessar</p>
 
-        <form action="{% url 'home' %}">
+
+        <!-- o que foi adicionado -->
+        <!-- botoes para trocar entre login de aluno e admin -->
+        <div class="tab-switcher">
+            <button class="tab-btn active" id="btn-aluno" onclick="setTab('aluno')">Aluno</button>
+            <button class="tab-btn" id="btn-admin" onclick="setTab('admin')">Administrador</button>
+        </div>
+        
+        <!-- verificação de erro de login de admin -->
+        {% if erro %}
+            <div class="error-msg show">{{ erro }}</div>
+        {% endif %}
+
+
+
+        <form action="{% url 'login' %}" method="POST">
+            {% csrf_token %} <!-- os dados nao serao vistos na url, protecao contra ataques -->
+            <input type="hidden" name="tipo" id="input-tipo" value="aluno"> <!-- atualiza o valor do tipo de login (aluno ou admin) para o backend -->
+
             <div class="campo">
-                <label>Matrícula</label>
-                <input type="text" placeholder="Ex: 2310000" required>
+                <label id="label-matricula">Matrícula</label>
+                <input id="input-matricula" name="matricula" type="text" placeholder="Ex: 2310000" required>
             </div>
 
             <div class="campo">
                 <label>Senha</label>
-                <input type="password" placeholder="••••••••" required>
+                <input name="senha" type="password" placeholder="Sua senha" required>
             </div>
 
             <button type="submit" class="btn-entrar">Entrar</button>
         </form>
 
+        <p class="cadastro-link">Ainda não tem conta? <a href="#">Cadastre-se</a></p>
     </div>
+
+    <script>
+        function setTab(tab) {
+            document.getElementById("btn-aluno").classList.toggle("active", tab === "aluno"); // so muda a classe do botao para mostrar qual esta selecionado
+            document.getElementById("btn-admin").classList.toggle("active", tab === "admin");
+            document.getElementById("input-tipo").value = tab; //atualiza o valor do tipo de login para o backend (aluno ou admin)
+            document.getElementById("label-matricula").textContent = tab === "admin" ? "Usuário" : "Matrícula"; //troca o label quando for aluno para adm
+            document.getElementById("input-matricula").placeholder = tab === "admin" ? "Ex: admin2025" : "Ex: 2310000"; //apenas troca o texto de exemplo
+        }
+    </script>
 </body>
 </html>
