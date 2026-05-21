@@ -14,26 +14,48 @@
     <button class="btn-criar-deck" onclick="abrirModal()">+ Criar Deck</button>
 </header>
 
+<div class="filtro-container">
+    <input type="text" id="filtroDeck" placeholder="Buscar deck..." oninput="filtrarDecks()">
+</div>
 
-<div class="decks-container" id="decksContainer"></div>
+<div class="decks-container" id="decksContainer">
+    {% for deck in decks %}
+        <div class="deck-card" data-nome="{{ deck.nome|lower }}">
+            <span class="deck-card-codigo">{{ deck.disciplina_codigo }}</span>
+            <h3 class="deck-card-nome">{{ deck.nome }}</h3>
+            <p class="deck-card-disciplina">{{ deck.disciplina_nome }}</p>
+        </div>
+    {% endfor %}
+</div>
 
-<div class="modal-overlay" id="modalOverlay" onclick="fecharModal(event)">
+<div id="modalOverlay"
+     class="modal-overlay"
+     data-erro="{{ erro|default:'' }}"
+     onclick="fecharModal(event)">
     <div class="modal">
         <button class="modal-fechar" onclick="fecharModal()">✕</button>
         <h2>Novo Deck</h2>
 
-        <label>Disciplina</label>
-        <select id="selectDisciplina">
-            <option value="">Selecione a disciplina</option>
-            {% for disciplina in disciplinas %}
-                <option value="{{ disciplina.id }}" data-codigo="{{ disciplina.codigo }}">{{ disciplina.nome }}</option>
-            {% endfor %}
-        </select>
+        <form method="POST">
+            {% csrf_token %}
 
-        <label>Nome do Deck</label>
-        <input type="text" id="inputNomeDeck" placeholder="Ex: Ponteiros e Memória">
+            <label>Disciplina</label>
+            <select name="disciplina_id">
+                <option value="">Selecione a disciplina</option>
+                {% for disciplina in disciplinas %}
+                    <option value="{{ disciplina.id }}">{{ disciplina.nome }}</option>
+                {% endfor %}
+            </select>
 
-        <button class="btn-criar-deck btn-modal" onclick="criarDeck()">Criar Deck</button>
+            <label>Nome do Deck</label>
+            <input type="text" name="nome_deck" placeholder="Ex: Ponteiros e Memória">
+
+            {% if erro %}
+                <p style="color: red;">{{ erro }}</p>
+            {% endif %}
+
+            <button type="submit" class="btn-criar-deck btn-modal">Criar Deck</button>
+        </form>
     </div>
 </div>
 
@@ -48,35 +70,19 @@
         }
     }
 
-    function criarDeck() {
-        const select = document.getElementById('selectDisciplina');
-        const input  = document.getElementById('inputNomeDeck');
+    const overlay = document.getElementById('modalOverlay');
+    if (overlay.dataset.erro) {
+        abrirModal();
+    }
 
-        const nomeDeck        = input.value.trim();
-        const opcao           = select.options[select.selectedIndex];
-        const nomeDisciplina  = opcao.text;
-        const codigoDisciplina = opcao.getAttribute('data-codigo');
+    function filtrarDecks() {
+        const busca = document.getElementById('filtroDeck').value.toLowerCase();
+        const cards = document.querySelectorAll('.deck-card');
 
-        console.log('nome:', nomeDeck, '| codigo:', codigoDisciplina);
-
-        if (!nomeDeck || !codigoDisciplina) {
-            alert('Preencha todos os campos.');
-            return;
-        }
-
-        const card = document.createElement('div');
-        card.classList.add('deck-card');
-        card.innerHTML = `
-            <span class="deck-card-codigo">${codigoDisciplina}</span>
-            <h3 class="deck-card-nome">${nomeDeck}</h3>
-            <p class="deck-card-disciplina">${nomeDisciplina}</p>
-        `;
-
-        document.getElementById('decksContainer').appendChild(card);
-
-        input.value = '';
-        select.selectedIndex = 0;
-        fecharModal();
+        cards.forEach(card => {
+            const nome = card.dataset.nome;
+            card.style.display = nome.includes(busca) ? '' : 'none';
+        });
     }
 </script>
 

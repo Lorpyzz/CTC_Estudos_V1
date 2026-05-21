@@ -30,8 +30,50 @@ header h1 {
 }
 
 
-/*Decks*/
-/* Grid de cards */
+/* Filtro */
+.filtro-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 20px;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.filtro-container::before {
+  content: '🔍';
+  position: absolute;
+  left: 34px;
+  font-size: 13px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+#filtroDeck {
+  width: 100%;
+  padding: 11px 16px 11px 40px;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 10px;
+  font-size: 14px;
+  outline: none;
+  box-sizing: border-box;
+  background: #f9fafb;
+  color: #111;
+  transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+}
+
+#filtroDeck:focus {
+  border-color: #4A90D9;
+  background: white;
+  box-shadow: 0 0 0 3px rgba(74, 144, 217, 0.12);
+}
+
+#filtroDeck::placeholder {
+  color: #b0b7c3;
+}
+
+
+/* Decks */
 .decks-container {
   max-width: 900px;
   margin: 32px auto;
@@ -42,7 +84,6 @@ header h1 {
   min-height: calc(100vh - 450px);
 }
 
-/* Card individual */
 .deck-card {
   background: white;
   border: 1px solid #e5e7eb;
@@ -54,7 +95,6 @@ header h1 {
   cursor: pointer;
   height: fit-content;
 }
-
 
 .deck-card-codigo {
   display: inline-block;
@@ -79,9 +119,6 @@ header h1 {
   font-size: 13px;
   color: #6b7280;
 }
-
-
-
 
 
 /* Modal */
