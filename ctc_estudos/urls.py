@@ -11,6 +11,7 @@ urlpatterns = [
     path('login/', views.loginAluno, name='login'),
     path('disciplinas/', views.paginaDisciplinas, name='disciplinas'),
     path('disciplinas/novo/', views.form_disciplina, name='form_disciplina'),
+    path('turmas/', views.paginaTurmas, name='turmas'),
     path('turmas/nova/', views.form_turma, name='form_turma'),
     path('sessoes/nova/', views.form_sessao_estudo, name='form_sessao_estudo'),
     path('inscricoes/nova/', views.form_inscricao, name='form_inscricao'),

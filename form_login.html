@@ -30,7 +30,11 @@
                     <li><a href="/flashcards/">Flashcards</a></li>
                     <li><a href="/duvidas/">Central de dúvidas</a></li>
                     <li><a href="/chat/">Chat</a></li>
+                    {% if request.user.is_authenticated %}
+                    <li><a href="/logout/" class="btn">Sair</a></li>
+                {% else %}
                     <li><a href="/login/" class="btn">Entrar</a></li>
+                {% endif %}
                 </ul>
             </nav>
         </div>
@@ -43,7 +47,7 @@
                     <span class="blue-icon"></span>
                     <h1>Acessar Plataforma</h1>
                 </div>
-                <p class="subtitle">Insira seu e-mail e senha cadastrados para entrar.</p>
+                <p class="subtitle">Insira sua matrícula e senha cadastradas para entrar.</p>
             </div>
         </header>
 

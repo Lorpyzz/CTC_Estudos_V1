@@ -1,24 +1,37 @@
 from django import forms
+from django.contrib.auth.hashers import make_password
 from .models import User, Professor, Disciplina, Turma, InscricaoTurma, Topico, Conteudo, Monitoria, SessaoEstudo
 
+
 class AlunoForm(forms.ModelForm):
+    password = forms.CharField(
+        widget=forms.PasswordInput(attrs={'class': 'form-input', 'placeholder': 'Crie uma senha'})
+    )
+
     class Meta:
         model = User
-        fields = ['nome', 'matricula', 'email', 'data_nasc']
+        fields = ['nome', 'matricula', 'email', 'data_nasc'] 
+        labels = {
+            'nome': 'Nome completo',
+            'matricula': 'Matrícula',
+            'email': 'E-mail',
+            'data_nasc': 'Data de nascimento',
+            
+        }
         widgets = {
-            'data_nasc': forms.DateInput(attrs={'type': 'date', 'class': 'form-input'}),
             'nome': forms.TextInput(attrs={'class': 'form-input', 'placeholder': 'Nome completo', 'style': 'text-transform: uppercase;'}),
-            'matricula': forms.TextInput(attrs={'class': 'form-input', 'placeholder': 'Matrícula'}),
+            'matricula': forms.TextInput(attrs={'class':'form-input', 'placeholder': '1920567'}),
             'email': forms.EmailInput(attrs={'class': 'form-input', 'placeholder': 'E-mail'}),
+            'data_nasc': forms.DateInput(attrs={'class': 'form-input', 'type': 'date'}),
         }
 
-    def clean(self):
-        cleaned_data = super().clean()
-        concluida = cleaned_data.get('concluida')
-        nota_final = cleaned_data.get('nota_final')
-        if concluida and (nota_final is None or nota_final < 5.0):
-            raise forms.ValidationError("Para marcar como concluída, a nota final deve ser informada e maior ou igual a 5.0.")
-        return cleaned_data
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.password = make_password(self.cleaned_data["password"])
+        if commit:
+            user.save()
+        return user
+
 
 class ProfessorForm(forms.ModelForm):
     class Meta:
@@ -26,8 +39,8 @@ class ProfessorForm(forms.ModelForm):
         fields = ['nome', 'email', 'departamento']
         widgets = {
             'nome': forms.TextInput(attrs={'class': 'form-input', 'placeholder': 'Nome do Professor', 'style': 'text-transform: uppercase;'}),
-            'email': forms.EmailInput(attrs={'class': 'form-input', 'placeholder': 'E-mail', 'style': 'text-transform: uppercase;'}),
-            'departamento': forms.TextInput(attrs={'class': 'form-input', 'placeholder': 'Departamento'}),
+            'email': forms.EmailInput(attrs={'class': 'form-input', 'placeholder': 'E-mail'}),
+            'departamento': forms.TextInput(attrs={'class': 'form-input', 'placeholder': 'Departamento', 'style': 'text-transform: uppercase;'}),
         }
 
 class DisciplinaForm(forms.ModelForm):
@@ -35,11 +48,11 @@ class DisciplinaForm(forms.ModelForm):
         model = Disciplina
         fields = ['nome', 'codigo', 'descricao', 'departamento', 'email']
         labels = {
-            'nome': 'nome da disciplina',
-            'descricao': 'descricao',
-            'email': 'email do professor',
-            'departamento': 'departamento',
-            'codigo': 'código'
+            'nome': 'Nome da disciplina',
+            'descricao': 'Descricao',
+            'email': 'Email do professor',
+            'departamento': 'Departamento',
+            'codigo': 'Código'
         }
         widgets = {
             'nome': forms.TextInput(attrs={'class': 'form-input', 'placeholder': 'nome da disciplina', 'style': 'text-transform: uppercase;'}),
@@ -52,7 +65,6 @@ class DisciplinaForm(forms.ModelForm):
     def clean_codigo(self):
         codigo = self.cleaned_data.get('codigo')
         if codigo:
-            codigo = codigo.upper()
             query = Disciplina.objects.filter(codigo__iexact=codigo)
             if self.instance and self.instance.pk:
                 query = query.exclude(pk=self.instance.pk)
@@ -63,19 +75,12 @@ class DisciplinaForm(forms.ModelForm):
     def clean_nome(self):
         nome = self.cleaned_data.get('nome')
         if nome:
-            nome = nome.upper()
             query = Disciplina.objects.filter(nome__iexact=nome)
             if self.instance and self.instance.pk:
                 query = query.exclude(pk=self.instance.pk)
             if query.exists():
                 raise forms.ValidationError('Já existe uma disciplina cadastrada com este nome.')
         return nome
-
-    def clean_departamento(self):
-        departamento = self.cleaned_data.get('departamento')
-        if departamento:
-            departamento = departamento.upper()
-        return departamento
 
 class TurmaForm(forms.ModelForm):
     disciplina = forms.CharField(
@@ -123,7 +128,6 @@ class TurmaForm(forms.ModelForm):
         val = self.cleaned_data.get('professor', '').upper()
         professor = Professor.objects.filter(nome__iexact=val).first()
         if not professor:
-            # Cria o professor automaticamente se não existir
             email = val.replace(" ", "").lower() + "@inf.puc-rio.br"
             professor = Professor.objects.create(nome=val, email=email, departamento="Indefinido")
         return professor
@@ -137,6 +141,15 @@ class InscricaoTurmaForm(forms.ModelForm):
             'turma': forms.Select(attrs={'class': 'form-select', 'style': 'text-transform: uppercase;'}),
             'nota_final': forms.NumberInput(attrs={'class': 'form-input', 'placeholder': 'Nota Final'}),
         }
+
+    # A VALIDAÇÃO DA NOTA FOI MOVIDA PARA CÁ (Lugar correto)
+    def clean(self):
+        cleaned_data = super().clean()
+        concluida = cleaned_data.get('concluida')
+        nota_final = cleaned_data.get('nota_final')
+        if concluida and (nota_final is None or nota_final < 5.0):
+            raise forms.ValidationError("Para marcar como concluída, a nota final deve ser informada e maior ou igual a 5.0.")
+        return cleaned_data
 
 class TopicoForm(forms.ModelForm):
     class Meta:

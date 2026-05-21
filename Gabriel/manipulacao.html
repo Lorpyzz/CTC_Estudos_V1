@@ -26,7 +26,11 @@
                     <li><a href="/flashcards/">Flashcards</a></li>
                     <li><a href="/duvidas/">Central de dúvidas</a></li>
                     <li><a href="/chat/">Chat</a></li>
-                    <li><a href="/cadastro/" class="btn">Entrar</a></li>
+                    {% if request.user.is_authenticated %}
+                    <li><a href="/logout/" class="btn">Sair</a></li>
+                {% else %}
+                    <li><a href="/login/" class="btn">Entrar</a></li>
+                {% endif %}
                 </ul>
             </nav>
         </div>

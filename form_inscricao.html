@@ -31,6 +31,11 @@
                     <li><a href="/duvidas/">Central de dúvidas</a></li>
                     <li><a href="/chat/">Chat</a></li>
                     <li><a href="/cadastro/" class="btn">Entrar</a></li>
+                    {% if request.user.is_authenticated %}
+                    <li><a href="/logout/" class="btn">Sair</a></li>
+                {% else %}
+                    <li><a href="/login/" class="btn">Entrar</a></li>
+                {% endif %}
                 </ul>
             </nav>
         </div>
@@ -43,7 +48,7 @@
                     <span class="blue-icon"></span>
                     <h1>Inscrição em Turma</h1>
                 </div>
-                <p class="subtitle">Inscreva um aluno em uma turma específica.</p>
+                <p class="subtitle">Inscreva-se em uma turma específica.</p>
             </div>
         </header>
 
@@ -69,5 +74,38 @@
             </form>
         </section>
     </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const mapping = {{ mapping_json|safe }};
+            const disciplinaSelect = document.getElementById("id_disciplina");
+            const codigoTurmaSelect = document.getElementById("id_codigo_turma");
+
+            function updateTurmas() {
+                const discId = disciplinaSelect.value;
+                const selectedCode = codigoTurmaSelect.value;
+                
+                // Clear and add placeholder
+                codigoTurmaSelect.innerHTML = '<option value="">---------</option>';
+                
+                if (discId && mapping[discId]) {
+                    mapping[discId].forEach(function(code) {
+                        const option = document.createElement("option");
+                        option.value = code;
+                        option.textContent = code;
+                        if (code === selectedCode) {
+                            option.selected = true;
+                        }
+                        codigoTurmaSelect.appendChild(option);
+                    });
+                }
+            }
+
+            if (disciplinaSelect && codigoTurmaSelect) {
+                disciplinaSelect.addEventListener("change", updateTurmas);
+                updateTurmas(); 
+            }
+        });
+    </script>
 </body>
 </html>

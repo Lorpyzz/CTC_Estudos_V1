@@ -8,14 +8,13 @@ views_path = os.path.join(base_dir, 'ctcEstudos', 'views.py')
 with open(views_path, 'r', encoding='utf-8') as f:
     views_content = f.read()
 
-# Remove comments
 views_content = re.sub(r'(?m)^\s*#.*$', '', views_content)
 
-# Add messages import
+
 if 'from django.contrib import messages' not in views_content:
     views_content = views_content.replace('from django.shortcuts import render, redirect', 'from django.shortcuts import render, redirect\nfrom django.contrib import messages')
 
-# Inject messages into views
+
 for form_name in ['DisciplinaForm', 'TurmaForm', 'SessaoEstudoForm', 'InscricaoTurmaForm', 'TopicoForm', 'AlunoForm']:
     pattern = rf"""(form = {form_name}\(request\.POST\)\s+if form\.is_valid\(\):\s+form\.save\(\))(\s+return redirect\('[^']+'\))"""
     replacement = rf"\1\n            messages.success(request, 'Cadastro realizado com sucesso!')\2"
@@ -28,12 +27,11 @@ for form_name in ['DisciplinaForm', 'TurmaForm', 'SessaoEstudoForm', 'InscricaoT
 with open(views_path, 'w', encoding='utf-8') as f:
     f.write(views_content)
 
-# 2. Update forms.py
+
 forms_path = os.path.join(base_dir, 'ctcEstudos', 'forms.py')
 with open(forms_path, 'r', encoding='utf-8') as f:
     forms_content = f.read()
 
-# Fix TurmaForm clean_disciplina
 forms_content = forms_content.replace("""        if not disciplina:
             disciplina = Disciplina.objects.filter(nome__iexact=val).first()
             
@@ -43,7 +41,6 @@ forms_content = forms_content.replace("""        if not disciplina:
             if not disciplina:
                 raise forms.ValidationError("Disciplina não encontrada com esse código/nome.")""")
 
-# Add custom validations to other forms
 validation_code = """
 
     def clean(self):
@@ -56,13 +53,13 @@ validation_code = """
 if 'def clean(self):' not in forms_content.split('class InscricaoTurmaForm')[1].split('class TopicoForm')[0]:
     forms_content = forms_content.replace("        }", "        }" + validation_code, 1) # Insert in InscricaoTurmaForm
 
-# Remove comments
+
 forms_content = re.sub(r'(?m)^\s*#.*$', '', forms_content)
 
 with open(forms_path, 'w', encoding='utf-8') as f:
     f.write(forms_content)
 
-# 3. Update HTML files
+
 emoji_pattern = re.compile(r'[\U00010000-\U0010ffff]', flags=re.UNICODE)
 messages_html = """
         {% if messages %}
@@ -82,16 +79,8 @@ for filename in os.listdir(base_dir):
         with open(filepath, 'r', encoding='utf-8') as f:
             html_content = f.read()
 
-        # Remove HTML comments
         html_content = re.sub(r'<!--.*?-->', '', html_content, flags=re.DOTALL)
-        
-        # Remove emojis
-        html_content = emoji_pattern.sub('', html_content)
-        # Also remove some known text-based icons if they didn't match the unicode range
-        for e in ['📝', '📚', '➤', '🎓', '👤', '👨‍🏫', '👨‍🎓', '📘', '⚙️', '📖', '⏱️']:
-            html_content = html_content.replace(e, '')
 
-        # Insert messages block right after <section class="form-card">
         if '{% if messages %}' not in html_content:
             html_content = html_content.replace('<section class="form-card">', f'<section class="form-card">{messages_html}')
 

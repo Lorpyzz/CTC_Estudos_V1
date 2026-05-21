@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -12,16 +13,27 @@
     <!-- <link rel="stylesheet" href="turmas.css"> -->
 </head>
 <body>
-    <nav class="glass-nav">
-        <ul>
-            <li><a href="/">Inicio</a></li>
-            <li><a href="/disciplinas/">Disciplina</a></li>
-            <li><a href="/turmas/" class="active">Minhas Turmas</a></li>
-            <li><a href="/flashcards/">Flashcards</a></li>
-            <li><a href="/duvidas/">Central de Dúvidas</a></li>
-            <li><a href="/chat/">Chat</a></li>
-        </ul>
-    </nav>
+    <div class="navbar">
+        <div class="logo">
+            <img src="{% static 'site-logo.png' %}" width="60px">
+            <h2>CTC estudos</h2>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="/">Início</a></li>
+                <li><a href="/disciplinas/">Disciplinas</a></li>
+                <li><a href="/turmas/" class="active">Minhas Turmas</a></li>
+                <li><a href="/flashcards/">Flashcards</a></li>
+                <li><a href="/duvidas/">Central de dúvidas</a></li>
+                <li><a href="/chat/">Chat</a></li>
+                {% if request.user.is_authenticated %}
+                    <li><a href="/logout/" class="btn-nav-login">Sair</a></li>
+                {% else %}
+                    <li><a href="/login/" class="btn-nav-login">Entrar</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
     
     <header class="hero-header">
         <h1>Minhas Turmas</h1>
@@ -34,79 +46,41 @@
         </div>
 
         <div class="turmas-grid">
-            <!-- Card Turma 1 -->
-            <div class="turma-card">
-                <div class="card-header math-bg">
-                    <span class="status-badge active">Em andamento</span>
-                    <h2>Matemática Avançada</h2>
-                </div>
-                <div class="card-body">
-                    <p class="professor">Prof. Carlos Silva</p>
-                    <p class="description">Cálculo integral, derivadas e álgebra linear aplicada.</p>
-                    <div class="progress-container">
-                        <div class="progress-info">
-                            <span>Progresso</span>
-                            <span>65%</span>
+            {% if request.user.is_authenticated %}
+                {% if inscricoes %}
+                    {% for inscricao in inscricoes %}
+                        <div class="turma-card {% if inscricao.concluida %}opacity-card{% endif %}">
+                            <div class="card-header {% if forloop.counter0|divisibleby:3 %}math-bg{% elif forloop.counter0|divisibleby:2 %}prog-bg{% else %}hist-bg{% endif %}">
+                                <span class="status-badge {% if inscricao.concluida %}completed{% else %}active{% endif %}">
+                                    {% if inscricao.concluida %}Concluída{% else %}Em andamento{% endif %}
+                                </span>
+                                <h2>{{ inscricao.turma.disciplina.nome }}</h2>
+                            </div>
+                            <div class="card-body">
+                                <p class="professor">Prof. {{ inscricao.turma.professor.nome }}</p>
+                                <p class="description">Turma: {{ inscricao.turma.codigo_turma }} | Semestre: {{ inscricao.turma.semestre }}</p>
+                                <p class="description">Horário: {{ inscricao.turma.horario }}</p>
+                                {% if inscricao.nota_final is not None %}
+                                    <p class="description"><b>Nota Final:</b> {{ inscricao.nota_final }}</p>
+                                {% endif %}
+                            </div>
+                            <div class="card-footer">
+                                <a href="/disciplinas/{{ inscricao.turma.disciplina.nome|slugify }}/" class="btn-secondary">Acessar Disciplina</a>
+                            </div>
                         </div>
-                        <div class="progress-bar">
-                            <div class="progress-fill" style="width: 65%;"></div>
-                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div style="grid-column: 1 / -1; text-align: center; padding: 40px; background: rgba(255, 255, 255, 0.8); border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+                        <p style="color: #6b7280; font-size: 18px; margin-bottom: 20px;">Você não está inscrito em nenhuma turma ainda.</p>
+                        <a href="{% url 'form_inscricao' %}" class="btn-primary-small" style="text-decoration: none; display: inline-block; padding: 10px 20px;">Inscrever-se em uma Turma</a>
                     </div>
+                {% endif %}
+            {% else %}
+                <div style="grid-column: 1 / -1; text-align: center; padding: 40px; background: rgba(255, 255, 255, 0.8); border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+                    <p style="color: #6b7280; font-size: 18px; margin-bottom: 20px;">Faça login para ver suas turmas inscritas.</p>
+                    <a href="/login/" class="btn-primary-small" style="text-decoration: none; display: inline-block; padding: 10px 20px;">Fazer Login</a>
                 </div>
-                <div class="card-footer">
-                    <a href="#" class="btn-secondary">Ver Material</a>
-                    <a href="#" class="btn-primary-small">Acessar Aula</a>
-                </div>
-            </div>
-
-            <!-- Card Turma 2 -->
-            <div class="turma-card">
-                <div class="card-header prog-bg">
-                    <span class="status-badge active">Em andamento</span>
-                    <h2>Lógica de Programação</h2>
-                </div>
-                <div class="card-body">
-                    <p class="professor">Prof. Amanda Sousa</p>
-                    <p class="description">Fundamentos de algoritmos, estruturas de dados e Python.</p>
-                    <div class="progress-container">
-                        <div class="progress-info">
-                            <span>Progresso</span>
-                            <span>90%</span>
-                        </div>
-                        <div class="progress-bar">
-                            <div class="progress-fill prog-fill" style="width: 90%;"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-footer">
-                    <a href="#" class="btn-secondary">Ver Material</a>
-                    <a href="#" class="btn-primary-small">Acessar Aula</a>
-                </div>
-            </div>
-
-            <!-- Card Turma 3 -->
-            <div class="turma-card opacity-card">
-                <div class="card-header hist-bg">
-                    <span class="status-badge completed">Concluída</span>
-                    <h2>História do Brasil</h2>
-                </div>
-                <div class="card-body">
-                    <p class="professor">Prof. João Mendes</p>
-                    <p class="description">Do período colonial até a república contemporânea.</p>
-                    <div class="progress-container">
-                        <div class="progress-info">
-                            <span>Progresso</span>
-                            <span>100%</span>
-                        </div>
-                        <div class="progress-bar">
-                            <div class="progress-fill success-fill" style="width: 100%;"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-footer">
-                    <a href="#" class="btn-secondary full-width text-center">Revisar Conteúdo</a>
-                </div>
-            </div>
+            {% endif %}
         </div>
     </main>
 </body>
