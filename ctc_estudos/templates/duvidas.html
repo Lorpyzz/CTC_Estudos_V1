@@ -1,15 +1,24 @@
-{% extends "base.html" %}
 {% load static %}
-
-{% block title %}Duvidas{% endblock %}
-
-{% block content %}
-    <link rel="stylesheet" href="{% static 'css/duvidas.css' %}">
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CTC-ESTUDOS</title>
+    <link rel="stylesheet" href="{% static 'duvidas.css' %}">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    
-
+    <nav>
+        <ul>
+            <li><a href="/">Inicio</a></li>
+            <li><a href="/disciplinas/">Disciplina</a></li>
+            <li><a href="/turmas/">Minhas Turmas</a></li>
+            <li><a href="/flashcards/">Flashcards</a></li>
+            <li><a href="/duvidas/">Central de Dúvidas</a></li>
+            <li><a href="/chat/">Chat</a></li>
+        </ul>
+    </nav>
 
     <div class="main-container">
         <header class="header-section">
@@ -23,7 +32,7 @@
             <button id="btn-toggle-form" class="btn-blue" onclick="toggleForm()">Nova Dúvida</button>
         </header>
 
-        <!-- FORMULÁRIO DE NOVA DÚVIDA -->
+
         <section id="form-nova-duvida" class="form-card" style="display: none;">
             <input type="text" placeholder="Título da dúvida" class="form-input">
             
@@ -72,7 +81,6 @@
             </select>
         </div>
 
-        <!-- FEED DE DÚVIDAS -->
         <div class="doubts-feed">
             <!-- Card 1: Recursão -->
             <div class="doubt-card" onclick="toggleCard(this)">
@@ -102,7 +110,6 @@
                 </div>
             </div>
 
-            <!-- Card 2 -->
             <div class="doubt-card" onclick="toggleCard(this)">
                 <div class="card-header">
                     <div class="meta-info">
@@ -150,7 +157,6 @@
         </div>
     </div>
 
-    <!-- MENSAGEM DE ERRO (ALERTA VERMELHO) -->
     <div id="error-toast" class="error-toast">
         <span>Faça login para publicar</span>
         <button class="close-toast" onclick="hideError()">×</button>

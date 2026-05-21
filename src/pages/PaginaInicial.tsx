@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import './PaginaInicial.css'; 
 
-const LandingPage: React.FC = () => {
+const Inicial: React.FC = () => {
   const navigate = useNavigate();
 
   return (
@@ -19,7 +19,7 @@ const LandingPage: React.FC = () => {
           <a href="#" className="nav-link">Flashcards</a>
           <a href="#" className="nav-link">Central de Dúvidas</a>
           <a href="#" className="nav-link">Chat</a>
-          <button className="btn-entrar-nav" onClick={() => navigate('/auth')}>
+          <button className="btn-entrar-nav" onClick={() => navigate('/cadastro/')}>
             Entrar
           </button>
         </div>
@@ -35,10 +35,10 @@ const LandingPage: React.FC = () => {
         </p>
 
         <div className="hero-buttons">
-          <button className="btn-primary" onClick={() => navigate('/disciplinas')}>
+          <button className="btn-primary" onClick={() => window.location.href = '/disciplinas/'}>
             Explorar Disciplinas &rarr;
           </button>
-          <button className="btn-secondary" onClick={() => navigate('/auth')}>
+          <button className="btn-secondary" onClick={() => navigate('/cadastro/')}>
             Fazer Login
           </button>
         </div>
@@ -47,4 +47,4 @@ const LandingPage: React.FC = () => {
   );
 };
 
-export default LandingPage;
+export default Inicial;

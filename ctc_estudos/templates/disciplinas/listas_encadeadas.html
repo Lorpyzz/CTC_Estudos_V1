@@ -1,9 +1,10 @@
+{% load static %}
 <!DOCTYPE HTML>
 <html>
 <head>
     <meta charset="UFT-8">
     <title>Programacao</title>
-    <link rel="stylesheet" href = "programacao.css">
+    <link rel="stylesheet" href="{% static 'programacao.css' %}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
@@ -11,6 +12,27 @@
 <body>
 
 
+    <div class="container">
+        <div class="navbar">
+            <div class = logo>
+                <img src="{% static 'site-logo.png' %}"width = "60px">
+                <h2>CTC estudos</h2>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="/">Início</a></li>
+                    <li><a href="/disciplinas/">Disciplinas</a></li>
+            <li><a href="/turmas/">Minhas Turmas</a></li>
+                    <li><a href="/flashcards/">Flashcards</a></li>
+                    <li><a href="/duvidas/">Central de dúvidas</a></li>
+                    <li><a href="/chat/">Chat</a></li>
+                    {% if request.user.is_authenticated %}
+                    <li><a href="/logout/" class="btn">Sair</a></li>
+                {% else %}
+                    <li><a href="/login/" class="btn">Entrar</a></li>
+                {% endif %}
+                </ul>
+            </nav>
 
     <nav>
         <div class="logo">
@@ -30,10 +52,11 @@
     <div class="container">
         <div class=""row>
             <div class="col"></div>
-                <button class="btn1" onclick="document.location='disciplinas.html'"> &#8592 Voltar para disciplinas</button>
+                <button class="btn1" onclick="document.location='/disciplinas/'"> &#8592 Voltar para disciplinas</button>
             <div class="col"></div>    
                 <button class="btn1" onclick="document.location='programacao.html'"> &#8592 Voltar para materiais</button>
     </div>
+        <div style="margin: 20px 0;"><input type="file" id="file_input" style="display: none;"><button class="btn" onclick="document.getElementById('file_input').click()">Adicionar conteúdo</button></div>
     Listas Encadeadas
 
 <br>Listas encadeadas são estruturas de dados lineares onde cada elemento (nó) contém um valor e um ponteiro para o próximo nó.
