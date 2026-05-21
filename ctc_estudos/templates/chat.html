@@ -1,0 +1,253 @@
+<script>
+
+const JSON_URL = '/static/json/mensagens_iniciais.json';
+const STORAGE_KEY = 'ctc_chat_data';
+
+
+// CARREGA DADOS
+async function loadChatData() {
+
+    let localData = localStorage.getItem(STORAGE_KEY);
+
+    if (localData) {
+        return JSON.parse(localData);
+    }
+
+    try {
+
+        const response = await fetch(JSON_URL);
+        const data = await response.json();
+
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+
+        return data;
+
+    } catch (error) {
+
+        console.error("Erro ao carregar JSON:", error);
+        return {};
+    }
+}
+
+
+// SALVA DADOS
+function saveChatData(data) {
+
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+}
+
+
+// SELECIONA CHAT
+async function selectChat(element, name, initial) {
+
+    document.querySelectorAll('.chat-item')
+        .forEach(item => item.classList.remove('active'));
+
+    element.classList.add('active');
+
+    document.getElementById('chat-title').innerText = name;
+    document.getElementById('header-avatar').innerText = initial;
+
+    const container = document.getElementById('messages-container');
+
+    container.innerHTML = "";
+
+    const allData = await loadChatData();
+
+    if (allData[name] && allData[name].length > 0) {
+
+        allData[name].forEach(msg => {
+
+            addMessageToUI(
+                msg.sender,
+                msg.text,
+                msg.time,
+                msg.type
+            );
+        });
+
+    } else {
+
+        container.innerHTML =
+            `<div class="empty-msg">Nenhuma mensagem ainda.</div>`;
+    }
+
+    container.scrollTop = container.scrollHeight;
+}
+
+
+// ENVIA MENSAGEM
+async function sendMessage() {
+
+    const input = document.getElementById('message-input');
+
+    const text = input.value.trim();
+
+    const chatTitle =
+        document.getElementById('chat-title').innerText;
+
+    if (text === "") return;
+
+    const now = new Date();
+
+    const timeStr =
+        now.getHours() +
+        ":" +
+        now.getMinutes().toString().padStart(2, '0');
+
+    // REMOVE MENSAGEM VAZIA
+    const emptyMsg = document.querySelector('.empty-msg');
+
+    if (emptyMsg) {
+        emptyMsg.remove();
+    }
+
+    // ADICIONA NA TELA
+    addMessageToUI(
+        "Você",
+        text,
+        timeStr,
+        "sent"
+    );
+
+    // SALVA NO "BANCO"
+    const allData = await loadChatData();
+
+    if (!allData[chatTitle]) {
+        allData[chatTitle] = [];
+    }
+
+    allData[chatTitle].push({
+
+        sender: "Você",
+        text: text,
+        time: timeStr,
+        type: "sent"
+
+    });
+
+    saveChatData(allData);
+
+    input.value = "";
+
+    const container =
+        document.getElementById('messages-container');
+
+    container.scrollTop = container.scrollHeight;
+}
+
+
+// CRIA CHAT
+function createNewChat() {
+
+    const chatList =
+        document.getElementById('chat-list');
+
+    const newChat =
+        document.createElement('div');
+
+    const now = new Date();
+
+    const timeStr =
+        now.getHours() +
+        ":" +
+        now.getMinutes().toString().padStart(2, '0');
+
+    const nomeChat =
+        "Novo Chat " +
+        (document.querySelectorAll('.chat-item').length + 1);
+
+    newChat.className = 'chat-item';
+
+    newChat.onclick = function () {
+
+        selectChat(
+            this,
+            nomeChat,
+            'NC'
+        );
+    };
+
+    newChat.innerHTML = `
+
+        <div class="avatar light-blue">
+            NC
+        </div>
+
+        <div class="chat-info">
+
+            <div class="chat-top">
+
+                <strong>${nomeChat}</strong>
+
+                <span class="time">
+                    ${timeStr}
+                </span>
+
+            </div>
+
+            <p class="preview">
+                Nenhuma mensagem ainda
+            </p>
+
+        </div>
+    `;
+
+    chatList.prepend(newChat);
+
+    newChat.click();
+}
+
+
+// ADICIONA MENSAGEM NA TELA
+function addMessageToUI(sender, text, time, type) {
+
+    const container =
+        document.getElementById('messages-container');
+
+    const messageDiv =
+        document.createElement('div');
+
+    messageDiv.className =
+        `message-row ${type}`;
+
+    messageDiv.innerHTML = `
+
+        <div class="avatar-small ${type === 'sent'
+            ? 'user-blue'
+            : 'gray'}">
+
+            ${sender[0]}
+
+        </div>
+
+        <div class="message-content">
+
+            <span class="sender-name">
+
+                ${sender}
+                <small>${time}</small>
+
+            </span>
+
+            <div class="bubble">
+                ${text}
+            </div>
+
+        </div>
+    `;
+
+    container.appendChild(messageDiv);
+}
+
+
+// ENTER
+function handleKeyPress(e) {
+
+    if (e.key === 'Enter') {
+
+        sendMessage();
+    }
+}
+
+</script>

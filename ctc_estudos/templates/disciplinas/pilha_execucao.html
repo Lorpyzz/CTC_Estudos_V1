@@ -1,0 +1,79 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="UFT-8">
+    <title>Programacao</title>
+    <link rel="stylesheet" href = "programacao.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <nav>
+        <div class="logo">
+            <img src="site-logo.png" width="60px">
+            <h2 class="logo-nome">CTC estudos</h2>
+        </div>
+        <ul>
+            <li><a href="../index.html">Inicio</a></li>
+            <li><a href="disciplinas.html" class="active">Disciplina</a></li>
+            <li><a href="../flashcards.html">Flashcards</a></li>
+            <li><a href="../duvidas.html">Central de Dúvidas</a></li>
+            <li><a href="../chat.html">Chat</a></li>
+        </ul>
+    </nav>
+    <hr class="divider">
+
+    <div class="container">
+        <div class=""row>
+            <div class="col"></div>
+                <button class="btn1" onclick="document.location='disciplinas.html'"> &#8592 Voltar para disciplinas</button>
+            <div class="col"></div>    
+                <button class="btn1" onclick="document.location='software_basico.html'"> &#8592 Voltar para materiais</button>
+    </div>
+    Aula: Pilha de Execução (Call Stack)
+
+    <br>Conceitos:
+    
+    <br>• A pilha cresce de endereços altos para baixos
+    
+    <br>• Cada chamada de função cria um stack frame
+    
+    <br>• RSP aponta para o topo da pilha
+    
+    <br> • RBP marca a base do frame atual
+    
+    <br>Stack Frame contém:
+    
+    <br> 1. Endereço de retorno (colocado por CALL)
+    
+    <br>2. RBP salvo (base do frame anterior)
+    
+    <br>3. Variáveis locais
+    
+    <br>4. Registradores salvos
+    
+    <br>Prólogo da função:
+    
+    <br>push rbp
+    
+    <br>mov rbp, rsp
+    
+    <br>sub rsp, N
+    
+    <br>Epílogo:
+    
+    <br>mov rsp, rbp
+    
+    <br>pop rbp
+    
+    <br>ret
+    
+    <br>Buffer overflow: quando escrevemos além do espaço alocado na pilha, sobrescrevendo o endereço de retorno.
+    
+    <br>Duração: ~55 minutos
+    
+    <br>*Material complementar da disciplina INF1018 — PUC-Rio*
+</body>
+</html>

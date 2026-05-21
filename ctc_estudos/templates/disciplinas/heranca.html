@@ -1,0 +1,73 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="UFT-8">
+    <title>Programacao</title>
+    <link rel="stylesheet" href = "programacao.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+</head>
+<body>
+
+
+    <nav>
+        <div class="logo">
+            <img src="site-logo.png" width="60px">
+            <h2 class="logo-nome">CTC estudos</h2>
+        </div>
+        <ul>
+            <li><a href="../index.html">Inicio</a></li>
+            <li><a href="disciplinas.html" class="active">Disciplina</a></li>
+            <li><a href="../flashcards.html">Flashcards</a></li>
+            <li><a href="../duvidas.html">Central de Dúvidas</a></li>
+            <li><a href="../chat.html">Chat</a></li>
+        </ul>
+    </nav>
+    <hr class="divider">
+
+
+    <div class="container">
+        <div class=""row>
+            <div class="col"></div>
+                <button class="btn1" onclick="document.location='disciplinas.html'"> &#8592 Voltar para disciplinas</button>
+            <div class="col"></div>    
+                <button class="btn1" onclick="document.location='programacao_o_o.html'"> &#8592 Voltar para materiais</button>
+    </div>
+    <br>Herança e Polimorfismo
+
+    <br>Herança permite que uma classe (filha) herde atributos e métodos de outra (pai).
+    
+    <br>public class Animal {
+    
+        <br>protected String nome;
+    
+        <br>public void falar() { System.out.println("..."); }
+    
+        <br>}
+    
+        <br> public class Cachorro extends Animal {
+    
+            <br>@Override
+    
+            <br> public void falar() { System.out.println("Au au!"); }
+    
+            <br> }
+    
+            <br>Polimorfismo: objetos de classes diferentes respondem à mesma mensagem de formas diferentes.
+    
+            <br>Animal a = new Cachorro();
+    
+            <br>a.falar();
+    
+            <br>Tipos:
+    
+            <br>• Polimorfismo de subtipo (herança)
+    
+            <br>• Polimorfismo paramétrico (generics)
+    
+            <br>• Sobrecarga (overloading)
+    
+            <br>Princípio de Substituição de Liskov: objetos de uma classe filha devem poder substituir objetos da classe pai sem alterar o comportamento correto do programa.
+</body>
+</html>
