@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minhas Turmas - CTC-ESTUDOS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'turmas.css' %}">
+    <!-- Para desenvolvimento local sem django template tags de CSS: -->
+    <!-- <link rel="stylesheet" href="turmas.css"> -->
+</head>
+<body>
+    <nav class="glass-nav">
+        <ul>
+            <li><a href="/">Inicio</a></li>
+            <li><a href="/disciplinas/">Disciplina</a></li>
+            <li><a href="/turmas/" class="active">Minhas Turmas</a></li>
+            <li><a href="/flashcards/">Flashcards</a></li>
+            <li><a href="/duvidas/">Central de Dúvidas</a></li>
+            <li><a href="/chat/">Chat</a></li>
+        </ul>
+    </nav>
+    
+    <header class="hero-header">
+        <h1>Minhas Turmas</h1>
+        <p>Acompanhe seu progresso e gerencie as turmas em que você está inscrito.</p>
+    </header>
+
+    <main class="container">
+        <div class="search-bar">
+            <input type="text" placeholder="Buscar turmas..." class="search-input">
+        </div>
+
+        <div class="turmas-grid">
+            <!-- Card Turma 1 -->
+            <div class="turma-card">
+                <div class="card-header math-bg">
+                    <span class="status-badge active">Em andamento</span>
+                    <h2>Matemática Avançada</h2>
+                </div>
+                <div class="card-body">
+                    <p class="professor">Prof. Carlos Silva</p>
+                    <p class="description">Cálculo integral, derivadas e álgebra linear aplicada.</p>
+                    <div class="progress-container">
+                        <div class="progress-info">
+                            <span>Progresso</span>
+                            <span>65%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 65%;"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="#" class="btn-secondary">Ver Material</a>
+                    <a href="#" class="btn-primary-small">Acessar Aula</a>
+                </div>
+            </div>
+
+            <!-- Card Turma 2 -->
+            <div class="turma-card">
+                <div class="card-header prog-bg">
+                    <span class="status-badge active">Em andamento</span>
+                    <h2>Lógica de Programação</h2>
+                </div>
+                <div class="card-body">
+                    <p class="professor">Prof. Amanda Sousa</p>
+                    <p class="description">Fundamentos de algoritmos, estruturas de dados e Python.</p>
+                    <div class="progress-container">
+                        <div class="progress-info">
+                            <span>Progresso</span>
+                            <span>90%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill prog-fill" style="width: 90%;"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="#" class="btn-secondary">Ver Material</a>
+                    <a href="#" class="btn-primary-small">Acessar Aula</a>
+                </div>
+            </div>
+
+            <!-- Card Turma 3 -->
+            <div class="turma-card opacity-card">
+                <div class="card-header hist-bg">
+                    <span class="status-badge completed">Concluída</span>
+                    <h2>História do Brasil</h2>
+                </div>
+                <div class="card-body">
+                    <p class="professor">Prof. João Mendes</p>
+                    <p class="description">Do período colonial até a república contemporânea.</p>
+                    <div class="progress-container">
+                        <div class="progress-info">
+                            <span>Progresso</span>
+                            <span>100%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill success-fill" style="width: 100%;"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="#" class="btn-secondary full-width text-center">Revisar Conteúdo</a>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

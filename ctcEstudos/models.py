@@ -9,13 +9,12 @@ class User(AbstractUser):
     Centraliza a identidade do Aluno e suas permissões.
     Todo monitor é obrigatoriamente um usuário/aluno do sistema.
     """
+    nome = models.CharField(max_length=100)
     matricula = models.CharField(max_length=15, unique=True)
-    is_monitor = models.BooleanField(default=False)
     data_nasc = models.DateField(null=True, blank=True)
 
     def __str__(self):
-        nome = self.first_name if self.first_name else self.username
-        return f"{self.matricula} - {nome}"
+        return f"{self.matricula} - {self.nome or self.username}"
 
 
 class Professor(models.Model):
@@ -34,6 +33,7 @@ class Disciplina(models.Model):
     codigo = models.CharField(max_length=10, unique=True)
     descricao = models.TextField(blank=True, null=True)
     departamento = models.CharField(max_length=50)
+    email = models.EmailField(max_length=100, blank=True, null=True)
     
     def __str__(self):
         return f"{self.codigo} - {self.nome}"
@@ -51,7 +51,7 @@ class Turma(models.Model):
     )
     codigo_turma = models.CharField(max_length=3) # Ex: "33A"
     semestre = models.CharField(max_length=6) # Ex: 2026.1
-    horario = models.CharField(max_length=100) # Ex: "3ª e 5ª às 11:00"
+    horario = models.CharField(max_length=100) # Ex: "3ª e 5ª 11:00-13:00"
 
     alunos = models.ManyToManyField(
         User, 
@@ -85,7 +85,7 @@ class Topico(models.Model):
         on_delete=models.CASCADE, 
         related_name='topicos' 
     )
-    titulo = models.CharField(max_length=200) 
+    titulo_topico = models.CharField(max_length=200) 
 
     class Meta:
         verbose_name = "Tópico"
@@ -115,7 +115,6 @@ class Monitoria(models.Model):
     monitor = models.ForeignKey(
         User, 
         on_delete=models.CASCADE, 
-        limit_choices_to={'is_monitor': True}, 
         related_name='monitorias'
     )
     disciplina = models.ForeignKey(

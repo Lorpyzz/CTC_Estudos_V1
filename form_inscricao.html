@@ -1,0 +1,73 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inscrição em Turma - CTC-ESTUDOS</title>
+    <link rel="stylesheet" href="{% static 'disciplinas.css' %}">
+    <link rel="stylesheet" href="{% static 'duvidas.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .main-container { max-width: 600px; margin: 40px auto; }
+        .form-card form p { margin-bottom: 15px; }
+        .form-card label { display: block; margin-bottom: 5px; font-weight: 600; color: #374151; }
+        .container { max-width: 1300px; margin: auto; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="navbar">
+            <div class="logo">
+                <img src="{% static 'site-logo.png' %}" width="60px">
+                <h2>CTC estudos</h2>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="/">Início</a></li>
+                    <li><a href="/disciplinas/">Disciplinas</a></li>
+            <li><a href="/turmas/">Minhas Turmas</a></li>
+                    <li><a href="/flashcards/">Flashcards</a></li>
+                    <li><a href="/duvidas/">Central de dúvidas</a></li>
+                    <li><a href="/chat/">Chat</a></li>
+                    <li><a href="/cadastro/" class="btn">Entrar</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <header class="header-section">
+            <div class="title-group">
+                <div class="icon-title">
+                    <span class="blue-icon"></span>
+                    <h1>Inscrição em Turma</h1>
+                </div>
+                <p class="subtitle">Inscreva um aluno em uma turma específica.</p>
+            </div>
+        </header>
+
+        <section class="form-card">
+        {% if messages %}
+        <div style="margin-bottom: 20px;">
+            {% for message in messages %}
+            <div style="padding: 10px; border-radius: 5px; {% if message.tags == 'error' %}background-color: #f8d7da; color: #721c24;{% else %}background-color: #d4edda; color: #155724;{% endif %}">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+            <form method="POST">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <div style="margin-top: 20px;">
+                    <button type="submit" class="btn-publicar">
+                        <span class="send-icon"></span> Confirmar Inscrição
+                    </button>
+                </div>
+            </form>
+        </section>
+    </div>
+</body>
+</html>

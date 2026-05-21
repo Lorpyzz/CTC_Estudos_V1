@@ -22,6 +22,7 @@
                 <ul>
                     <li><a href="/">Início</a></li>
                     <li><a href="/disciplinas/">Disciplinas</a></li>
+            <li><a href="/turmas/">Minhas Turmas</a></li>
                     <li><a href="/flashcards/">Flashcards</a></li>
                     <li><a href="/duvidas/">Central de dúvidas</a></li>
                     <li><a href="/chat/">Chat</a></li>
@@ -33,11 +34,18 @@
             <div class="col-2">
                 <h1>Disciplinas</h1>
                 <p>Encontre materiais e recursos para suas disciplinas do CTC.</p>
+                <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px;">
+                    <a href="{% url 'form_turma' %}" class="btn">Criar Turma</a>
+                    <a href="{% url 'form_sessao_estudo' %}" class="btn">Criar Sessão de Estudo</a>
+                    <a href="{% url 'form_disciplina' %}" class="btn">Criar Disciplina</a>
+                    <a href="{% url 'form_inscricao' %}" class="btn">Inscrever-se em uma Turma</a>
+                </div>
             </div>
         </div>
     </div>
 
     <div class="disciplinas">
+        <!-- Disciplinas Fixas (Hardcoded) -->
         <div class="row">
             <div class="col-3">
                 <button class="btn1" onclick="document.location='/disciplinas/programacao/'"><div class="codigo"><b>INF1007</b></div><h3>Programação II</h3><br><p style = "color:#747474;"> Informática</p><br><p style ="color:#3ea5ef;">Ver conteúdos &#8594;</p></button>
@@ -60,6 +68,23 @@
                 <button class="btn1" onclick="document.location='/disciplinas/fisica_I/'"><div class="codigo"><b>FIS1033</b></div><h3>Física I</h3><br><p style = "color:#747474;"> Física</p><br><p style ="color:#3ea5ef;">Ver conteúdos &#8594;</p></button>
             </div>
         </div>
+
+        <!-- Disciplinas Dinâmicas (Criadas pelo usuário e salvas no BD) -->
+        {% if disciplina %}
+        <h2 style="margin-top: 40px; margin-bottom: 20px; padding-left: 20px; color: #374151;">Disciplinas Adicionadas</h2>
+        <div class="row" style="flex-wrap: wrap;">
+            {% for d in disciplina %}
+            <div class="col-3" style="min-width: 300px; margin-bottom: 20px;">
+                <button class="btn1" onclick="document.location='/disciplinas/{{ d.nome|slugify }}/'">
+                    <div class="codigo"><b>{{ d.codigo }}</b></div>
+                    <h3>{{ d.nome }}</h3><br>
+                    <p style="color:#747474;"> {{ d.departamento }}</p><br>
+                    <p style="color:#3ea5ef;">Ver conteúdos &#8594;</p>
+                </button>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
     </div>
    
 

@@ -4,33 +4,93 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CTC-ESTUDOS</title>
+    <title>Flashcards - CTC-ESTUDOS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'flashcards.css' %}">
 </head>
 <body>
-    <nav>
+    <nav class="glass-nav">
         <ul>
-            <li>
-                <a href="/">Inicio</a>
-            </li>
-            <li>
-                <a href="/disciplinas/">Disciplina</a>
-            </li>
-            <li>
-                <a href="/flashcards/">Flashcards</a>
-            </li>
-            <li>
-                <a href="/duvidas/">Central de Dúvidas</a>
-            </li>
-            <li>
-                <a href="/chat/">Chat</a>
-            </li>
+            <li><a href="/">Inicio</a></li>
+            <li><a href="/disciplinas/">Disciplina</a></li>
+            <li><a href="/turmas/">Minhas Turmas</a></li>
+            <li><a href="/flashcards/" class="active">Flashcards</a></li>
+            <li><a href="/duvidas/">Central de Dúvidas</a></li>
+            <li><a href="/chat/">Chat</a></li>
         </ul>
     </nav>
-    <header>
-        <h1>Flashcards</h1>
+    
+    <header class="hero-header">
+        <h1>Meus Flashcards</h1>
         <p>Crie decks por disciplina e revise com repetição espaçada inteligente.</p>
     </header>
 
+    <main class="container">
+        <section class="actions-section">
+            <button id="btn-create-flashcard" class="btn-primary" onclick="toggleForm()">
+                <span class="icon">+</span> Criar Novo Flashcard
+            </button>
+        </section>
+
+        <section id="create-flashcard-form" class="form-section hidden">
+            <div class="glass-card form-card">
+                <h2>Criar Flashcard</h2>
+                <form action="#" method="POST">
+                    <div class="input-group">
+                        <label for="disciplina">Disciplina</label>
+                        <select id="disciplina" name="disciplina" required>
+                            <option value="">Selecione uma disciplina...</option>
+                            <option value="matematica">Matemática</option>
+                            <option value="historia">História</option>
+                            <option value="programacao">Programação</option>
+                        </select>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="frente">Frente (Pergunta)</label>
+                        <textarea id="frente" name="frente" rows="3" placeholder="Ex: O que é encapsulamento?" required></textarea>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="verso">Verso (Resposta)</label>
+                        <textarea id="verso" name="verso" rows="4" placeholder="Ex: É o mecanismo de esconder detalhes de implementação..." required></textarea>
+                    </div>
+
+                    <button type="submit" class="btn-submit">Salvar Flashcard</button>
+                </form>
+            </div>
+        </section>
+
+        <section class="example-section">
+            <h2 class="section-title">Exemplo de Flashcard</h2>
+            <div class="flashcard-grid">
+                <div class="flashcard-container">
+                    <div class="flashcard">
+                        <div class="flashcard-front">
+                            <span class="tag">Programação</span>
+                            <h3>O que é o DOM?</h3>
+                            <p class="hint">Clique para virar</p>
+                        </div>
+                        <div class="flashcard-back">
+                            <p><strong>D</strong>ocument <strong>O</strong>bject <strong>M</strong>odel.</p>
+                            <p>É uma interface de programação para os documentos HTML e XML. Representa a página para que os programas possam alterar a estrutura do documento, estilo e conteúdo.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        function toggleForm() {
+            const form = document.getElementById('create-flashcard-form');
+            form.classList.toggle('hidden');
+            if(!form.classList.contains('hidden')) {
+                form.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+    </script>
 </body>
 </html>
