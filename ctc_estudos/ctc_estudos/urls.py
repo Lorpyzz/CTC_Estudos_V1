@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 from views import disciplinas, home, flashcards, duvidas, chat, login, forms, cadastro  
 
 urlpatterns = [
@@ -6,8 +6,8 @@ urlpatterns = [
     path('disciplinas/', disciplinas.lista_disciplinas, name='lista_disciplinas'),
     path('flashcards/', flashcards.flashcards, name='flashcards'),
     path('duvidas/', duvidas.duvidas, name='duvidas'),
-    path('chat/', chat.chat, name='chat'),
     path('login/', login.login, name='login'),
     path('novas/', forms.forms, name='novas'), 
     path('cadastro/', cadastro.cadastro, name='cadastro'),
+    path('chat/', include('chat.urls')),
 ]
