@@ -3,8 +3,8 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.forms import AuthenticationForm
-from ctcEstudos.models import User, Disciplina, Turma, SessaoEstudo, Professor, InscricaoTurma
-from ctcEstudos.forms import AlunoForm, DisciplinaForm, TurmaForm, SessaoEstudoForm, InscricaoTurmaForm, TopicoForm
+from .models import User, Disciplina, Turma, SessaoEstudo, Professor, InscricaoTurma
+from .forms import AlunoForm, DisciplinaForm, TurmaForm, SessaoEstudoForm, InscricaoTurmaForm, TopicoForm
 
 def paginaInicial(request):
     return render(request, "home.html")
