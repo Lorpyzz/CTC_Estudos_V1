@@ -1,0 +1,196 @@
+body {
+    overflow: hidden;
+    height: 100vh;
+}
+
+/* APP LAYOUT */
+.app-container {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+    height: calc(100vh - 50px);
+}
+
+/* SIDEBAR */
+.sidebar {
+    width: 300px;
+    border-right: 1px solid #eee;
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+}
+
+.sidebar-header { 
+    padding: 15px 20px; 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+}
+
+.sidebar-header h2 { font-size: 0.9rem; color: #333; }
+
+.btn-plus { 
+    background: none; 
+    border: none; 
+    font-size: 1.5rem; 
+    color: #999; 
+    cursor: pointer; 
+}
+
+.chat-list { overflow-y: auto; flex: 1; }
+
+.chat-item { 
+    display: flex; 
+    padding: 15px 20px; 
+    gap: 12px; 
+    cursor: pointer; 
+    border-bottom: 1px solid #fcfcfc; 
+}
+
+.chat-item.active { background-color: #ebf7ff; }
+
+/* AVATARES */
+.avatar { 
+    width: 40px; 
+    height: 40px; 
+    border-radius: 50%; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    font-weight: bold; 
+    font-size: 0.8rem; 
+    flex-shrink: 0; 
+}
+
+.avatar-small { 
+    width: 30px; 
+    height: 30px; 
+    border-radius: 50%; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    font-weight: bold; 
+    font-size: 0.7rem; 
+    flex-shrink: 0; 
+}
+
+.light-blue { background-color: #d1ecff; color: #00a0ff; }
+.user-blue { background-color: #00a0ff; color: white; }
+.gray { background-color: #f0f0f0; color: #999; }
+
+.chat-info { flex: 1; overflow: hidden; }
+.chat-top { display: flex; justify-content: space-between; }
+.chat-top strong { font-size: 0.85rem; color: #333; }
+.time { font-size: 0.75rem; color: #bbb; }
+.preview { 
+    font-size: 0.8rem; 
+    color: #999; 
+    white-space: nowrap; 
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+}
+
+/* JANELA DE CHAT */
+.chat-window {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background-color: #fff;
+    height: calc(100vh - 50px);
+    overflow: hidden;
+}
+
+.chat-header { 
+    padding: 12px 20px; 
+    border-bottom: 1px solid #eee; 
+    display: flex; 
+    align-items: center; 
+    gap: 10px; 
+}
+
+.chat-header h3 { font-size: 0.9rem; font-weight: 600; }
+
+.messages-container {
+    flex: 1;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    overflow-y: auto;
+    justify-content: flex-end;
+}
+
+/* MENSAGENS */
+.message-row {
+    display: flex;
+    gap: 10px;
+    max-width: 80%;
+    margin-top: auto; 
+}
+
+.message-row + .message-row { margin-top: 0; }
+
+.message-row.sent {
+    align-self: flex-end;
+    flex-direction: row-reverse;
+}
+
+.message-content { display: flex; flex-direction: column; }
+.message-row.sent .message-content { align-items: flex-end; }
+
+.sender-name { font-size: 0.75rem; color: #666; margin-bottom: 4px; }
+.sender-name small { color: #aaa; margin-left: 4px; }
+
+.bubble {
+    background-color: #f1f3f5;
+    padding: 10px 15px;
+    border-radius: 15px;
+    font-size: 0.85rem;
+    line-height: 1.4;
+    word-wrap: break-word;
+}
+
+.message-row.sent .bubble {
+    background-color: #00a0ff;
+    color: white;
+}
+
+.empty-msg { margin: auto; color: #999; font-size: 0.9rem; text-align: center; }
+
+/* INPUT */
+.chat-input-area {
+    padding: 15px 25px;
+    border-top: 1px solid #eee;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+    background: white;
+}
+
+.input-actions { display: flex; gap: 15px; }
+.icon-btn { background: none; border: none; color: #666; font-size: 1.1rem; cursor: pointer; }
+
+.chat-input-area input {
+    flex: 1;
+    padding: 12px 20px;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    outline: none;
+    font-size: 0.9rem;
+}
+
+.send-btn {
+    background-color: #00a0ff;
+    color: white;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+

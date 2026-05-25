@@ -1,0 +1,62 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="UFT-8">
+    <title>Programacao</title>
+    <link rel="stylesheet" href = "programacao.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <nav>
+        <div class="logo">
+            <img src="site-logo.png" width="60px">
+            <h2 class="logo-nome">CTC estudos</h2>
+        </div>
+        <ul>
+            <li><a href="../index.html">Inicio</a></li>
+            <li><a href="disciplinas.html" class="active">Disciplina</a></li>
+            <li><a href="../flashcards.html">Flashcards</a></li>
+            <li><a href="../duvidas.html">Central de Dúvidas</a></li>
+            <li><a href="../chat.html">Chat</a></li>
+        </ul>
+    </nav>
+    <hr class="divider">
+
+
+    <div class="container">
+        <div class=""row>
+            <div class="col"></div>
+                <button class="btn1" onclick="document.location='disciplinas.html'"> &#8592 Voltar para disciplinas</button>
+            <div class="col"></div>    
+                <button class="btn1" onclick="document.location='algebra_linear.html'"> &#8592 Voltar para materiais</button>
+    </div>
+    Aula: Autovalores e Autovetores
+
+    <br>Definição: Av = λv, onde λ é autovalor e v é autovetor.
+    
+    <br>Como encontrar:
+    
+    <br>1. Resolver det(A - λI) = 0 → polinômio característico → autovalores
+    
+    <br>2. Para cada λ, resolver (A - λI)v = 0 → autovetores
+    
+    <br>Propriedades:
+    
+    <br>• Soma dos autovalores = traço(A)
+    
+    <br>• Produto dos autovalores = det(A)
+    
+    <br>• Autovetores de autovalores distintos são LI
+    
+    <br>Diagonalização: A = PDP⁻¹, onde D é diagonal (autovalores) e P tem autovetores como colunas.
+    
+    <br>Aplicação: Aⁿ = PDⁿP⁻¹ (cálculo eficiente de potências de matrizes)
+    
+    <br>Duração: ~60 minutos
+    
+    <br>*Material complementar da disciplina ENG1419 — PUC-Rio*
+</body>
+</html>

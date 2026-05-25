@@ -1,0 +1,8 @@
+{
+  "Chat Geral": [
+    { "sender": "Sistema", "text": "Bem-vindo ao CTC Estudos!", "time": "10:00", "type": "received" }
+  ],
+  "Cálculo I": [
+    { "sender": "Sistema", "text": "Dúvidas sobre a lista 3 aqui.", "time": "09:00", "type": "received" }
+  ]
+}

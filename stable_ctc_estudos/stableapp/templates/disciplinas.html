@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Disciplinas{% endblock %}
+
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'css/disciplinas.css' %}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+
+
+
+<div class="titulo">
+    <h1><b>Disciplinas</b></h1>
+    <p>Encontre materiais e recursos para suas disciplinas do CTC</p>
+</div>
+
+<a href="{% url 'novas' %}">Adicionar nova disciplina</a>
+
+<div class="disciplinas">
+    <div class="row">
+
+        {% for disciplina in disciplinas %}
+
+        <button class="btn1"
+                onclick="location.href=''">
+
+            <div class="codigo">
+                <b>{{ disciplina.id }}</b>
+            </div>
+
+            <h3>{{ disciplina.nome }}</h3>
+
+            <br>
+
+            <p style="color:#747474;">
+                {{ disciplina.descricao }}
+            </p>
+
+            <br>
+
+            <p style="color:#3ea5ef;">
+                Ver conteúdos →
+            </p>
+
+        </button>
+
+        {% endfor %}
+
+    </div>
+</div>
+
+
+
+{% endblock %}

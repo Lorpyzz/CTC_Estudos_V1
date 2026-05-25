@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load static %}
+    <title>Cadastro</title>
+    <link rel="stylesheet" href="{% static 'css/cadastro.css' %}">
+</head>
+<body>
+    <div class="login-box">
+        <img src="{% static 'img/logo-puc-rio.png' %}" width="60px">
+        <h2>Criar conta no CTC Estudos</h2>
+        <p>Use sua matrícula da PUC-Rio para se cadastrar</p>
+
+        <form action="{% url 'cadastro' %}" method="POST">
+            {% csrf_token %}
+
+            <div class="campo">
+                <label>Matrícula</label>
+                <input name="matricula" type="text" placeholder="Ex: 2310000" required>
+            </div>
+
+            <div class="campo">
+                <label>Senha</label>
+                <input name="senha" type="password" placeholder="••••••••" required>
+            </div>
+
+            <div class="campo">
+                <label>Confirmar Senha</label>
+                <input name="confirmar_senha" type="password" placeholder="••••••••" required>
+            </div>
+
+            {% if erro %}
+                <p style="color: red; font-size: 13px; margin: 0;">{{ erro }}</p>
+            {% endif %}
+
+            <button type="submit" class="btn-entrar">Cadastrar</button>
+        </form>
+
+        <p class="login-link">Já tem conta? <a href="{% url 'login' %}">Entrar</a></p>
+    </div>
+</body>
+</html>

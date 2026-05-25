@@ -1,0 +1,74 @@
+{
+  "disciplinas": [
+    {
+      "id": 1,
+      "nome": "Programação II",
+      "descricao": "Ponteiros, alocação dinâmica, arquivos, estruturas e introdução a estruturas de dados em C."
+    },
+    {
+      "id": 2,
+      "nome": "Estrutura de dados",
+      "descricao": "Listas, pilhas, filas, árvores, grafos e análise de complexidade.."
+    },
+    {
+      "id": 3,
+      "nome": "Estruturas de Dados Avançadas",
+      "descricao": "Árvores balanceadas, tabelas hash, heaps e algoritmos de ordenação avançados.."
+    },
+    {
+      "id": 4,
+      "nome": "Cálculo I",
+      "descricao": "Limites, derivadas, integrais e aplicações de funções de uma variável."
+    }
+  ],
+  "conteudos": [
+    {
+      "id": 1,
+      "titulo": "Equações do 2º Grau",
+      "descricao": "Aprender a resolver equações quadráticas.",
+      "disciplina_id": 1
+    },
+    {
+      "id": 2,
+      "titulo": "Geometria Analítica",
+      "descricao": "Estudo de pontos, retas e planos no espaço cartesiano.",
+      "disciplina_id": 1
+    },
+    {
+      "id": 3,
+      "titulo": "Revolução Francesa",
+      "descricao": "Principais eventos e impactos da Revolução Francesa.",
+      "disciplina_id": 2
+    },
+    {
+      "id": 4,
+      "titulo": "Segunda Guerra Mundial",
+      "descricao": "Causas, eventos e consequências da guerra.",
+      "disciplina_id": 2
+    },
+    {
+      "id": 5,
+      "titulo": "Leis de Newton",
+      "descricao": "Fundamentos da mecânica clássica.",
+      "disciplina_id": 3
+    },
+    {
+      "id": 6,
+      "titulo": "Eletricidade Básica",
+      "descricao": "Introdução a circuitos elétricos e corrente.",
+      "disciplina_id": 3
+    },
+    {
+      "id": 7,
+      "titulo": "Introdução ao Python",
+      "descricao": "Sintaxe básica e estruturas fundamentais.",
+      "disciplina_id": 4
+    },
+    {
+      "id": 8,
+      "titulo": "Desenvolvimento Web com Django",
+      "descricao": "Criação de aplicações web usando Django.",
+      "disciplina_id": 4
+    }
+  ]
+}
