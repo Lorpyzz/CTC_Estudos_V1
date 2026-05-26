@@ -4,11 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     {% load static %}
+    <title>{% block title %}CTC Estudos{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     {% block extra_css %}{% endblock %}
 </head>
 <body>
-
     <nav>
         <div class="logo">
             <img src="{% static 'img/site-logo.png' %}" width="60px">
@@ -16,22 +17,20 @@
         </div>
         <ul>
             <li><a href="{% url 'home' %}">Inicio</a></li>
-            <li><a href="{% url 'lista_disciplinas' %}">Disciplina</a></li>
+            <li><a href="{% url 'disciplinas' %}">Disciplina</a></li>
+            <li><a href="{% url 'turmas' %}">Minhas Turmas</a></li>
             <li><a href="{% url 'flashcards' %}">Flashcards</a></li>
             <li><a href="{% url 'duvidas' %}">Central de Dúvidas</a></li>
             <li><a href="{% url 'chat' %}">Chat</a></li>
         </ul>
     </nav>
     <hr class="divider">
-
     {% block content %}
     {% endblock %}
-
     <hr class="divider">
     <footer>
         <img src="{% static 'img/logo-puc-rio.png' %}" alt="Logo PUC-Rio" class="footer-logo">
         <p>© 2026 CTC Estudos – PUC-Rio. Feito por alunos, para alunos.</p>
     </footer>
-
 </body>
 </html>

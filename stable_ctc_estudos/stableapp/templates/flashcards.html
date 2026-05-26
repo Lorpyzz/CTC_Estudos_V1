@@ -1,105 +1,81 @@
+{% extends 'base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flashcards - CTC-ESTUDOS</title>
-    <link rel="stylesheet" href="{% static 'flashcards.css' %}">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
-</head>
-<body>
-    <div class="navbar">
-        <div class="logo">
-            <img src="{% static 'site-logo.png' %}" width="60px">
-            <h2>CTC estudos</h2>
-        </div>
-        <nav>
-            <ul>
-                <li><a href="/">Início</a></li>
-                <li><a href="/disciplinas/">Disciplinas</a></li>
-                <li><a href="/turmas/">Minhas Turmas</a></li>
-                <li><a href="/flashcards/" class="active">Flashcards</a></li>
-                <li><a href="/duvidas/">Central de dúvidas</a></li>
-                <li><a href="/chat/">Chat</a></li>
-                {% if request.user.is_authenticated %}
-                    <li><a href="/logout/" class="btn-nav-login">Sair</a></li>
-                {% else %}
-                    <li><a href="/login/" class="btn-nav-login">Entrar</a></li>
-                {% endif %}
-            </ul>
-        </nav>
-    </div>
-    
-    <header class="hero-header">
-        <h1>Meus Flashcards</h1>
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/flashcards.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<header>
+    <div>
+        <h1>Flashcards</h1>
         <p>Crie decks por disciplina e revise com repetição espaçada inteligente.</p>
-    </header>
+    </div>
+    <button class="btn-criar-deck" onclick="abrirModal()">+ Criar Deck</button>
+</header>
 
-    <main class="container">
-        <section class="actions-section">
-            <button id="btn-create-flashcard" class="btn-primary" onclick="toggleForm()">
-                <span class="icon">+</span> Criar Novo Flashcard
-            </button>
-        </section>
+<div class="decks-container" id="decksContainer"></div>
 
-        <section id="create-flashcard-form" class="form-section hidden">
-            <div class="glass-card form-card">
-                <h2>Criar Flashcard</h2>
-                <form action="#" method="POST">
-                    <div class="input-group">
-                        <label for="disciplina">Disciplina</label>
-                        <select id="disciplina" name="disciplina" required>
-                            <option value="">Selecione uma disciplina...</option>
-                            <option value="matematica">Matemática</option>
-                            <option value="historia">História</option>
-                            <option value="programacao">Programação</option>
-                        </select>
-                    </div>
-                    
-                    <div class="input-group">
-                        <label for="frente">Frente (Pergunta)</label>
-                        <textarea id="frente" name="frente" rows="3" placeholder="Ex: O que é encapsulamento?" required></textarea>
-                    </div>
+<div class="modal-overlay" id="modalOverlay" onclick="fecharModal(event)">
+    <div class="modal">
+        <button class="modal-fechar" onclick="fecharModal()">✕</button>
+        <h2>Novo Deck</h2>
 
-                    <div class="input-group">
-                        <label for="verso">Verso (Resposta)</label>
-                        <textarea id="verso" name="verso" rows="4" placeholder="Ex: É o mecanismo de esconder detalhes de implementação..." required></textarea>
-                    </div>
+        <label>Disciplina</label>
+        <select id="selectDisciplina">
+            <option value="">Selecione a disciplina</option>
+            {% for disciplina in disciplinas %}
+                <option value="{{ disciplina.id }}" data-codigo="{{ disciplina.codigo }}">{{ disciplina.nome }}</option>
+            {% endfor %}
+        </select>
 
-                    <button type="submit" class="btn-submit">Salvar Flashcard</button>
-                </form>
-            </div>
-        </section>
+        <label>Nome do Deck</label>
+        <input type="text" id="inputNomeDeck" placeholder="Ex: Ponteiros e Memória">
 
-        <section class="example-section">
-            <h2 class="section-title">Exemplo de Flashcard</h2>
-            <div class="flashcard-grid">
-                <div class="flashcard-container">
-                    <div class="flashcard">
-                        <div class="flashcard-front">
-                            <span class="tag">Programação</span>
-                            <h3>O que é o DOM?</h3>
-                            <p class="hint">Clique para virar</p>
-                        </div>
-                        <div class="flashcard-back">
-                            <p><strong>D</strong>ocument <strong>O</strong>bject <strong>M</strong>odel.</p>
-                            <p>É uma interface de programação para os documentos HTML e XML. Representa a página para que os programas possam alterar a estrutura do documento, estilo e conteúdo.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </main>
+        <button class="btn-criar-deck btn-modal" onclick="criarDeck()">Criar Deck</button>
+    </div>
+</div>
 
-    <script>
-        function toggleForm() {
-            const form = document.getElementById('create-flashcard-form');
-            form.classList.toggle('hidden');
-            if(!form.classList.contains('hidden')) {
-                form.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }
+<script>
+    function abrirModal() {
+        document.getElementById('modalOverlay').classList.add('ativo');
+    }
+
+    function fecharModal(e) {
+        if (!e || e.target === document.getElementById('modalOverlay')) {
+            document.getElementById('modalOverlay').classList.remove('ativo');
         }
-    </script>
-</body>
-</html>
+    }
+
+    function criarDeck() {
+        const select = document.getElementById('selectDisciplina');
+        const input  = document.getElementById('inputNomeDeck');
+
+        const nomeDeck         = input.value.trim();
+        const opcao            = select.options[select.selectedIndex];
+        const nomeDisciplina   = opcao.text;
+        const codigoDisciplina = opcao.getAttribute('data-codigo');
+
+        if (!nomeDeck || !codigoDisciplina) {
+            alert('Preencha todos os campos.');
+            return;
+        }
+
+        const card = document.createElement('div');
+        card.classList.add('deck-card');
+        card.innerHTML = `
+            <span class="deck-card-codigo">${codigoDisciplina}</span>
+            <h3 class="deck-card-nome">${nomeDeck}</h3>
+            <p class="deck-card-disciplina">${nomeDisciplina}</p>
+        `;
+
+        document.getElementById('decksContainer').appendChild(card);
+
+        input.value = '';
+        select.selectedIndex = 0;
+        fecharModal();
+    }
+</script>
+
+{% endblock %}

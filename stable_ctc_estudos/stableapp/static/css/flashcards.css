@@ -29,8 +29,6 @@ header h1 {
   cursor: pointer;
 }
 
-
-/*Decks*/
 /* Grid de cards */
 .decks-container {
   max-width: 900px;
@@ -55,7 +53,6 @@ header h1 {
   height: fit-content;
 }
 
-
 .deck-card-codigo {
   display: inline-block;
   background: #f1f5f9;
@@ -79,10 +76,6 @@ header h1 {
   font-size: 13px;
   color: #6b7280;
 }
-
-
-
-
 
 /* Modal */
 .modal-overlay {

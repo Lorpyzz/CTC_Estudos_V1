@@ -26,7 +26,7 @@ def loginAluno(request):
                 login(request, user)
                 nome_exibicao = user.nome if user.nome else user.username
                 messages.success(request, f"Bem-vindo de volta, {nome_exibicao}!")
-                return redirect("disciplinas") 
+                return redirect("disciplinas")
             
         messages.error(request, "Erro: Matrícula e/ou senha incorretos.")
         
@@ -58,7 +58,7 @@ def paginaCadastro(request):
             user.set_password(form.cleaned_data['password'])
             user.save()
             messages.success(request, 'Cadastro realizado com sucesso!')
-            return redirect("disciplinas.html")
+            return redirect("disciplinas")  # CORRIGIDO: era "disciplinas.html"
         else:
             messages.error(request, 'Erro no cadastro. Verifique os campos informados.')
     else:
@@ -75,9 +75,11 @@ def paginaDisciplinas(request):
             messages.success(request, 'Disciplina criada com sucesso!')
             return redirect('disciplinas')
     else:
-        disciplina = Disciplina.objects.all()
         form = DisciplinaForm()
-    return render(request, "disciplinas.html", context={"disciplina": disciplina, "form": form})
+
+    disciplina = Disciplina.objects.all()  # CORRIGIDO: movido para fora do if/else
+    return render(request, "disciplinas.html", context={"disciplinas": disciplina, "form": form})
+
 
 def paginaTurmas(request):
     if request.user.is_authenticated:
@@ -87,10 +89,12 @@ def paginaTurmas(request):
     return render(request, "turmas.html", {"inscricoes": inscricoes})
 
 def paginaFlashcards(request):
-    return render(request, "flashcards.html")
+    disciplinas = Disciplina.objects.all()
+    return render(request, "flashcards.html", {"disciplinas": disciplinas})
 
 def paginaDuvidas(request):
-    return render(request, "duvidas.html")
+    disciplinas = Disciplina.objects.all()
+    return render(request, "duvidas.html", {"disciplinas": disciplinas})
 
 def paginaChat(request):
     return render(request, "chat.html")
@@ -141,15 +145,13 @@ def form_sessao_estudo(request):
 def form_inscricao(request):
     if not request.user.is_authenticated:
         messages.error(request, "Você precisa estar logado para se inscrever em uma turma.")
-        
-        return redirect('loginAluno') 
+        return redirect('login')  # CORRIGIDO: era 'loginAluno', o name correto é 'login'
 
     if request.method == "POST":
-        
         form = InscricaoTurmaForm(request.POST)
         if form.is_valid():
             inscricao = form.save(commit=False)
-            inscricao.user = request.user  
+            inscricao.user = request.user
             inscricao.save()
             messages.success(request, 'Inscrição realizada com sucesso!')
             return redirect('turmas')

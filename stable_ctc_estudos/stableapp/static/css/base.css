@@ -10,6 +10,9 @@ nav {
     align-items: center;
     justify-content: space-between;
     padding: 0 24px;
+    height: 60px;
+    background-color: white;
+    border-bottom: 1px solid #e0e0e0;
 }
 
 .logo {
@@ -30,7 +33,7 @@ ul {
     gap: 30px;
     list-style-type: none;
     align-items: center;
-    padding: 12px 0;
+    padding: 0;
     margin: 0;
 }
 
@@ -54,6 +57,10 @@ footer {
     display: flex;
     flex-direction: column;
     align-items: center;
+    padding: 14px;
+    text-align: center;
+    color: rgb(58, 58, 58);
+    font-size: 0.9rem;
 }
 
 .footer-logo {
