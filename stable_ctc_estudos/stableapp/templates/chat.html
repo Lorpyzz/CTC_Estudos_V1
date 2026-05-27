@@ -1,166 +1,161 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 {% load static %}
 
-{% block title %}Chat - CTC Estudos{% endblock %}
-
-{% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/chat.css' %}">
+{% block title %}
+Chat
 {% endblock %}
 
 {% block content %}
+
+<link rel="stylesheet" href="{% static 'css/chat.css' %}">
+
 <div class="app-container">
 
     <!-- SIDEBAR -->
-    <div class="sidebar">
+    <aside class="sidebar">
+
         <div class="sidebar-header">
             <h2>Conversas</h2>
-            <button class="btn-plus" onclick="createNewChat()">+</button>
         </div>
-        <div class="chat-list" id="chat-list">
-            <div class="chat-item active" onclick="selectChat(this, 'INF1007 — Prog II', 'P2')">
-                <div class="avatar light-blue">P2</div>
-                <div class="chat-info">
-                    <div class="chat-top">
-                        <strong>INF1007 — Prog II</strong>
-                        <span class="time">10:42</span>
-                    </div>
-                    <p class="preview">Alguém entendeu a aula de ponteiros?</p>
-                </div>
-            </div>
-            <div class="chat-item" onclick="selectChat(this, 'MAT1161 — Cálculo I', 'C1')">
-                <div class="avatar light-blue">C1</div>
-                <div class="chat-info">
-                    <div class="chat-top">
-                        <strong>MAT1161 — Cálculo I</strong>
-                        <span class="time">09:15</span>
-                    </div>
-                    <p class="preview">Alguém tem a lista 3?</p>
-                </div>
-            </div>
-            <div class="chat-item" onclick="selectChat(this, 'INF1631 — Est. Dados', 'ED')">
-                <div class="avatar light-blue">ED</div>
-                <div class="chat-info">
-                    <div class="chat-top">
-                        <strong>INF1631 — Est. Dados</strong>
-                        <span class="time">ontem</span>
-                    </div>
-                    <p class="preview">Dúvida sobre árvore binária</p>
-                </div>
-            </div>
-        </div>
-    </div>
 
-    <!-- JANELA DE CHAT -->
-    <div class="chat-window">
-        <div class="chat-header">
-            <div class="avatar-small light-blue" id="header-avatar">P2</div>
-            <h3 id="chat-title">INF1007 — Prog II</h3>
+        <div class="chat-list">
+
+            <div class="chat-item active">
+
+                <div class="avatar light-blue">
+                    CG
+                </div>
+
+                <div class="chat-info">
+
+                    <div class="chat-top">
+                        <strong>Chat Geral</strong>
+                    </div>
+
+                    <p class="preview">
+                        Conversa geral do sistema
+                    </p>
+
+                </div>
+            </div>
         </div>
-        <div class="messages-container" id="messages-container">
-            <div class="empty-msg">Selecione um chat para começar.</div>
+    </aside>
+
+    <!-- AREA DO CHAT -->
+    <main class="chat-window">
+
+        <!-- HEADER -->
+        <header class="chat-header">
+
+            <div class="avatar-small light-blue">
+                CG
+            </div>
+
+            <h3>
+                Chat Geral
+            </h3>
+
+        </header>
+
+        <!-- MENSAGENS -->
+        <div
+            class="messages-container"
+            id="messages-container"
+        >
+
+            {% for msg in mensagens %}
+
+                <div class="message-row
+                    {% if msg.usuario == request.user %}
+                        sent
+                    {% else %}
+                        received
+                    {% endif %}
+                ">
+
+                    <!-- AVATAR -->
+                    <div class="avatar-small
+                        {% if msg.usuario == request.user %}
+                            user-blue
+                        {% else %}
+                            gray
+                        {% endif %}
+                    ">
+
+                        {{ msg.usuario.nome|first|upper }}
+
+                    </div>
+
+                    <!-- CONTEUDO -->
+                    <div class="message-content">
+
+                        <span class="sender-name">
+
+                            {{ msg.usuario.nome }}
+
+                            <small>
+                                {{ msg.enviado_em|date:"H:i" }}
+                            </small>
+
+                        </span>
+
+                        <div class="bubble">
+                            {{ msg.conteudo }}
+                        </div>
+
+                    </div>
+
+                </div>
+
+            {% empty %}
+
+                <div class="empty-msg">
+                    Nenhuma mensagem ainda.
+                </div>
+
+            {% endfor %}
+
         </div>
-        <div class="chat-input-area">
-            <input type="text" id="message-input" placeholder="Digite uma mensagem..."
-                onkeydown="if(event.key==='Enter') sendMessage()">
-            <button class="send-btn" onclick="sendMessage()">➤</button>
-        </div>
-    </div>
+
+        <!-- FORM -->
+        <form
+            method="POST"
+            class="chat-input-area"
+        >
+
+            {% csrf_token %}
+
+            <input
+                type="text"
+                name="mensagem"
+                id="message-input"
+                placeholder="Digite sua mensagem..."
+                required
+            >
+
+            <button
+                type="submit"
+                class="send-btn"
+            >
+                <i class="fa-solid fa-paper-plane"></i>
+            </button>
+
+        </form>
+
+    </main>
 
 </div>
 
 <script>
-const JSON_URL = "{% static 'json/mensagens_iniciais.json' %}";
-const STORAGE_KEY = 'ctc_chat_data';
 
-async function loadChatData() {
-    let localData = localStorage.getItem(STORAGE_KEY);
-    if (localData) return JSON.parse(localData);
-    try {
-        const response = await fetch(JSON_URL);
-        const data = await response.json();
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-        return data;
-    } catch (error) {
-        console.error("Erro ao carregar JSON:", error);
-        return {};
-    }
-}
+    const container =
+        document.getElementById(
+            'messages-container'
+        );
 
-function saveChatData(data) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-}
+    container.scrollTop =
+        container.scrollHeight;
 
-function addMessageToUI(sender, text, time, type) {
-    const container = document.getElementById('messages-container');
-    const row = document.createElement('div');
-    row.className = `message-row ${type}`;
-    row.innerHTML = `
-        <div class="avatar-small ${type === 'sent' ? 'user-blue' : 'light-blue'}">
-            ${sender[0]}
-        </div>
-        <div class="message-content">
-            <span class="sender-name">${sender} <small>${time}</small></span>
-            <div class="bubble">${text}</div>
-        </div>
-    `;
-    container.appendChild(row);
-}
-
-async function selectChat(element, name, initial) {
-    document.querySelectorAll('.chat-item').forEach(item => item.classList.remove('active'));
-    element.classList.add('active');
-    document.getElementById('chat-title').innerText = name;
-    document.getElementById('header-avatar').innerText = initial;
-    const container = document.getElementById('messages-container');
-    container.innerHTML = "";
-    const allData = await loadChatData();
-    if (allData[name] && allData[name].length > 0) {
-        allData[name].forEach(msg => addMessageToUI(msg.sender, msg.text, msg.time, msg.type));
-    } else {
-        container.innerHTML = `<div class="empty-msg">Nenhuma mensagem ainda.</div>`;
-    }
-    container.scrollTop = container.scrollHeight;
-}
-
-async function sendMessage() {
-    const input = document.getElementById('message-input');
-    const text = input.value.trim();
-    const chatTitle = document.getElementById('chat-title').innerText;
-    if (text === "") return;
-    const now = new Date();
-    const timeStr = now.getHours() + ":" + now.getMinutes().toString().padStart(2, '0');
-    const emptyMsg = document.querySelector('.empty-msg');
-    if (emptyMsg) emptyMsg.remove();
-    addMessageToUI("Você", text, timeStr, "sent");
-    const allData = await loadChatData();
-    if (!allData[chatTitle]) allData[chatTitle] = [];
-    allData[chatTitle].push({ sender: "Você", text, time: timeStr, type: "sent" });
-    saveChatData(allData);
-    input.value = "";
-    const container = document.getElementById('messages-container');
-    container.scrollTop = container.scrollHeight;
-}
-
-function createNewChat() {
-    const chatList = document.getElementById('chat-list');
-    const newChat = document.createElement('div');
-    const now = new Date();
-    const timeStr = now.getHours() + ":" + now.getMinutes().toString().padStart(2, '0');
-    const nomeChat = "Novo Chat " + (document.querySelectorAll('.chat-item').length + 1);
-    newChat.className = 'chat-item';
-    newChat.onclick = function() { selectChat(this, nomeChat, 'NC'); };
-    newChat.innerHTML = `
-        <div class="avatar light-blue">NC</div>
-        <div class="chat-info">
-            <div class="chat-top">
-                <strong>${nomeChat}</strong>
-                <span class="time">${timeStr}</span>
-            </div>
-            <p class="preview">Nenhuma mensagem ainda</p>
-        </div>
-    `;
-    chatList.prepend(newChat);
-    newChat.click();
-}
 </script>
+
 {% endblock %}

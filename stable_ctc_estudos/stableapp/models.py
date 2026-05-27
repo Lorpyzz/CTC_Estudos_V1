@@ -4,22 +4,32 @@ from django.core.exceptions import ValidationError
 
 
 class CtcEstudosUser(AbstractUser):
-    """
-    Extensão do usuário padrão do Django. 
-    Centraliza a identidade do Aluno e suas permissões.
-    Todo monitor é obrigatoriamente um usuário/aluno do sistema.
-    """
+
     nome = models.CharField(max_length=100)
-    matricula = models.CharField(max_length=15, unique=True)
-    data_nasc = models.DateField(null=True, blank=True)
+
+    matricula = models.CharField(
+        max_length=15,
+        unique=True
+    )
+
+    data_nasc = models.DateField(
+        null=True,
+        blank=True
+    )
 
     def __str__(self):
         return f"{self.matricula} - {self.nome or self.username}"
 
 
 class Professor(models.Model):
+
     nome = models.CharField(max_length=100)
-    email = models.EmailField(max_length=100, unique=True)
+
+    email = models.EmailField(
+        max_length=100,
+        unique=True
+    )
+
     departamento = models.CharField(max_length=50)
 
     class Meta:
@@ -28,81 +38,141 @@ class Professor(models.Model):
     def __str__(self):
         return self.nome
 
+
 class Disciplina(models.Model):
+
     nome = models.CharField(max_length=100)
-    codigo = models.CharField(max_length=10, unique=True)
-    descricao = models.TextField(blank=True, null=True)
+
+    codigo = models.CharField(
+        max_length=10,
+        unique=True
+    )
+
+    descricao = models.TextField(
+        blank=True,
+        null=True
+    )
+
     departamento = models.CharField(max_length=50)
-    email = models.EmailField(max_length=100, blank=True, null=True)
-    
+
+    email = models.EmailField(
+        max_length=100,
+        blank=True,
+        null=True
+    )
+
     def __str__(self):
         return f"{self.codigo} - {self.nome}"
 
+
 class Turma(models.Model):
+
     disciplina = models.ForeignKey(
-        Disciplina, 
-        on_delete=models.CASCADE, 
+        Disciplina,
+        on_delete=models.CASCADE,
         related_name='turmas'
     )
+
     professor = models.ForeignKey(
-        Professor, 
-        on_delete=models.PROTECT, 
+        Professor,
+        on_delete=models.PROTECT,
         related_name='turmas_ministradas'
     )
-    codigo_turma = models.CharField(max_length=3) # Ex: "33A"
-    semestre = models.CharField(max_length=6) # Ex: 2026.1
-    horario = models.CharField(max_length=100) # Ex: "3ª e 5ª 11:00-13:00"
+
+    codigo_turma = models.CharField(max_length=3)
+
+    semestre = models.CharField(max_length=6)
+
+    horario = models.CharField(max_length=100)
 
     alunos = models.ManyToManyField(
-        CtcEstudosUser, 
-        through='InscricaoTurma', 
+        CtcEstudosUser,
+        through='InscricaoTurma',
         related_name='turmas_inscritas'
     )
 
     def __str__(self):
         return f"{self.disciplina.codigo} ({self.codigo_turma}) - {self.semestre}"
 
+
 class InscricaoTurma(models.Model):
-    
-    user = models.ForeignKey(CtcEstudosUser, on_delete=models.CASCADE, related_name='inscricoes')
-    turma = models.ForeignKey(Turma, on_delete=models.CASCADE, related_name='inscricoes')
-    concluida = models.BooleanField(default=False) # GATILHO DA REGRA DE NEGÓCIO DA MONITORIA
-    nota_final = models.DecimalField(max_digits=4, decimal_places=2, null=True, blank=True)
+
+    user = models.ForeignKey(
+        CtcEstudosUser,
+        on_delete=models.CASCADE,
+        related_name='inscricoes'
+    )
+
+    turma = models.ForeignKey(
+        Turma,
+        on_delete=models.CASCADE,
+        related_name='inscricoes'
+    )
+
+    concluida = models.BooleanField(default=False)
+
+    nota_final = models.DecimalField(
+        max_digits=4,
+        decimal_places=2,
+        null=True,
+        blank=True
+    )
 
     class Meta:
         unique_together = ('user', 'turma')
+
         verbose_name = "Inscrição em Turma"
+
         verbose_name_plural = "Inscrições em Turmas"
 
     def __str__(self):
-        status = "Concluída" if self.concluida else "Em Andamento"
+
+        status = (
+            "Concluída"
+            if self.concluida
+            else "Em Andamento"
+        )
+
         return f"{self.user.username} em {self.turma} ({status})"
+
 
 class Topico(models.Model):
 
     disciplina = models.ForeignKey(
-        Disciplina, 
-        on_delete=models.CASCADE, 
-        related_name='topicos' 
+        Disciplina,
+        on_delete=models.CASCADE,
+        related_name='topicos'
     )
-    titulo_topico = models.CharField(max_length=200) 
+
+    titulo_topico = models.CharField(max_length=200)
 
     class Meta:
         verbose_name = "Tópico"
 
     def __str__(self):
-        return f"{self.disciplina.codigo} -> {self.titulo}"
+
+        return (
+            f"{self.disciplina.codigo}"
+            f" -> {self.titulo_topico}"
+        )
+
 
 class Conteudo(models.Model):
-    """ Materiais específicos de estudo vinculados a um Tópico """
+
     topico = models.ForeignKey(
-        Topico, 
-        on_delete=models.CASCADE, 
-        related_name='conteudos' 
+        Topico,
+        on_delete=models.CASCADE,
+        related_name='conteudos'
     )
+
     titulo = models.CharField(max_length=100)
+
     descricao = models.TextField()
-    link_material = models.URLField(blank=True, null=True) 
+
+    link_material = models.URLField(
+        blank=True,
+        null=True
+    )
 
     class Meta:
         verbose_name = "Conteúdo"
@@ -110,27 +180,41 @@ class Conteudo(models.Model):
     def __str__(self):
         return self.titulo
 
+
 class Monitoria(models.Model):
-    
+
     monitor = models.ForeignKey(
-        CtcEstudosUser, 
-        on_delete=models.CASCADE, 
+        CtcEstudosUser,
+        on_delete=models.CASCADE,
         related_name='monitorias'
     )
+
     disciplina = models.ForeignKey(
-        Disciplina, 
-        on_delete=models.CASCADE, 
+        Disciplina,
+        on_delete=models.CASCADE,
         related_name='monitorias_ativas'
     )
+
     semestre_atuacao = models.CharField(max_length=6)
 
     def __str__(self):
-        nome_aluno = self.monitor.first_name if self.monitor.first_name else self.monitor.username
-        return f"Monitor {nome_aluno} - {self.disciplina.nome} ({self.semestre_atuacao})"
+
+        nome_aluno = (
+            self.monitor.first_name
+            if self.monitor.first_name
+            else self.monitor.username
+        )
+
+        return (
+            f"Monitor {nome_aluno}"
+            f" - {self.disciplina.nome}"
+            f" ({self.semestre_atuacao})"
+        )
 
     def clean(self):
 
         if hasattr(self, 'monitor') and hasattr(self, 'disciplina'):
+
             ja_cursou = InscricaoTurma.objects.filter(
                 user=self.monitor,
                 turma__disciplina=self.disciplina,
@@ -138,36 +222,128 @@ class Monitoria(models.Model):
             ).exists()
 
             if not ja_cursou:
-                nome_aluno = self.monitor.first_name if self.monitor.first_name else self.monitor.username
+
+                nome_aluno = (
+                    self.monitor.first_name
+                    if self.monitor.first_name
+                    else self.monitor.username
+                )
+
                 raise ValidationError(
-                    f"Inconsistência: O aluno '{nome_aluno}' não possui registro de "
-                    f"conclusão na disciplina '{self.disciplina.nome}' e não pode ser alocado como monitor."
+                    f"O aluno '{nome_aluno}' "
+                    f"não concluiu "
+                    f"'{self.disciplina.nome}'."
                 )
 
     def save(self, *args, **kwargs):
-        self.full_clean() 
+
+        self.full_clean()
+
         super().save(*args, **kwargs)
 
+
 class SessaoEstudo(models.Model):
+
     aluno = models.ForeignKey(
-        CtcEstudosUser, 
-        on_delete=models.CASCADE, 
+        CtcEstudosUser,
+        on_delete=models.CASCADE,
         related_name='sessoes_estudo'
     )
+
     topico = models.ForeignKey(
-        Topico, 
-        on_delete=models.SET_NULL, 
-        null=True, 
+        Topico,
+        on_delete=models.SET_NULL,
+        null=True,
         related_name='sessoes_direcionadas'
     )
-    data_estudo = models.DateField(auto_now_add=True)
-    duracao_minutos = models.PositiveIntegerField() 
-    observacoes = models.TextField(blank=True, null=True)
+
+    data_estudo = models.DateField(
+        auto_now_add=True
+    )
+
+    duracao_minutos = models.PositiveIntegerField()
+
+    observacoes = models.TextField(
+        blank=True,
+        null=True
+    )
 
     class Meta:
+
         verbose_name = "Sessão de Estudo"
+
         verbose_name_plural = "Sessões de Estudo"
 
     def __str__(self):
-        nome_aluno = self.aluno.first_name if self.aluno.first_name else self.aluno.username
-        return f"{nome_aluno} dedicou {self.duracao_minutos}min em {self.topico.titulo if self.topico else 'Tópico Geral'}"
+
+        nome_aluno = (
+            self.aluno.first_name
+            if self.aluno.first_name
+            else self.aluno.username
+        )
+
+        topico_nome = (
+            self.topico.titulo_topico
+            if self.topico
+            else "Tópico Geral"
+        )
+
+        return (
+            f"{nome_aluno} dedicou "
+            f"{self.duracao_minutos}min "
+            f"em {topico_nome}"
+        )
+
+
+# CHAT
+
+class Chat(models.Model):
+
+    usuario1 = models.ForeignKey(
+        CtcEstudosUser,
+        on_delete=models.CASCADE,
+        related_name='chats_usuario1'
+    )
+
+    usuario2 = models.ForeignKey(
+        CtcEstudosUser,
+        on_delete=models.CASCADE,
+        related_name='chats_usuario2'
+    )
+
+    criado_em = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    def __str__(self):
+        return f"{self.usuario1} x {self.usuario2}"
+
+
+class Mensagem(models.Model):
+
+    chat = models.ForeignKey(
+        Chat,
+        on_delete=models.CASCADE,
+        related_name='mensagens'
+    )
+
+    usuario = models.ForeignKey(
+        CtcEstudosUser,
+        on_delete=models.CASCADE
+    )
+
+    conteudo = models.TextField()
+
+    enviado_em = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    class Meta:
+        ordering = ['enviado_em']
+
+    def __str__(self):
+
+        return (
+            f"{self.usuario.username}: "
+            f"{self.conteudo[:20]}"
+        )
