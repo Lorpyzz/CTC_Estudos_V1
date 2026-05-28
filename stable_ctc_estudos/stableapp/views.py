@@ -535,3 +535,21 @@ def form_topico(request):
         "form_topico.html",
         {"form": form}
     )
+
+# ATUALIZAR INFORMAÇÃO DE UMA DISCIPLINA
+
+def update_disciplina(request, id):
+    disciplina = Disciplina.objects.get(id = id)
+    if request.method == "POST":
+        #atualizar uma disciplina
+        Disciplina.objects.update(
+           nome = request.POST["nome"],
+           codigo = request.POST["codigo"], 
+           descricao = request.POST["descricao"] ,
+           departamento = request.POST["departamento"],
+           email = request.POST["email"]
+        )
+        return redirect("home")
+    form = DisciplinaForm(instance=disciplina)
+    return render(request, "form_disciplina.html", context = {"disciplina":disciplina,"form":form})
+
