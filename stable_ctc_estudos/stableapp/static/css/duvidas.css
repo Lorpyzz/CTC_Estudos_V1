@@ -1,61 +1,4 @@
 html { overflow-y: scroll; }
-* { box-sizing: border-box; }
-
-body {
-    color: gray; background-color: white;
-    font-family: Arial, Helvetica, sans-serif; margin: 0;
-}
-
-
-/*CABEÇALHO*/
-nav {
-  display: flex;
-  align-items: center;
-  justify-content: space-between; /* logo na esquerda, links na direita */
-  padding: 0 24px;
-}
-
-.logo {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.logo-nome {
-  color: black;
-  font-size: 1.1rem;
-  font-weight: 600;
-  margin: 0;
-}
-
-ul {
-  display: flex;
-  gap: 30px;
-  list-style-type: none;
-  align-items: center;
-  padding: 12px 0;
-  margin: 0;
-}
-
-  ul a {
-    color: gray;
-    text-decoration: none;
-    transition: color 0.2s ease; /* transição suave */
-  }
-  
-  /* Hover: azul bebê */
-  ul a:hover {
-    color: #89CFF0;
-  }
-  
-  /* Página atual: adicione class="active" no <a> da página */
-  ul a.active {
-    color: #89CFF0;
-    font-weight: 500;
-    border-bottom: 2px solid #89CFF0;
-  }
-
-
 
 .main-container {
     max-width: 900px; margin: 40px auto; padding: 0 20px;
@@ -101,9 +44,3 @@ ul {
 .error-toast { position: fixed; bottom: 25px; right: 25px; background-color: #ef4444; color: white; padding: 16px 24px; border-radius: 12px; display: flex; align-items: center; gap: 40px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); z-index: 1000; opacity: 0; visibility: hidden; transition: all 0.3s; transform: translateY(20px); }
 .error-toast.show { opacity: 1; visibility: visible; transform: translateY(0); }
 .close-toast { background: none; border: none; color: white; font-size: 20px; cursor: pointer; }
-
-
-.divider {
-    border-top: 1px solid #e0e0e0;
-    margin: 0;
-  }
