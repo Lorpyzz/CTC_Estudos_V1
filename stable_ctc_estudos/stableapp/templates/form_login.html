@@ -1,83 +1,32 @@
+{% extends 'base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - CTC-ESTUDOS</title>
-    <link rel="stylesheet" href="{% static 'disciplinas.css' %}">
-    <link rel="stylesheet" href="{% static 'duvidas.css' %}">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        .main-container { max-width: 600px; margin: 40px auto; }
-        .form-card form p { margin-bottom: 15px; }
-        .form-card label { display: block; margin-bottom: 5px; font-weight: 600; color: #374151; }
-        .container { max-width: 1300px; margin: auto; }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="navbar">
-            <div class="logo">
-                <img src="{% static 'site-logo.png' %}" width="60px">
-                <h2>CTC estudos</h2>
-            </div>
-            <nav>
-                <ul>
-                    <li><a href="/">Início</a></li>
-                    <li><a href="/disciplinas/">Disciplinas</a></li>
-                    <li><a href="/turmas/">Minhas Turmas</a></li>
-                    <li><a href="/flashcards/">Flashcards</a></li>
-                    <li><a href="/duvidas/">Central de dúvidas</a></li>
-                    <li><a href="/chat/">Chat</a></li>
-                    {% if request.user.is_authenticated %}
-                    <li><a href="/logout/" class="btn">Sair</a></li>
-                {% else %}
-                    <li><a href="/login/" class="btn">Entrar</a></li>
-                {% endif %}
-                </ul>
-            </nav>
-        </div>
-    </div>
 
-    <div class="main-container">
-        <header class="header-section">
-            <div class="title-group">
-                <div class="icon-title">
-                    <span class="blue-icon"></span>
-                    <h1>Acessar Plataforma</h1>
-                </div>
-                <p class="subtitle">Insira sua matrícula e senha cadastradas para entrar.</p>
-            </div>
-        </header>
+{% block title %}Login - CTC Estudos{% endblock %}
 
-        <section class="form-card">
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/login.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="login-wrapper">
+    <div class="login-box">
+        <img src="{% static 'img/logo-puc-rio.png' %}">
+        <h2>Acessar Plataforma</h2>
+        <p>Insira sua matrícula e senha cadastradas para entrar.</p>
+
         {% if messages %}
-        <div style="margin-bottom: 20px;">
             {% for message in messages %}
-            <div style="padding: 10px; border-radius: 5px; {% if message.tags == 'error' %}background-color: #f8d7da; color: #721c24;{% else %}background-color: #d4edda; color: #155724;{% endif %}">
-                {{ message }}
-            </div>
+                <div class="error-msg show">{{ message }}</div>
             {% endfor %}
-        </div>
         {% endif %}
 
-            <form method="POST">
-                {% csrf_token %}
-                {{ form.as_p }}
-                <div style="margin-top: 20px;">
-                    <button type="submit" class="btn-publicar">
-                        <span class="send-icon"></span> Entrar
-                    </button>
-                </div>
-            </form>
-            
-            <div style="margin-top: 15px; text-align: center;">
-                <p style="font-size: 14px; color: #4b5563;">
-                    Não tem uma conta? <a href="/cadastro/" style="color: #2563eb; font-weight: 600;">Cadastre-se aqui</a>
-                </p>
-            </div>
-        </section>
+        <form method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn-entrar">Entrar</button>
+        </form>
+
+        <p class="cadastro-link">Não tem uma conta? <a href="/cadastro/">Cadastre-se aqui</a></p>
     </div>
-</body>
-</html>
+</div>
+{% endblock %}

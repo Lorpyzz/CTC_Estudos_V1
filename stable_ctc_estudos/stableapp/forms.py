@@ -4,9 +4,8 @@ from .models import CtcEstudosUser, Professor, Disciplina, Turma, InscricaoTurma
 
 
 class AlunoForm(forms.ModelForm):
-    password = forms.CharField(
-        widget=forms.PasswordInput(attrs={'class': 'form-input', 'placeholder': 'Crie uma senha'})
-    )
+    
+    password = forms.CharField(label="Senha", widget=forms.PasswordInput(attrs={'class': 'form-input', 'placeholder': 'Crie uma senha'}))
 
     class Meta:
         model = CtcEstudosUser

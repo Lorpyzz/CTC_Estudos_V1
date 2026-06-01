@@ -1,71 +1,86 @@
-body {
-    min-height: 100vh;
-    background: linear-gradient(135deg, #000000 0%, #0f2638 40%, #175a6e 70%, #1590c0 100%);
+/* cadastro.css — herda base.css (nav, footer, body) */
+
+.cadastro-wrapper {
+    min-height: calc(100vh - 120px); /* nav 60px + footer ~60px */
     display: flex;
     align-items: center;
     justify-content: center;
-    font-family: Arial, Helvetica, sans-serif;
+    padding: 40px 20px;
 }
 
-.login-box {
+.cadastro-box {
     background: white;
+    border: 1px solid #e0e0e0;
     border-radius: 16px;
     padding: 40px 32px;
     width: 100%;
-    max-width: 420px;
+    max-width: 480px;
     display: flex;
     flex-direction: column;
     gap: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 }
 
-.login-box img {
-    align-self: center;
-    width: 70px;
-}
-
-.login-box h2 {
-    margin: 0;
-    color: black;
-    font-size: 22px;
-    font-weight: 700;
-    text-align: center;
-}
-
-.login-box > p {
-    margin: -8px 0 0 0;
-    color: gray;
-    font-size: 13px;
-    text-align: center;
-}
-
-
-.campo {
+/* Header com ícone + título */
+.page-header {
     display: flex;
-    flex-direction: column;
-    gap: 6px;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 4px;
 }
 
-.campo label {
-    font-size: 14px;
-    font-weight: 600;
-    color: #222;
+.header-icon {
+    width: 44px;
+    height: 44px;
+    background: #e8f1fb;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #4A90D9;
+    font-size: 18px;
+    flex-shrink: 0;
 }
 
-.campo input {
-    padding: 12px 14px;
-    border: 1px solid #e0e0e0;
-    border-radius: 10px;
-    font-size: 14px;
-    outline: none;
-    width: 100%;
-    box-sizing: border-box;
-    color: #333;
+.page-header h1 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #111;
+    margin: 0;
 }
 
-.campo input:focus {
-    border-color: #4A90D9;
+.page-header .subtitle {
+    font-size: 13px;
+    color: gray;
+    margin: 2px 0 0 0;
 }
 
+/* Alerts — mesmo padrão do login */
+.alert-msg {
+    display: none;
+    font-size: 13px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.alert-msg.show {
+    display: block;
+}
+
+.alert-error {
+    background: #fff0f0;
+    border: 1px solid #ffcccc;
+    color: #cc0000;
+}
+
+.alert-success {
+    background: #f0fff4;
+    border: 1px solid #b2f0c8;
+    color: #1a7f3c;
+}
+
+/* Form — idêntico ao login.css */
 form {
     width: 100%;
     display: flex;
@@ -73,7 +88,64 @@ form {
     gap: 12px;
 }
 
-.btn-entrar {
+form p {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin: 0;
+}
+
+form p label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #222;
+}
+
+form p input,
+form p select,
+form p textarea {
+    padding: 12px 14px;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    font-size: 14px;
+    font-family: inherit;
+    outline: none;
+    width: 100%;
+    box-sizing: border-box;
+    color: #333;
+    background: #fff;
+    transition: border-color 0.15s;
+}
+
+form p input:focus,
+form p select:focus,
+form p textarea:focus {
+    border-color: #4A90D9;
+}
+
+form p textarea {
+    resize: vertical;
+    min-height: 90px;
+}
+
+/* Erros inline do Django */
+form p ul.errorlist {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+form p ul.errorlist li {
+    font-size: 12px;
+    color: #cc0000;
+}
+
+/* Botão — mesmo padrão do btn-entrar no login */
+.btn-cadastrar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
     padding: 14px;
     background-color: #4A90D9;
     color: white;
@@ -81,18 +153,16 @@ form {
     border-radius: 10px;
     font-size: 15px;
     font-weight: 600;
+    font-family: inherit;
     cursor: pointer;
     width: 100%;
+    transition: background-color 0.15s;
 }
 
-.login-link {
-    text-align: center;
-    font-size: 13px;
-    color: #555;
+.btn-cadastrar:hover {
+    background-color: #3a7bc8;
 }
 
-.login-link a {
-    color: #4A90D9;
-    text-decoration: none;
-    font-weight: 600;
+.btn-cadastrar:active {
+    background-color: #2f6ab0;
 }
