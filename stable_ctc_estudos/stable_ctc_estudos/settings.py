@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'stableapp'
 ]
+LOGOUT_REDIRECT_URL = '/'  # ou '/login/' ou qualquer página
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

@@ -23,14 +23,54 @@
             <li><a href="{% url 'duvidas' %}">Central de Dúvidas</a></li>
             <li><a href="{% url 'chat' %}">Chat</a></li>
         </ul>
+
+        {% if user.is_authenticated %}
+        <div class="user-menu">
+            <button class="user-avatar-btn" onclick="toggleDropdown()">
+                <div class="avatar-circle">
+                    {{ user.nome|slice:":1"|upper }}
+                </div>
+            </button>
+
+            <div class="user-dropdown" id="userDropdown">
+                <div class="dropdown-info">
+                    <strong>{{ user.nome }}</strong>
+                    <span>Mat: {{ user.matricula }}</span>
+                </div>
+                <hr class="dropdown-divider">
+                <form method="post" action="{% url 'logout' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn-sair">
+                        <i class="fa-solid fa-arrow-right-from-bracket"></i> Sair
+                    </button>
+                </form>
+            </div>
+        </div>
+        {% else %}
+        <a href="{% url 'login' %}" class="btn-login">Entrar</a>
+        {% endif %}
     </nav>
-    
+
     {% block content %}
     {% endblock %}
-    
+
     <footer>
         <img src="{% static 'img/logo-puc-rio.png' %}" alt="Logo PUC-Rio" class="footer-logo">
         <p>© 2026 CTC Estudos – PUC-Rio. Feito por alunos, para alunos.</p>
     </footer>
+
+    <script>
+        function toggleDropdown() {
+            const dropdown = document.getElementById('userDropdown');
+            dropdown.classList.toggle('show');
+        }
+
+        document.addEventListener('click', function(e) {
+            const menu = document.querySelector('.user-menu');
+            if (menu && !menu.contains(e.target)) {
+                document.getElementById('userDropdown').classList.remove('show');
+            }
+        });
+    </script>
 </body>
 </html>

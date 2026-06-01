@@ -25,14 +25,23 @@
             <div class="codigo">
                 <b>{{ disciplina.codigo }}</b>
             </div>
-            <h3>{{ disciplina.nome }}
-                <a href = "update/{{ disciplina.id }}">Editar</a>
-                <a href = "delete/{{ disciplina.id }}">Deletar</a>
-            </h3>
+            
+            <h3>{{ disciplina.nome }}</h3>
+            
             <br>
             <p style="color:#747474;">{{ disciplina.descricao }}</p>
             <br>
             <p style="color:#3ea5ef;">Ver conteúdos →</p>
+                  <div class="edit_btn">
+                   <h4>
+                    <a href = "update/{{ disciplina.id }}">Editar</a>
+                </div>
+                <div class="delete_btn">
+                    <a href = "delete/{{ disciplina.id }}">Deletar</a>
+                   </h4>
+                </div>
+            
+            
         </button>
         {% endfor %}
     </div>
