@@ -10,7 +10,7 @@ urlpatterns = [
     path('cadastro/', views.paginaCadastro, name='cadastro'),
     path('cadastro', views.paginaCadastro),
     path('login/', views.loginAluno, name='login'),
-    path('logout/', auth_views.LogoutView.as_view(next_page='home'), name='logout'),
+    path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('disciplinas/', views.paginaDisciplinas, name='disciplinas'),
     path('disciplinas/novo/', views.form_disciplina, name='form_disciplina'),
     path('disciplinas/update/<id>',views.update_disciplina),
