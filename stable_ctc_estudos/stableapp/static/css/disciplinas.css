@@ -76,3 +76,21 @@ p {
     color: #2b9dee;
     scale: 1.05;
 }
+
+
+.edit_btn {
+    padding-left: 250px;
+}
+
+.delete_btn{
+    padding-left: 250px;
+}
+
+.edit_btn:hover{
+    color: #2b9dee;
+    scale: 1.05;
+}
+.delete_btn:hover{
+    color:red ;
+    scale: 1.05;
+}

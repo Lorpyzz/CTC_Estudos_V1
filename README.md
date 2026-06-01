@@ -13,7 +13,7 @@ Para buildar o projeto:
 - Instalar o venv (ambiente virtual) por meio do seguinte comando: python -m venv .venv
 
 * Caso já tenha o venv instalado neste projeto:
-- O comando para ativar o ambiente virtual no WINDOWS é: .\venv\Scripts\activate; 
+- O comando para ativar o ambiente virtual no WINDOWS é: .venv\Scripts\activate;
 caso nao queira digitar todo esse caminho, basta fazer: 
 .\aa, o arquivo aa.ps1 possui o comando de ativar o ambiente virtual, reduzindo esse processo de digitação.
 
