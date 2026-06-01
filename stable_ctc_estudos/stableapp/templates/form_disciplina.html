@@ -1,13 +1,15 @@
+{% extends "base.html" %}
 {% load static %}
+
 <!DOCTYPE html>
 <html lang="pt-br">
-
+{% block content %}
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastro de Disciplina - CTC-ESTUDOS</title>
-    <link rel="stylesheet" href="{% static 'disciplinas.css' %}">
-    <link rel="stylesheet" href="{% static 'duvidas.css' %}">
+    <link rel="stylesheet" href="{% static 'css/disciplinas.css' %}">
+    <link rel="stylesheet" href="{% static 'css/duvidas.css' %}">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         .main-container {
@@ -34,38 +36,14 @@
 </head>
 
 <body>
-    <div class="container">
-        <div class="navbar">
-            <div class="logo">
-                <img src="{% static 'site-logo.png' %}" width="60px">
-                <h2>CTC estudos</h2>
-            </div>
-            <nav>
-                <ul>
-                    <li><a href="/">Início</a></li>
-                    <li><a href="/disciplinas/">Disciplinas</a></li>
-            <li><a href="/turmas/">Minhas Turmas</a></li>
-                    <li><a href="/flashcards/">Flashcards</a></li>
-                    <li><a href="/duvidas/">Central de dúvidas</a></li>
-                    <li><a href="/chat/">Chat</a></li>
-                    {% if request.user.is_authenticated %}
-                    <li><a href="/logout/" class="btn">Sair</a></li>
-                {% else %}
-                    <li><a href="/login/" class="btn">Entrar</a></li>
-                {% endif %}
-                </ul>
-            </nav>
-        </div>
-    </div>
 
     <div class="main-container">
         <header class="header-section">
             <div class="title-group">
                 <div class="icon-title">
                     <span class="blue-icon"></span>
-                    <h1>Cadastro de Disciplina</h1>
+                    <h1>{{ action }} disciplina</h1>
                 </div>
-                <p class="subtitle">Adicione uma nova disciplina ao currículo.</p>
             </div>
         </header>
 
@@ -92,5 +70,5 @@
         </section>
     </div>
 </body>
-
+{% endblock %}
 </html>

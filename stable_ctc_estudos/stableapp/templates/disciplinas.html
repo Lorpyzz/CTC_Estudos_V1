@@ -25,7 +25,10 @@
             <div class="codigo">
                 <b>{{ disciplina.codigo }}</b>
             </div>
-            <h3>{{ disciplina.nome }}</h3>
+            <h3>{{ disciplina.nome }}
+                <a href = "update/{{ disciplina.id }}">Editar</a>
+                <a href = "delete/{{ disciplina.id }}">Deletar</a>
+            </h3>
             <br>
             <p style="color:#747474;">{{ disciplina.descricao }}</p>
             <br>

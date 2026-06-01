@@ -14,6 +14,7 @@ urlpatterns = [
     path('disciplinas/', views.paginaDisciplinas, name='disciplinas'),
     path('disciplinas/novo/', views.form_disciplina, name='form_disciplina'),
     path('disciplinas/update/<id>',views.update_disciplina),
+    path('disciplinas/delete/<id>',views.delete_disciplina),
     path('disciplinas/<str:nome>/', views.paginaDisciplinaDetalhe, name='disciplina_detalhe'),
     path('turmas/', views.paginaTurmas, name='turmas'),
     path('turmas/nova/', views.form_turma, name='form_turma'),

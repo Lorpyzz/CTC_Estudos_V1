@@ -348,7 +348,7 @@ def form_disciplina(request):
     return render(
         request,
         "form_disciplina.html",
-        {"form": form}
+        context = {"form":form,"action":"Cadastrar"}
     )
 
 
@@ -542,14 +542,25 @@ def update_disciplina(request, id):
     disciplina = Disciplina.objects.get(id = id)
     if request.method == "POST":
         #atualizar uma disciplina
-        Disciplina.objects.update(
-           nome = request.POST["nome"],
-           codigo = request.POST["codigo"], 
-           descricao = request.POST["descricao"] ,
-           departamento = request.POST["departamento"],
-           email = request.POST["email"]
-        )
-        return redirect("home")
+        disciplina.nome = request.POST["nome"]
+        disciplina.codigo = request.POST["codigo"] 
+        disciplina.descricao = request.POST["descricao"]   
+        disciplina.departamento = request.POST["departamento"]
+        disciplina.email = request.POST["email"]
+        disciplina.save()
+        return redirect("disciplinas")
     form = DisciplinaForm(instance=disciplina)
-    return render(request, "form_disciplina.html", context = {"disciplina":disciplina,"form":form})
+    return render(request, "form_disciplina.html", context = {"disciplina":disciplina,"form":form,"action":"Editar"})
+
+
+#DELETAR UMA DISCIPLINA
+
+def delete_disciplina(request, id):
+    disciplina = Disciplina.objects.get(id = id)
+    if request.method == "POST":
+        if "confirm" in request.POST:
+            disciplina.delete()
+        return redirect("disciplinas")
+    form = DisciplinaForm(instance=disciplina)
+    return render(request, "are_you_sure.html", context = {"disciplina":disciplina,"form":form})
 

@@ -1,0 +1,7 @@
+Você tem certeza que deseja deletar a disciplina "{{disciplina.nome}}"? 
+
+<form method="post">
+    {% csrf_token %}
+    <input type = "submit" name="confirm" value = "Sim">
+    <input type = "submit" value = "Não">
+</form>
