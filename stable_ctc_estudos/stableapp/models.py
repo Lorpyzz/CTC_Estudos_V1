@@ -214,6 +214,30 @@ class Monitoria(models.Model):
 
     semestre_atuacao = models.CharField(max_length=6)
 
+    sala = models.CharField(
+        max_length=50,
+        blank=True
+    )
+
+    dia_semana = models.CharField(
+        max_length=20, 
+        default='sábado'
+    )
+
+    horario = models.CharField(
+        max_length=50, 
+        default='19h - 21h'
+    )
+
+    online = models.BooleanField(
+        default=False
+    )
+
+    link_reuniao = models.URLField(
+        blank=True,
+        null=True
+    )
+
     def __str__(self):
 
         nome_aluno = (
@@ -230,27 +254,31 @@ class Monitoria(models.Model):
 
     def clean(self):
 
-        if hasattr(self, 'monitor') and hasattr(self, 'disciplina'):
+        super().clean()
+          
+        user = self.monitor
 
-            ja_cursou = InscricaoTurma.objects.filter(
-                user=self.monitor,
-                turma__disciplina=self.disciplina,
-                concluida=True
-            ).exists()
+        ja_cursou = InscricaoTurma.objects.filter(
+            user=self.monitor,
+            turma__disciplina=self.disciplina,
+            status='CONCLUIDA'
+        ).exists()
 
-            if not ja_cursou:
+        if not ja_cursou:
+            raise ValidationError(
+                f"O aluno '{self.monitor.nome}' não concluiu "
+                f"'{self.disciplina.nome}'."
+            )
 
-                nome_aluno = (
-                    self.monitor.first_name
-                    if self.monitor.first_name
-                    else self.monitor.username
-                )
+        if self.online and not self.link_reuniao:
+            raise ValidationError(
+                "Monitorias online devem possuir um link de reunião."
+            )
 
-                raise ValidationError(
-                    f"O aluno '{nome_aluno}' "
-                    f"não concluiu "
-                    f"'{self.disciplina.nome}'."
-                )
+        if not self.online and not self.sala:
+            raise ValidationError(
+                "Monitorias presenciais devem possuir uma sala."
+            )
 
     def save(self, *args, **kwargs):
 

@@ -709,26 +709,33 @@ def delete_conteudo(request, id):
 @login_required
 def form_monitoria(request):
     if request.method == "POST":
-        form = MonitoriaForm(request.POST)
+        dados_formulario = request.POST.copy()
+        dados_formulario['monitor'] = request.user.id 
+        
+        form = MonitoriaForm(dados_formulario)
+
         if form.is_valid():
-            form.save()
+            monitoria = form.save(commit=False)
+            monitoria.monitor = request.user
+            monitoria.save()
             messages.success(request, 'Monitoria cadastrada com sucesso!')
-            return redirect('disciplinas')
+            return redirect('monitoria')
         else:
             messages.error(request, 'Erro no cadastro.')
     else:
-        form = MonitoriaForm()
+        form = MonitoriaForm(initial={'monitor': request.user})
     return render(request, "form_monitoria.html", {"form": form})
 
 @login_required
-def update_monitoria(request, id):
+def update_monitoria(request,  id):
     monitoria = get_object_or_404(Monitoria, id=id)
     if request.method == "POST":
         form = MonitoriaForm(request.POST, instance=monitoria)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Monitoria atualizada com sucesso!')
-            return redirect('disciplinas')
+        if request.user.is_monitor:
+            if form.is_valid():
+                form.save()
+                messages.success(request, 'Monitoria atualizada com sucesso!')
+                return redirect('disciplinas')
         else:
             messages.error(request, 'Erro na atualização.')
     else:
@@ -736,11 +743,32 @@ def update_monitoria(request, id):
     return render(request, "form_monitoria.html", {"form": form, "monitoria": monitoria})
 
 @login_required
-def delete_monitoria(request, id):
-    monitoria = get_object_or_404(Monitoria, id=id)
-    monitoria.delete()
-    messages.success(request, 'Monitoria deletada com sucesso!')
+def delete_monitoria(request):
+    if request.user.is_monitor:
+        monitoria = get_object_or_404(Monitoria, nome= request.user.nome)
+        monitoria.delete()
+        messages.success(request, 'Monitoria deletada com sucesso!')
+    else:
+        messages.error(request, 'Você não possui permissão para deletar uma monitoria.')
     return redirect('disciplinas')
+
+@login_required
+def exibe_monitoria(request):
+
+    monitorias = Monitoria.objects.filter(
+        disciplina__turmas__inscricoes__user=request.user,
+        disciplina__turmas__inscricoes__status='ATIVA'
+    ).distinct()
+
+    return render(
+        request,
+        'monitoria.html',
+        {
+            'monitorias': monitorias,
+            
+        }
+    )
+
 
 @login_required
 def form_professor(request):
@@ -822,3 +850,4 @@ def editar_turma(request, turma_id):
         return redirect('listar_turmas')
 
     return render(request, 'editar_turma.html', {'form': form})
+

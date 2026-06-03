@@ -36,6 +36,30 @@
 </head>
 
 <body>
+    <div class="container">
+        <div class="navbar">
+            <div class="logo">
+                <img src="{% static 'site-logo.png' %}" width="60px">
+                <h2>CTC estudos</h2>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="/">Início</a></li>
+                    <li><a href="/disciplinas/">Disciplinas</a></li>
+            <li><a href="/turmas/">Minhas Turmas</a></li>
+                    <li><a href="/monitoria/">Monitoria</a></li>
+                    <li><a href="/flashcards/">Flashcards</a></li>
+                    <li><a href="/duvidas/">Central de dúvidas</a></li>
+                    <li><a href="/chat/">Chat</a></li>
+                    {% if request.user.is_authenticated %}
+                    <li><a href="/logout/" class="btn">Sair</a></li>
+                {% else %}
+                    <li><a href="/login/" class="btn">Entrar</a></li>
+                {% endif %}
+                </ul>
+            </nav>
+        </div>
+    </div>
 
     <div class="main-container">
         <header class="header-section">
