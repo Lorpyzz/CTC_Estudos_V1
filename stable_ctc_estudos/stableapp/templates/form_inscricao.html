@@ -26,16 +26,16 @@
                 <ul>
                     <li><a href="/">Início</a></li>
                     <li><a href="/disciplinas/">Disciplinas</a></li>
-            <li><a href="/turmas/">Minhas Turmas</a></li>
+                    <li><a href="/turmas/">Minhas Turmas</a></li>
                     <li><a href="/flashcards/">Flashcards</a></li>
                     <li><a href="/duvidas/">Central de dúvidas</a></li>
                     <li><a href="/chat/">Chat</a></li>
                     <li><a href="/cadastro/" class="btn">Entrar</a></li>
                     {% if request.user.is_authenticated %}
-                    <li><a href="/logout/" class="btn">Sair</a></li>
-                {% else %}
-                    <li><a href="/login/" class="btn">Entrar</a></li>
-                {% endif %}
+                        <li><a href="/logout/" class="btn">Sair</a></li>
+                    {% else %}
+                        <li><a href="/login/" class="btn">Entrar</a></li>
+                    {% endif %}
                 </ul>
             </nav>
         </div>
@@ -77,6 +77,7 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
+            
             const mapping = {{ mapping_json|safe }};
             const disciplinaSelect = document.getElementById("id_disciplina");
             const codigoTurmaSelect = document.getElementById("id_codigo_turma");
@@ -85,7 +86,6 @@
                 const discId = disciplinaSelect.value;
                 const selectedCode = codigoTurmaSelect.value;
                 
-                // Clear and add placeholder
                 codigoTurmaSelect.innerHTML = '<option value="">---------</option>';
                 
                 if (discId && mapping[discId]) {
@@ -105,6 +105,26 @@
                 disciplinaSelect.addEventListener("change", updateTurmas);
                 updateTurmas(); 
             }
+
+            const selectStatus = document.getElementById("id_status"); 
+            const inputNotaFinal = document.getElementById("id_nota_final");
+
+            if (selectStatus && inputNotaFinal) {
+                function gerenciarCampoNota() {
+
+                    if (selectStatus.value === 'CONCLUIDA') {
+                        inputNotaFinal.disabled = false; 
+                    } else {
+                        inputNotaFinal.disabled = true;  
+                        inputNotaFinal.value = "";       
+                    }
+                }
+
+                gerenciarCampoNota();
+
+                selectStatus.addEventListener("change", gerenciarCampoNota);
+            }
+
         });
     </script>
 </body>

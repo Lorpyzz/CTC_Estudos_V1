@@ -12,51 +12,215 @@
 
 {% block content %}
 <header class="hero-header">
-    <h1>Minhas Turmas</h1>
+    <h1>Fazer login</h1>
     <p>Acompanhe seu progresso e gerencie as turmas em que você está inscrito.</p>
 </header>
 
 <main class="container">
+
     <div class="search-bar">
         <input type="text" placeholder="Buscar turmas..." class="search-input">
     </div>
 
     <div class="turmas-grid">
+
         {% if request.user.is_authenticated %}
+
             {% if inscricoes %}
+
                 {% for inscricao in inscricoes %}
-                    <div class="turma-card {% if inscricao.concluida %}opacity-card{% endif %}">
+
+                    <div class="turma-card {% if inscricao.status == 'CONCLUIDA' %}opacity-card{% endif %}">
+
                         <div class="card-header {% if forloop.counter0|divisibleby:3 %}math-bg{% elif forloop.counter0|divisibleby:2 %}prog-bg{% else %}hist-bg{% endif %}">
-                            <span class="status-badge {% if inscricao.concluida %}completed{% else %}active{% endif %}">
-                                {% if inscricao.concluida %}Concluída{% else %}Em andamento{% endif %}
+
+                            <span class="status-badge {% if inscricao.status == 'CONCLUIDA' %}completed{% else %}active{% endif %}">
+                                {{ inscricao.get_status_display }}
                             </span>
+
                             <h2>{{ inscricao.turma.disciplina.nome }}</h2>
+
                         </div>
+
                         <div class="card-body">
-                            <p class="professor">Prof. {{ inscricao.turma.professor.nome }}</p>
-                            <p class="description">Turma: {{ inscricao.turma.codigo_turma }} | Semestre: {{ inscricao.turma.semestre }}</p>
-                            <p class="description">Horário: {{ inscricao.turma.horario }}</p>
-                            {% if inscricao.nota_final is not None %}
-                                <p class="description"><b>Nota Final:</b> {{ inscricao.nota_final }}</p>
+
+                            <p class="professor">
+                                Prof. {{ inscricao.turma.professor.nome }}
+                            </p>
+
+                            <p class="description">
+                                Turma: {{ inscricao.turma.codigo_turma }}
+                                |
+                                Semestre: {{ inscricao.turma.semestre }}
+                            </p>
+
+                            <p class="description">
+                                Horário: {{ inscricao.turma.horario }}
+                            </p>
+
+                            {% if inscricao.nota_final %}
+                                <p class="description">
+                                    <b>Nota Final:</b> {{ inscricao.nota_final }}
+                                </p>
+                            {% endif %}
+
+                        </div>
+
+                        <div class="card-footer" style="display: flex; flex-direction: column; gap: 8px;">
+                            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                                <a href="/disciplinas/{{ inscricao.turma.disciplina.nome|slugify }}/"
+                                   class="btn-secondary" style="flex: 1; text-align: center;">
+                                    Acessar Disciplina
+                                </a>
+                                <a href="{% url 'update_inscricao' id=inscricao.id %}"
+                                   class="btn-secondary" style="flex: 1; text-align: center;">
+                                    Editar Inscrição
+                                </a>
+                            </div>
+
+                            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                                <a href="{% url 'update_turma' id=inscricao.turma.id %}"
+                                   class="btn-secondary" style="flex: 1; text-align: center;">
+                                    Editar Turma
+                                </a>
+                                <form method="post"
+                                      action="{% url 'delete_turma' id=inscricao.turma.id %}"
+                                      style="display:inline; flex: 1;">
+                                    {% csrf_token %}
+                                    <button
+                                        type="submit"
+                                        class="btn-secondary"
+                                        style="width: 100%; background-color: #fca5a5; color: #7f1d1d;"
+                                        onclick="return confirm('Deseja realmente DELETAR esta turma do sistema?');">
+                                        Deletar Turma
+                                    </button>
+                                </form>
+                            </div>
+
+                            {% if inscricao.status == 'ATIVA' %}
+                                <form method="post"
+                                      action="{% url 'cancelar_inscricao' inscricao.turma.id %}"
+                                      style="width: 100%;">
+
+                                    {% csrf_token %}
+
+                                    <button
+                                        type="submit"
+                                        class="btn-secondary"
+                                        style="width: 100%; border: 1px solid #d1d5db; background-color: #f9fafb; color: #374151;"
+                                        onclick="return confirm('Deseja realmente cancelar esta inscrição?');">
+
+                                        Cancelar Inscrição
+
+                                    </button>
+
+                                </form>
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+            {% else %}
+
+                <div style="grid-column: 1 / -1; text-align: center; padding: 40px;">
+
+                    <p style="color: #6b7280; font-size: 18px; margin-bottom: 20px;">
+                        Você não está inscrito em nenhuma turma ainda.
+                    </p>
+
+                    <a href="{% url 'form_inscricao' %}"
+                       class="btn-primary-small"
+                       style="text-decoration: none; display: inline-block; padding: 10px 20px;">
+
+                        Inscrever-se em uma Turma
+
+                    </a>
+
+                </div>
+
+            {% endif %}
+
+        {% else %}
+
+            <div style="grid-column: 1 / -1; text-align: center; padding: 40px;">
+
+                <p style="color: #6b7280; font-size: 18px; margin-bottom: 20px;">
+                    Faça login para ver suas turmas inscritas.
+                </p>
+
+                <a href="/login/"
+                   class="btn-primary-small"
+                   style="text-decoration: none; display: inline-block; padding: 10px 20px;">
+
+                    Fazer Login
+
+                </a>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+    <div style="margin-top: 40px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px solid #e5e7eb; padding-bottom: 10px;">
+            <h2 style="font-size: 1.5rem; font-weight: 700; color: #1f2937;">Minhas Sessões de Estudo</h2>
+            <a href="{% url 'form_sessao_estudo' %}" class="btn-primary-small" style="text-decoration: none; display: inline-block; padding: 8px 16px; background-color: #3b82f6; color: white; border-radius: 6px; font-weight: 600; font-size: 0.875rem;">
+                + Registrar Estudo
+            </a>
+        </div>
+
+        {% if sessoes %}
+            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px;">
+                {% for sessao in sessoes %}
+                    <div style="background-color: white; border: 1px solid #e5e7eb; border-radius: 8px; padding: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); display: flex; flex-direction: column; justify-content: space-between;">
+                        <div>
+                            <span style="font-size: 0.75rem; font-weight: 600; color: #3b82f6; text-transform: uppercase;">
+                                {{ sessao.topico.disciplina.nome }}
+                            </span>
+                            <h3 style="font-size: 1.125rem; font-weight: 600; color: #1f2937; margin: 4px 0 8px 0;">
+                                {{ sessao.topico.titulo_topico }}
+                            </h3>
+                            <p style="font-size: 0.875rem; color: #4b5563; margin-bottom: 8px;">
+                                <strong>Duração:</strong> {{ sessao.duracao_minutos }} minutos
+                            </p>
+                            <p style="font-size: 0.875rem; color: #4b5563; margin-bottom: 8px;">
+                                <strong>Data:</strong> {{ sessao.data_estudo|date:"d/m/Y" }}
+                            </p>
+                            {% if sessao.observacoes %}
+                                <p style="font-size: 0.875rem; color: #6b7280; font-style: italic; background-color: #f9fafb; padding: 8px; border-radius: 4px;">
+                                    "{{ sessao.observacoes }}"
+                                </p>
                             {% endif %}
                         </div>
-                        <div class="card-footer">
-                            <a href="/disciplinas/{{ inscricao.turma.disciplina.nome|slugify }}/" class="btn-secondary">Acessar Disciplina</a>
+                        <div style="margin-top: 16px; display: flex; gap: 8px; justify-content: flex-end; border-top: 1px solid #f3f4f6; padding-top: 12px;">
+                            <a href="{% url 'update_sessao_estudo' id=sessao.id %}" style="padding: 6px 12px; background-color: #f3f4f6; color: #374151; border-radius: 6px; font-size: 0.875rem; text-decoration: none; font-weight: 500;">
+                                Editar
+                            </a>
+                            <form method="post" action="{% url 'delete_sessao_estudo' id=sessao.id %}" style="display: inline;">
+                                {% csrf_token %}
+                                <button type="submit" style="padding: 6px 12px; background-color: #fee2e2; color: #991b1b; border: none; border-radius: 6px; font-size: 0.875rem; font-weight: 500; cursor: pointer;" onclick="return confirm('Deseja realmente excluir esta sessão de estudo?');">
+                                    Excluir
+                                </button>
+                            </form>
                         </div>
                     </div>
                 {% endfor %}
-            {% else %}
-                <div style="grid-column: 1 / -1; text-align: center; padding: 40px;">
-                    <p style="color: #6b7280; font-size: 18px; margin-bottom: 20px;">Você não está inscrito em nenhuma turma ainda.</p>
-                    <a href="{% url 'form_inscricao' %}" class="btn-primary-small" style="text-decoration: none; display: inline-block; padding: 10px 20px;">Inscrever-se em uma Turma</a>
-                </div>
-            {% endif %}
+            </div>
         {% else %}
-            <div style="grid-column: 1 / -1; text-align: center; padding: 40px;">
-                <p style="color: #6b7280; font-size: 18px; margin-bottom: 20px;">Faça login para ver suas turmas inscritas.</p>
-                <a href="/login/" class="btn-primary-small" style="text-decoration: none; display: inline-block; padding: 10px 20px;">Fazer Login</a>
+            <div style="text-align: center; padding: 40px; background-color: #f9fafb; border-radius: 8px; border: 1px dashed #d1d5db;">
+                <p style="color: #6b7280; font-size: 16px; margin-bottom: 16px;">
+                    Você ainda não registrou nenhuma sessão de estudo.
+                </p>
+                <a href="{% url 'form_sessao_estudo' %}" class="btn-primary-small" style="text-decoration: none; display: inline-block; padding: 8px 16px; background-color: #3b82f6; color: white; border-radius: 6px; font-weight: 600;">
+                    Começar a Estudar
+                </a>
             </div>
         {% endif %}
     </div>
+
 </main>
 {% endblock %}

@@ -1,4 +1,5 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, get_list_or_404, get_object_or_404, redirect
+from django.http import HttpResponseForbidden
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, get_user_model
 from django.contrib.auth.forms import AuthenticationForm
@@ -12,7 +13,11 @@ from .models import (
     SessaoEstudo,
     InscricaoTurma,
     Chat,
-    Mensagem
+    Mensagem,
+    Topico,
+    Conteudo,
+    Monitoria,
+    Professor
 )
 
 from .forms import (
@@ -21,20 +26,18 @@ from .forms import (
     TurmaForm,
     SessaoEstudoForm,
     InscricaoTurmaForm,
-    TopicoForm
+    TopicoForm,
+    ConteudoForm,
+    MonitoriaForm,
+    ProfessorForm
 )
 
-# PEGA O MODEL CUSTOMIZADO
 User = get_user_model()
 
 
 def paginaInicial(request):
     return render(request, "home.html")
 
-
-# =========================================
-# LOGIN
-# =========================================
 
 def loginAluno(request):
 
@@ -88,7 +91,6 @@ def loginAluno(request):
     else:
         form = AuthenticationForm()
 
-    # CUSTOMIZA CAMPOS
     if 'username' in form.fields:
 
         form.fields['username'].label = 'Matrícula'
@@ -114,10 +116,6 @@ def loginAluno(request):
     )
 
 
-# =========================================
-# CADASTRO
-# =========================================
-
 def paginaCadastro(request):
 
     if request.method == "POST":
@@ -128,7 +126,6 @@ def paginaCadastro(request):
 
             user = form.save(commit=False)
 
-            # LOGIN COM MATRICULA
             user.username = user.matricula
 
             user.set_password(
@@ -165,11 +162,6 @@ def paginaCadastro(request):
         }
     )
 
-
-# =========================================
-# DISCIPLINAS
-# =========================================
-
 def paginaDisciplinas(request):
 
     if request.method == "POST":
@@ -202,32 +194,35 @@ def paginaDisciplinas(request):
     )
 
 
-# =========================================
-# TURMAS
-# =========================================
-
 @login_required
 def paginaTurmas(request):
 
     inscricoes = (
         InscricaoTurma.objects
-        .filter(user=request.user)
+        .filter(user=request.user, 
+                status__in=['ATIVA', 'CONCLUIDA'])
         .select_related(
             'turma__disciplina',
             'turma__professor'
         )
     )
 
+    sessoes = (
+        SessaoEstudo.objects
+        .filter(aluno=request.user)
+        .select_related('topico__disciplina')
+        .order_by('-id')
+    )
+
     return render(
         request,
         "turmas.html",
-        {"inscricoes": inscricoes}
+        {
+            "inscricoes": inscricoes,
+            "sessoes": sessoes
+        }
     )
 
-
-# =========================================
-# FLASHCARDS
-# =========================================
 
 def paginaFlashcards(request):
 
@@ -240,10 +235,6 @@ def paginaFlashcards(request):
     )
 
 
-# =========================================
-# DUVIDAS
-# =========================================
-
 def paginaDuvidas(request):
 
     disciplinas = Disciplina.objects.all()
@@ -254,10 +245,6 @@ def paginaDuvidas(request):
         {"disciplinas": disciplinas}
     )
 
-
-# =========================================
-# CHAT
-# =========================================
 
 @login_required
 def paginaChat(request):
@@ -299,10 +286,6 @@ def paginaChat(request):
         }
     )
 
-# =========================================
-# DETALHE DISCIPLINA
-# =========================================
-
 def paginaDisciplinaDetalhe(
     request,
     nome
@@ -312,11 +295,6 @@ def paginaDisciplinaDetalhe(
         request,
         f"{nome}.html"
     )
-
-
-# =========================================
-# FORM DISCIPLINA
-# =========================================
 
 def form_disciplina(request):
 
@@ -352,10 +330,6 @@ def form_disciplina(request):
     )
 
 
-# =========================================
-# FORM TURMA
-# =========================================
-
 def form_turma(request):
 
     if request.method == "POST":
@@ -390,16 +364,12 @@ def form_turma(request):
     )
 
 
-# =========================================
-# FORM SESSAO ESTUDO
-# =========================================
-
 @login_required
 def form_sessao_estudo(request):
 
     if request.method == "POST":
 
-        form = SessaoEstudoForm(request.POST)
+        form = SessaoEstudoForm(request.POST, user=request.user)
 
         if form.is_valid():
 
@@ -417,7 +387,7 @@ def form_sessao_estudo(request):
             return redirect('disciplinas')
 
     else:
-        form = SessaoEstudoForm()
+        form = SessaoEstudoForm(user=request.user)
 
     return render(
         request,
@@ -425,10 +395,6 @@ def form_sessao_estudo(request):
         {"form": form}
     )
 
-
-# =========================================
-# INSCRICAO
-# =========================================
 
 @login_required
 def form_inscricao(request):
@@ -499,10 +465,6 @@ def form_inscricao(request):
     )
 
 
-# =========================================
-# FORM TOPICO
-# =========================================
-
 def form_topico(request):
 
     if request.method == "POST":
@@ -536,20 +498,295 @@ def form_topico(request):
         {"form": form}
     )
 
-# ATUALIZAR INFORMAÇÃO DE UMA DISCIPLINA
 
 def update_disciplina(request, id):
-    disciplina = Disciplina.objects.get(id = id)
+    disciplina = get_object_or_404(Disciplina, id=id)
     if request.method == "POST":
-        #atualizar uma disciplina
-        Disciplina.objects.update(
-           nome = request.POST["nome"],
-           codigo = request.POST["codigo"], 
-           descricao = request.POST["descricao"] ,
-           departamento = request.POST["departamento"],
-           email = request.POST["email"]
-        )
-        return redirect("home")
-    form = DisciplinaForm(instance=disciplina)
-    return render(request, "form_disciplina.html", context = {"disciplina":disciplina,"form":form})
+        form = DisciplinaForm(request.POST, instance=disciplina)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Disciplina atualizada com sucesso!')
+            return redirect('disciplinas')
+        else:
+            messages.error(request, 'Erro na atualização.')
+    else:
+        form = DisciplinaForm(instance=disciplina)
+    return render(request, "form_disciplina.html", context={"disciplina": disciplina, "form": form})
 
+@login_required
+def delete_inscricao(request, turma_id):
+    inscricao = get_object_or_404(
+        InscricaoTurma,
+        user=request.user,
+        turma_id=turma_id
+    )
+
+    if inscricao.status == 'CONCLUIDA':
+        messages.error(
+            request,
+            "Não é possível cancelar uma turma já concluída."
+        )
+        return redirect('turmas')
+
+    inscricao.status = 'CANCELADA'
+    inscricao.save()
+
+    SessaoEstudo.objects.filter(
+        aluno=request.user,
+        topico__disciplina=inscricao.turma.disciplina
+    ).delete()
+
+    messages.success(
+        request,
+        "Inscrição cancelada com sucesso."
+    )
+
+    return redirect('turmas')
+
+@login_required
+def update_turma(request, id):
+    turma = get_object_or_404(Turma, id=id)
+    if request.method == "POST":
+        form = TurmaForm(request.POST, instance=turma, user=request.user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Turma atualizada com sucesso!')
+            return redirect('disciplinas')
+        else:
+            messages.error(request, 'Erro na atualização.')
+    else:
+        form = TurmaForm(instance=turma, user=request.user)
+    
+    if not request.user.is_monitor:
+        return HttpResponseForbidden(
+            "Você não tem permissão para alterar o professor."
+        )
+    return render(request, "form_turma.html", {"form": form, "turma": turma})
+
+@login_required
+def delete_turma(request, id):
+    turma = get_object_or_404(Turma, id=id)
+    
+    is_enrolled = InscricaoTurma.objects.filter(user=request.user, turma=turma, status__in=['ATIVA', 'CONCLUIDA']).exists()
+    if not is_enrolled:
+        messages.error(request, "Você só pode deletar uma turma na qual esteja matriculado.")
+        return redirect('disciplinas')
+        
+    enrolled_users = InscricaoTurma.objects.filter(turma=turma).values_list('user', flat=True)
+    SessaoEstudo.objects.filter(aluno_id__in=enrolled_users, topico__disciplina=turma.disciplina).delete()
+    
+    turma.delete()
+    messages.success(request, "Turma deletada com sucesso.")
+    return redirect('disciplinas')
+
+@login_required
+def update_sessao_estudo(request, id):
+    sessao = get_object_or_404(SessaoEstudo, id=id, aluno=request.user)
+    if request.method == "POST":
+        form = SessaoEstudoForm(request.POST, instance=sessao, user=request.user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Sessão de estudo atualizada com sucesso!')
+            return redirect('disciplinas')
+        else:
+            messages.error(request, 'Erro na atualização.')
+    else:
+        form = SessaoEstudoForm(instance=sessao, user=request.user)
+    return render(request, "form_sessao_estudo.html", {"form": form, "sessao": sessao})
+
+@login_required
+def delete_sessao_estudo(request, id):
+    sessao = get_object_or_404(SessaoEstudo, id=id, aluno=request.user)
+    sessao.delete()
+    messages.success(request, 'Sessão de estudo deletada com sucesso!')
+    return redirect('disciplinas')
+
+@login_required
+def update_inscricao(request, id):
+    inscricao = get_object_or_404(InscricaoTurma, id=id, user=request.user)
+    if request.method == "POST":
+        form = InscricaoTurmaForm(request.POST, instance=inscricao)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Inscrição atualizada com sucesso!')
+            return redirect('turmas')
+        else:
+            messages.error(request, 'Erro na atualização.')
+    else:
+        form = InscricaoTurmaForm(instance=inscricao)
+    return render(request, "form_inscricao.html", {"form": form, "inscricao": inscricao})
+
+@login_required
+def update_topico(request, id):
+    topico = get_object_or_404(Topico, id=id)
+    if request.method == "POST":
+        form = TopicoForm(request.POST, instance=topico)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Tópico atualizado com sucesso!')
+            return redirect('disciplinas')
+        else:
+            messages.error(request, 'Erro na atualização.')
+    else:
+        form = TopicoForm(instance=topico)
+    return render(request, "form_topico.html", {"form": form, "topico": topico})
+
+@login_required
+def delete_topico(request, id):
+    topico = get_object_or_404(Topico, id=id)
+    topico.delete()
+    messages.success(request, 'Tópico deletado com sucesso!')
+    return redirect('disciplinas')
+
+@login_required
+def form_conteudo(request):
+    if request.method == "POST":
+        form = ConteudoForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Conteúdo cadastrado com sucesso!')
+            return redirect('disciplinas')
+        else:
+            messages.error(request, 'Erro no cadastro.')
+    else:
+        form = ConteudoForm()
+    return render(request, "form_conteudo.html", {"form": form})
+
+@login_required
+def update_conteudo(request, id):
+    conteudo = get_object_or_404(Conteudo, id=id)
+    if request.method == "POST":
+        form = ConteudoForm(request.POST, instance=conteudo)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Conteúdo atualizado com sucesso!')
+            return redirect('disciplinas')
+        else:
+            messages.error(request, 'Erro na atualização.')
+    else:
+        form = ConteudoForm(instance=conteudo)
+    return render(request, "form_conteudo.html", {"form": form, "conteudo": conteudo})
+
+@login_required
+def delete_conteudo(request, id):
+    conteudo = get_object_or_404(Conteudo, id=id)
+    conteudo.delete()
+    messages.success(request, 'Conteúdo deletado com sucesso!')
+    return redirect('disciplinas')
+
+@login_required
+def form_monitoria(request):
+    if request.method == "POST":
+        form = MonitoriaForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Monitoria cadastrada com sucesso!')
+            return redirect('disciplinas')
+        else:
+            messages.error(request, 'Erro no cadastro.')
+    else:
+        form = MonitoriaForm()
+    return render(request, "form_monitoria.html", {"form": form})
+
+@login_required
+def update_monitoria(request, id):
+    monitoria = get_object_or_404(Monitoria, id=id)
+    if request.method == "POST":
+        form = MonitoriaForm(request.POST, instance=monitoria)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Monitoria atualizada com sucesso!')
+            return redirect('disciplinas')
+        else:
+            messages.error(request, 'Erro na atualização.')
+    else:
+        form = MonitoriaForm(instance=monitoria)
+    return render(request, "form_monitoria.html", {"form": form, "monitoria": monitoria})
+
+@login_required
+def delete_monitoria(request, id):
+    monitoria = get_object_or_404(Monitoria, id=id)
+    monitoria.delete()
+    messages.success(request, 'Monitoria deletada com sucesso!')
+    return redirect('disciplinas')
+
+@login_required
+def form_professor(request):
+    if request.method == "POST":
+        form = ProfessorForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Professor cadastrado com sucesso!')
+            return redirect('disciplinas')
+        else:
+            messages.error(request, 'Erro no cadastro.')
+    else:
+        form = ProfessorForm()
+    return render(request, "form_professor.html", {"form": form})
+
+@login_required
+def update_professor(request, id):
+    professor = get_object_or_404(Professor, id=id)
+    if request.method == "POST":
+        form = ProfessorForm(request.POST, instance=professor)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Professor atualizado com sucesso!')
+            return redirect('disciplinas')
+        else:
+            messages.error(request, 'Erro na atualização.')
+    else:
+        form = ProfessorForm(instance=professor)
+    return render(request, "form_professor.html", {"form": form, "professor": professor})
+
+@login_required
+def delete_professor(request, id):
+    professor = get_object_or_404(Professor, id=id)
+    professor.delete()
+    messages.success(request, 'Professor deletado com sucesso!')
+    return redirect('disciplinas')
+
+@login_required
+def update_aluno(request, id):
+    if request.user.id != int(id):
+        messages.error(request, "Você não tem permissão para editar este perfil.")
+        return redirect('home')
+    aluno = get_object_or_404(User, id=id)
+    if request.method == "POST":
+        form = AlunoForm(request.POST, instance=aluno)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Perfil atualizado com sucesso!')
+            return redirect('home')
+        else:
+            messages.error(request, 'Erro na atualização.')
+    else:
+        form = AlunoForm(instance=aluno)
+    return render(request, "form_aluno.html", {"form": form, "aluno": aluno})
+
+@login_required
+def delete_aluno(request, id):
+    if request.user.id != int(id):
+        messages.error(request, "Você não tem permissão para deletar este perfil.")
+        return redirect('home')
+    aluno = get_object_or_404(User, id=id)
+    aluno.delete()
+    messages.success(request, 'Perfil deletado com sucesso.')
+    return redirect('home')
+
+@login_required
+def editar_turma(request, turma_id):
+    turma = get_object_or_404(Turma, id=turma_id)
+
+    if not request.user.is_monitor:
+        return HttpResponseForbidden(
+            "Apenas monitores podem atualizar o professor."
+        )
+
+    form = TurmaForm(request.POST or None, instance=turma)
+
+    if form.is_valid():
+        form.save()
+        return redirect('listar_turmas')
+
+    return render(request, 'editar_turma.html', {'form': form})

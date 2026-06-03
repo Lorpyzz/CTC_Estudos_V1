@@ -7,6 +7,8 @@ class CtcEstudosUser(AbstractUser):
 
     nome = models.CharField(max_length=100)
 
+    is_monitor = models.BooleanField(default= False)
+
     matricula = models.CharField(
         max_length=15,
         unique=True
@@ -63,6 +65,11 @@ class Disciplina(models.Model):
 
     def __str__(self):
         return f"{self.codigo} - {self.nome}"
+    
+    def delete(self, *args, **kwargs):
+        raise ValidationError(
+            "Não é permitido excluir disciplinas."
+        )
 
 
 class Turma(models.Model):
@@ -97,6 +104,18 @@ class Turma(models.Model):
 
 class InscricaoTurma(models.Model):
 
+    STATUS_CHOICES = [
+        ('ATIVA', 'Ativa'),
+        ('CANCELADA', 'Cancelada'),
+        ('CONCLUIDA', 'Concluída'),
+    ]
+
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default='ATIVA'
+    )
+    
     user = models.ForeignKey(
         CtcEstudosUser,
         on_delete=models.CASCADE,
@@ -109,8 +128,6 @@ class InscricaoTurma(models.Model):
         related_name='inscricoes'
     )
 
-    concluida = models.BooleanField(default=False)
-
     nota_final = models.DecimalField(
         max_digits=4,
         decimal_places=2,
@@ -121,9 +138,9 @@ class InscricaoTurma(models.Model):
     class Meta:
         unique_together = ('user', 'turma')
 
-        verbose_name = "Inscrição em Turma"
+    verbose_name = "Inscrição em Turma"
 
-        verbose_name_plural = "Inscrições em Turmas"
+    verbose_name_plural = "Inscrições em Turmas"
 
     def __str__(self):
 
