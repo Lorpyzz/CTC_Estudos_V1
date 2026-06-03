@@ -1,38 +1,104 @@
-*{
+.login-wrapper {
+    min-height: calc(100vh - 120px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+}
+
+.login-box {
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 16px;
+    padding: 40px 32px;
+    width: 100%;
+    max-width: 480px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.login-box h2 {
     margin: 0;
-    padding: 0;
+    color: black;
+    font-size: 22px;
+    font-weight: 700;
+    text-align: center;
+}
+
+.login-box > p {
+    margin: -8px 0 0 0;
+    color: gray;
+    font-size: 13px;
+    text-align: center;
+}
+
+.error-msg {
+    display: none;
+    background: #fff0f0;
+    border: 1px solid #ffcccc;
+    color: #cc0000;
+    font-size: 13px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.error-msg.show {
+    display: block;
+}
+
+form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+form p {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin: 0;
+}
+
+form p label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #222;
+}
+
+form p input,
+form p select {
+    padding: 12px 14px;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    font-size: 14px;
+    outline: none;
+    width: 100%;
     box-sizing: border-box;
+    color: #333;
+    font-family: inherit;
 }
 
-h1{ 
-    color: gray;
-    background-color: white;
-    font-family: Arial, Helvetica, sans-serif;
-    margin: 10px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+form p input:focus,
+form p select:focus {
+    border-color: #4A90D9;
 }
 
-body{
-    color: gray;
-    background-color: white;
-    font-family: Arial, Helvetica, sans-serif;
+.btn-entrar {
+    padding: 14px;
+    background-color: #4A90D9;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
 }
 
-div{ 
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-label{
-    position:absolute;
-    padding-right:320px;
-}
-input{
-    border-color: #2b9dee;
-    border-radius: .75rem;
-    padding: 10px;
-    margin:10px;
-
+.btn-entrar:hover {
+    background-color: #3a7bc8;
 }
