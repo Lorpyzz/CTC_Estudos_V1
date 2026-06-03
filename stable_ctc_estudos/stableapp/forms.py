@@ -144,33 +144,73 @@ class TurmaForm(forms.ModelForm):
         return professor
 
 class InscricaoTurmaForm(forms.ModelForm):
+    
+    disciplina = forms.ModelChoiceField(
+        queryset=Disciplina.objects.all(),
+        label="Disciplina",
+        empty_label="---------",
+        widget=forms.Select(attrs={'class': 'form-select', 'id': 'id_disciplina'})
+    )
+    
+    turma = forms.CharField(
+        label="Código da Turma",
+        widget=forms.TextInput(attrs={
+            'class': 'form-input', 
+            'id': 'id_codigo_turma', 
+            'placeholder': 'Escolha ou digite (Ex: 33A)',
+            'autocomplete': 'off', 
+            'style': 'text-transform: uppercase;'
+        })
+    )
+
     class Meta:
         model = InscricaoTurma
-        fields = ['turma', 'status', 'nota_final']
-
+        fields = ['disciplina', 'turma', 'status', 'nota_final']
         widgets = {
-            'turma': forms.Select(attrs={'class': 'form-select', 'style': 'text-transform: uppercase;'}),
-            'status': forms.Select(attrs={'class': 'form-select'}), 
-            'nota_final': forms.NumberInput(attrs={'class': 'form-input', 'placeholder': 'Nota Final'}),
+            'status': forms.Select(attrs={'class': 'form-select', 'id': 'id_status'}), 
+            'nota_final': forms.NumberInput(attrs={'class': 'form-input', 'id': 'id_nota_final', 'placeholder': 'Nota Final'}),
         }
 
-    def clean(self):
-        cleaned_data = super().clean()
-        status = cleaned_data.get('status')
-        nota_final = cleaned_data.get('nota_final')
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance and self.instance.pk and self.instance.turma:
+            self.fields['disciplina'].initial = self.instance.turma.disciplina.id
+            
+            self.fields['turma'].initial = self.instance.turma.codigo_turma
 
-        if status == 'CONCLUIDA':
-            if nota_final is None or nota_final < 5.0:
-                raise forms.ValidationError(
-                    "Para marcar como concluída, a nota final deve ser informada e maior ou igual a 5.0."
-                )
+    def clean_turma(self):
+        codigo_digitado = self.cleaned_data.get('turma', '').strip().upper()
+        disciplina = self.cleaned_data.get('disciplina')
+
+        if not codigo_digitado:
+            raise forms.ValidationError("Este campo é obrigatório.")
+
+        if not disciplina:
+            raise forms.ValidationError("Selecione uma disciplina primeiro.")
+
         
-        else:
-            if nota_final is not None:
-                raise forms.ValidationError(
-                    "Você não pode inserir uma nota final para uma inscrição que não está concluída."
-                )
-        return cleaned_data
+        turma_obj = Turma.objects.filter(codigo_turma=codigo_digitado, disciplina=disciplina).first()
+        
+        if not turma_obj:
+            
+            professor_padrao, _ = Professor.objects.get_or_create(
+                nome="A DEFINIR",
+                defaults={
+                    'email': 'adefinir@inf.puc-rio.br',
+                    'departamento': 'Indefinido'
+                }
+            )
+
+            
+            turma_obj = Turma.objects.create(
+                codigo_turma=codigo_digitado,
+                disciplina=disciplina,
+                professor=professor_padrao, 
+                semestre="2026.1", 
+                horario="A definir"
+            )
+        
+        return turma_obj
 
 class TopicoForm(forms.ModelForm):
     class Meta:

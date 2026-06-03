@@ -28,6 +28,9 @@
                 <p class="desc">{{ disciplina.descricao }}</p>
                 <p class="ver">Ver conteúdos →</p>
                 <div class="card-actions">
+                    <a href="{% url 'form_inscricao' %}" class="btn-publicar" style="text-decoration: none; display: inline-block; margin-bottom: 20px;">
+                        <span class="plus-icon"></span> Inscrever-se em uma Turma
+                    </a>
                     <a href="{% url 'update_disciplina' id=disciplina.id %}" class="edit-link" onclick="event.stopPropagation()">Editar</a>
                     <a href="delete/{{ disciplina.id }}" class="delete-link" onclick="event.stopPropagation()">Deletar</a>
                 </div>

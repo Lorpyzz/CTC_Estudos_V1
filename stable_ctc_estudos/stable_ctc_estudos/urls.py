@@ -55,7 +55,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.paginaInicial, name='home'),
     path('monitoria/', views.exibe_monitoria, name='monitoria'),
-    path('monitorias/nova/', views.form_monitoria, name='form_monitoria'),
+    path('monitoria/nova/', views.form_monitoria, name='form_monitoria'),
 
 ]
 
