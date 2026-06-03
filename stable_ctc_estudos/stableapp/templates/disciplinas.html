@@ -5,22 +5,28 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/disciplinas.css' %}">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
 {% endblock %}
 
 {% block content %}
 <div class="titulo">
-    <h1><b>Disciplinas</b></h1>
-    <p>Encontre materiais e recursos para suas disciplinas do CTC</p>
+    <div>
+        <h1>Disciplinas</h1>
+        <p>Encontre materiais e recursos para suas disciplinas do CTC</p>
+    </div>
+    <a href="{% url 'form_disciplina' %}" class="btn-add">+ Adicionar Disciplina</a>
 </div>
-
-<a href="{% url 'form_disciplina' %}">Adicionar nova disciplina</a>
 
 <div class="disciplinas">
     <div class="row">
         {% for disciplina in disciplinas %}
+<<<<<<< Updated upstream
+=======
+<<<<<<< HEAD
+        <button class="btn1" onclick="location.href=''">
+            <div class="card-top">
+                <span class="codigo">{{ disciplina.codigo }}</span>
+=======
+>>>>>>> Stashed changes
         <div style="position: relative; width: 100%; max-width: 380px; margin-bottom: 20px; display: inline-block;">
             <button class="btn1" onclick="location.href='{% url 'disciplina_detalhe' nome=disciplina.nome %}'" style="width: 100%; text-align: left; height: 100%;">
                 <div class="codigo">
@@ -34,24 +40,18 @@
             </button>
             <div style="position: absolute; right: 15px; top: 15px; z-index: 10;">
                 <a href="{% url 'update_disciplina' id=disciplina.id %}" class="btn-editar" style="padding: 4px 8px; background-color: #e5e7eb; color: #374151; border-radius: 4px; font-size: 0.75rem; text-decoration: none; font-weight: 600;">Editar</a>
+<<<<<<< Updated upstream
+=======
+>>>>>>> eac7e5a1f3eac6bc9508eaf8432c66a93a6f28b2
+>>>>>>> Stashed changes
             </div>
-            
             <h3>{{ disciplina.nome }}</h3>
-            
-            <br>
-            <p style="color:#747474;">{{ disciplina.descricao }}</p>
-            <br>
-            <p style="color:#3ea5ef;">Ver conteúdos →</p>
-                  <div class="edit_btn">
-                   <h4>
-                    <a href = "update/{{ disciplina.id }}">Editar</a>
-                </div>
-                <div class="delete_btn">
-                    <a href = "delete/{{ disciplina.id }}">Deletar</a>
-                   </h4>
-                </div>
-            
-            
+            <p class="desc">{{ disciplina.descricao }}</p>
+            <p class="ver">Ver conteúdos →</p>
+            <div class="card-actions">
+                <a href="update/{{ disciplina.id }}" class="edit-link">Editar</a>
+                <a href="delete/{{ disciplina.id }}" class="delete-link">Deletar</a>
+            </div>
         </button>
         </div>
         {% endfor %}

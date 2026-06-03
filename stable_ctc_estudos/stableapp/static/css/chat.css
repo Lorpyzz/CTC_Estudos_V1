@@ -1,14 +1,9 @@
-body {
-    overflow: hidden;
-    height: 100vh;
-}
-
 /* APP LAYOUT */
 .app-container {
     display: flex;
     flex: 1;
     overflow: hidden;
-    height: calc(100vh - 50px);
+    height: calc(100vh - 61px);
 }
 
 /* SIDEBAR */
@@ -96,7 +91,7 @@ body {
     display: flex;
     flex-direction: column;
     background-color: #fff;
-    height: calc(100vh - 50px);
+    height: calc(100vh - 61px);
     overflow: hidden;
 }
 
@@ -193,4 +188,3 @@ body {
     cursor: pointer;
     flex-shrink: 0;
 }
-
