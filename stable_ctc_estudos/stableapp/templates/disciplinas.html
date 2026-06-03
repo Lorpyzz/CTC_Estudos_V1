@@ -8,53 +8,32 @@
 {% endblock %}
 
 {% block content %}
-<div class="titulo">
-    <div>
-        <h1>Disciplinas</h1>
-        <p>Encontre materiais e recursos para suas disciplinas do CTC</p>
+<div class="page-wrapper">
+    <div class="titulo">
+        <div>
+            <h1>Disciplinas</h1>
+            <p>Encontre materiais e recursos para suas disciplinas do CTC</p>
+        </div>
+        <a href="{% url 'form_disciplina' %}" class="btn-add">+ Adicionar Disciplina</a>
     </div>
-    <a href="{% url 'form_disciplina' %}" class="btn-add">+ Adicionar Disciplina</a>
-</div>
 
-<div class="disciplinas">
-    <div class="row">
-        {% for disciplina in disciplinas %}
-<<<<<<< Updated upstream
-=======
-<<<<<<< HEAD
-        <button class="btn1" onclick="location.href=''">
-            <div class="card-top">
-                <span class="codigo">{{ disciplina.codigo }}</span>
-=======
->>>>>>> Stashed changes
-        <div style="position: relative; width: 100%; max-width: 380px; margin-bottom: 20px; display: inline-block;">
-            <button class="btn1" onclick="location.href='{% url 'disciplina_detalhe' nome=disciplina.nome %}'" style="width: 100%; text-align: left; height: 100%;">
-                <div class="codigo">
-                    <b>{{ disciplina.codigo }}</b>
+    <div class="disciplinas">
+        <div class="row">
+            {% for disciplina in disciplinas %}
+            <button class="btn1" onclick="location.href='{% url 'disciplina_detalhe' nome=disciplina.nome %}'">
+                <div class="card-top">
+                    <span class="codigo">{{ disciplina.codigo }}</span>
                 </div>
                 <h3>{{ disciplina.nome }}</h3>
-                <br>
-                <p style="color:#747474;">{{ disciplina.descricao }}</p>
-                <br>
-                <p style="color:#3ea5ef;">Ver conteúdos →</p>
+                <p class="desc">{{ disciplina.descricao }}</p>
+                <p class="ver">Ver conteúdos →</p>
+                <div class="card-actions">
+                    <a href="{% url 'update_disciplina' id=disciplina.id %}" class="edit-link" onclick="event.stopPropagation()">Editar</a>
+                    <a href="delete/{{ disciplina.id }}" class="delete-link" onclick="event.stopPropagation()">Deletar</a>
+                </div>
             </button>
-            <div style="position: absolute; right: 15px; top: 15px; z-index: 10;">
-                <a href="{% url 'update_disciplina' id=disciplina.id %}" class="btn-editar" style="padding: 4px 8px; background-color: #e5e7eb; color: #374151; border-radius: 4px; font-size: 0.75rem; text-decoration: none; font-weight: 600;">Editar</a>
-<<<<<<< Updated upstream
-=======
->>>>>>> eac7e5a1f3eac6bc9508eaf8432c66a93a6f28b2
->>>>>>> Stashed changes
-            </div>
-            <h3>{{ disciplina.nome }}</h3>
-            <p class="desc">{{ disciplina.descricao }}</p>
-            <p class="ver">Ver conteúdos →</p>
-            <div class="card-actions">
-                <a href="update/{{ disciplina.id }}" class="edit-link">Editar</a>
-                <a href="delete/{{ disciplina.id }}" class="delete-link">Deletar</a>
-            </div>
-        </button>
+            {% endfor %}
         </div>
-        {% endfor %}
     </div>
 </div>
 {% endblock %}
