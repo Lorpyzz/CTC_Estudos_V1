@@ -21,9 +21,19 @@
 <div class="disciplinas">
     <div class="row">
         {% for disciplina in disciplinas %}
-        <button class="btn1" onclick="location.href=''">
-            <div class="codigo">
-                <b>{{ disciplina.codigo }}</b>
+        <div style="position: relative; width: 100%; max-width: 380px; margin-bottom: 20px; display: inline-block;">
+            <button class="btn1" onclick="location.href='{% url 'disciplina_detalhe' nome=disciplina.nome %}'" style="width: 100%; text-align: left; height: 100%;">
+                <div class="codigo">
+                    <b>{{ disciplina.codigo }}</b>
+                </div>
+                <h3>{{ disciplina.nome }}</h3>
+                <br>
+                <p style="color:#747474;">{{ disciplina.descricao }}</p>
+                <br>
+                <p style="color:#3ea5ef;">Ver conteúdos →</p>
+            </button>
+            <div style="position: absolute; right: 15px; top: 15px; z-index: 10;">
+                <a href="{% url 'update_disciplina' id=disciplina.id %}" class="btn-editar" style="padding: 4px 8px; background-color: #e5e7eb; color: #374151; border-radius: 4px; font-size: 0.75rem; text-decoration: none; font-weight: 600;">Editar</a>
             </div>
             
             <h3>{{ disciplina.nome }}</h3>
@@ -43,6 +53,7 @@
             
             
         </button>
+        </div>
         {% endfor %}
     </div>
 </div>

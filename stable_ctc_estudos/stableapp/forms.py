@@ -110,6 +110,16 @@ class TurmaForm(forms.ModelForm):
             'horario': forms.TextInput(attrs={'class': 'form-input', 'placeholder': 'Ex: 3ª e 5ª às 11:00'}),
         }
 
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        super().__init__(*args, **kwargs)
+        if self.instance and self.instance.pk:
+            self.fields['disciplina'].initial = self.instance.disciplina.codigo
+            self.fields['professor'].initial = self.instance.professor.nome
+            if user:
+                if not user.is_monitor:
+                    self.fields['professor'].disabled = True
+
     def clean_disciplina(self):
         val = self.cleaned_data.get('disciplina', '').upper()
         if not any(char.isdigit() for char in val):
@@ -124,6 +134,8 @@ class TurmaForm(forms.ModelForm):
         return disciplina
 
     def clean_professor(self):
+        if self.fields['professor'].disabled:
+            return self.instance.professor
         val = self.cleaned_data.get('professor', '').upper()
         professor = Professor.objects.filter(nome__iexact=val).first()
         if not professor:
@@ -134,20 +146,30 @@ class TurmaForm(forms.ModelForm):
 class InscricaoTurmaForm(forms.ModelForm):
     class Meta:
         model = InscricaoTurma
-        fields = ['user', 'turma', 'concluida', 'nota_final']
+        fields = ['turma', 'status', 'nota_final']
+
         widgets = {
-            'user': forms.Select(attrs={'class': 'form-select'}),
             'turma': forms.Select(attrs={'class': 'form-select', 'style': 'text-transform: uppercase;'}),
+            'status': forms.Select(attrs={'class': 'form-select'}), 
             'nota_final': forms.NumberInput(attrs={'class': 'form-input', 'placeholder': 'Nota Final'}),
         }
 
-    # A VALIDAÇÃO DA NOTA FOI MOVIDA PARA CÁ (Lugar correto)
     def clean(self):
         cleaned_data = super().clean()
-        concluida = cleaned_data.get('concluida')
+        status = cleaned_data.get('status')
         nota_final = cleaned_data.get('nota_final')
-        if concluida and (nota_final is None or nota_final < 5.0):
-            raise forms.ValidationError("Para marcar como concluída, a nota final deve ser informada e maior ou igual a 5.0.")
+
+        if status == 'CONCLUIDA':
+            if nota_final is None or nota_final < 5.0:
+                raise forms.ValidationError(
+                    "Para marcar como concluída, a nota final deve ser informada e maior ou igual a 5.0."
+                )
+        
+        else:
+            if nota_final is not None:
+                raise forms.ValidationError(
+                    "Você não pode inserir uma nota final para uma inscrição que não está concluída."
+                )
         return cleaned_data
 
 class TopicoForm(forms.ModelForm):
@@ -156,7 +178,8 @@ class TopicoForm(forms.ModelForm):
         fields = ['disciplina', 'titulo_topico']
         widgets = {
             'disciplina': forms.Select(attrs={'class': 'form-select'}),
-            'titulo_topico': forms.TextInput(attrs={'class': 'form-input', 'placeholder': 'Título do Tópico', 'style': 'text-transform: uppercase;'}),
+            'titulo_topico': forms.TextInput(attrs={'class': 'form-input', 'placeholder': 'Título do Tópico',
+                                                     'style': 'text-transform: uppercase;'}),
         }
 
 class ConteudoForm(forms.ModelForm):
@@ -165,8 +188,10 @@ class ConteudoForm(forms.ModelForm):
         fields = ['topico', 'titulo', 'descricao', 'link_material']
         widgets = {
             'topico': forms.Select(attrs={'class': 'form-select'}),
-            'titulo': forms.TextInput(attrs={'class': 'form-input', 'placeholder': 'Título do Conteúdo', 'style': 'text-transform: uppercase;'}),
-            'descricao': forms.Textarea(attrs={'class': 'form-textarea', 'placeholder': 'Descrição...', 'rows': 4}),
+            'titulo': forms.TextInput(attrs={'class': 'form-input', 'placeholder': 'Título do Conteúdo',
+                                              'style': 'text-transform: uppercase;'}),
+            'descricao': forms.Textarea(attrs={'class': 'form-textarea', 
+                                               'placeholder': 'Descrição...', 'rows': 4}),
             'link_material': forms.URLInput(attrs={'class': 'form-input', 'placeholder': 'URL do Material'}),
         }
 
@@ -183,10 +208,17 @@ class MonitoriaForm(forms.ModelForm):
 class SessaoEstudoForm(forms.ModelForm):
     class Meta:
         model = SessaoEstudo
-        fields = ['aluno', 'topico', 'duracao_minutos', 'observacoes']
+        fields = ['topico', 'duracao_minutos', 'observacoes']
         widgets = {
-            'aluno': forms.Select(attrs={'class': 'form-select'}),
             'topico': forms.Select(attrs={'class': 'form-select'}),
             'duracao_minutos': forms.NumberInput(attrs={'class': 'form-input', 'placeholder': 'Duração (minutos)'}),
             'observacoes': forms.Textarea(attrs={'class': 'form-textarea', 'placeholder': 'Observações...', 'rows': 4}),
         }
+
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        super().__init__(*args, **kwargs)
+        if user:
+            turmas_do_aluno = InscricaoTurma.objects.filter(user=user, status__in=['ATIVA', 'CONCLUIDA']).values_list('turma', flat=True)
+            disciplinas_do_aluno = Turma.objects.filter(id__in=turmas_do_aluno).values_list('disciplina', flat=True)
+            self.fields['topico'].queryset = Topico.objects.filter(disciplina__in=disciplinas_do_aluno)
