@@ -1,77 +1,46 @@
+{% extends "base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastro de Monitoria - CTC-ESTUDOS</title>
-    <link rel="stylesheet" href="{% static 'disciplinas.css' %}">
-    <link rel="stylesheet" href="{% static 'duvidas.css' %}">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        .main-container { max-width: 600px; margin: 40px auto; }
-        .form-card form p { margin-bottom: 15px; }
-        .form-card label { display: block; margin-bottom: 5px; font-weight: 600; color: #374151; }
-        .container { max-width: 1300px; margin: auto; }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="navbar">
-            <div class="logo">
-                <img src="{% static 'site-logo.png' %}" width="60px">
-                <h2>CTC estudos</h2>
-            </div>
-            <nav>
-                <ul>
-                    <li><a href="/">Início</a></li>
-                    <li><a href="/disciplinas/">Disciplinas</a></li>
-            <li><a href="/turmas/">Minhas Turmas</a></li>
-                    <li><a href="/flashcards/">Flashcards</a></li>
-                    <li><a href="/duvidas/">Central de dúvidas</a></li>
-                    <li><a href="/chat/">Chat</a></li>
-                    {% if request.user.is_authenticated %}
-                    <li><a href="/logout/" class="btn">Sair</a></li>
-                {% else %}
-                    <li><a href="/login/" class="btn">Entrar</a></li>
-                {% endif %}
-                </ul>
-            </nav>
-        </div>
-    </div>
 
-    <div class="main-container">
-        <header class="header-section">
-            <div class="title-group">
-                <div class="icon-title">
-                    <span class="blue-icon"></span>
-                    <h1>Cadastro de Monitoria</h1>
-                </div>
-                <p class="subtitle">Designe um aluno monitor para uma disciplina.</p>
-            </div>
-        </header>
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/monitoria.css' %}">
 
-        <section class="form-card">
-        {% if messages %}
-        <div style="margin-bottom: 20px;">
-            {% for message in messages %}
-            <div style="padding: 10px; border-radius: 5px; {% if message.tags == 'error' %}background-color: #f8d7da; color: #721c24;{% else %}background-color: #d4edda; color: #155724;{% endif %}">
-                {{ message }}
-            </div>
-            {% endfor %}
-        </div>
-        {% endif %}
+<div class="main-container">
+    <h1>Cadastrar Nova Monitoria</h1>
+    
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn-publicar">Salvar Monitoria</button>
+    </form>
+</div>
 
-            <form method="POST">
-                {% csrf_token %}
-                {{ form.as_p }}
-                <div style="margin-top: 20px;">
-                    <button type="submit" class="btn-publicar">
-                        <span class="send-icon"></span> Confirmar Monitoria
-                    </button>
-                </div>
-            </form>
-        </section>
-    </div>
-</body>
-</html>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const checkboxOnline = document.querySelector('input[name="online"]');
+        const inputSala = document.querySelector('input[name="sala"]');
+        const inputLink = document.querySelector('input[name="link_reuniao"]');
+
+        function alternarCampos() {
+            if (!checkboxOnline || !inputSala || !inputLink) return;
+
+            const campoSala = inputSala.closest('p');
+            const campoLink = inputLink.closest('p');
+
+            if (checkboxOnline.checked) {
+                
+                campoSala.style.display = 'none';
+                campoLink.style.display = 'flex';
+            } else {
+                
+                campoSala.style.display = 'flex';
+                campoLink.style.display = 'none';
+            }
+        }
+
+        if (checkboxOnline) {
+            checkboxOnline.addEventListener('change', alternarCampos);
+            alternarCampos(); 
+        }
+    });
+</script>
+{% endblock %}

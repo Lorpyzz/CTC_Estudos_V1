@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'css/monitoria.css' %}">
+
+<div class="main-container">
+
+    <h1>Monitorias</h1>
+
+    <a class="btn-publicar" href="{% url 'form_monitoria' %}">
+        Cadastrar monitoria
+    </a>
+
+    <h2>Disponíveis</h2>
+
+    {% for monitoria in monitorias %}
+
+        <div class="monitoria-card">
+
+            <h3>
+                {{ monitoria.disciplina.codigo }} - {{ monitoria.disciplina.nome }}
+            </h3>
+
+            <p><strong>Monitor:</strong> {{ monitoria.monitor.nome }}</p>
+            <p><strong>Dia:</strong> {{ monitoria.dia_semana }}</p>
+            <p><strong>Horário:</strong> {{ monitoria.horario }}</p>
+
+            {% if monitoria.online %}
+                <p>Online</p>
+                <a href="{{ monitoria.link_reuniao }}" target="_blank">
+                    Entrar na reunião
+                </a>
+            {% else %}
+                <p>Presencial - Sala {{ monitoria.sala }}</p>
+            {% endif %}
+
+        </div>
+
+    {% empty %}
+        <p>Nenhuma monitoria disponível.</p>
+    {% endfor %}
+
+</div>
+
+{% endblock %}

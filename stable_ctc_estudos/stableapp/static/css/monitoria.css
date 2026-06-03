@@ -1,0 +1,85 @@
+.main-container {
+    max-width: 600px;
+    margin: 50px auto; 
+    padding: 30px;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.main-container h1 {
+    font-size: 1.8rem;
+    color: #1e293b;
+    margin-bottom: 24px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.main-container form p {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 16px;
+}
+
+.main-container form label {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #475569;
+    margin-bottom: 6px;
+}
+
+.form-input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    color: #334155;
+    background-color: #fff;
+    box-sizing: border-box;
+    transition: border-color 0.2s;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+.main-container form p:has(input[name="online"]) {
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 10px;
+    background: #f8fafc;
+    padding: 12px;
+    border-radius: 6px;
+    border: 1px solid #e2e8f0;
+    margin-top: 20px;
+}
+
+.main-container form input[name="online"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
+
+.btn-publicar {
+    width: 100%;
+    padding: 12px;
+    background-color: #3b82f6;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    margin-top: 15px;
+}
+
+.btn-publicar:hover {
+    background-color: #2563eb;
+}

@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="main-container">
+    <h1>Cadastrar Nova Monitoria</h1>
+    
+    <form method="POST">
+        {% csrf_token %}
+        
+        {{ form.as_p }} 
+        
+        <button type="submit" class="btn-publicar">Salvar Monitoria</button>
+    </form>
+</div>
+{% endblock %}

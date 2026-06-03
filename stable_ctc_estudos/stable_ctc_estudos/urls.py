@@ -54,6 +54,9 @@ urlpatterns = [
     path('chat/', views.paginaChat, name='chat'),
     path('admin/', admin.site.urls),
     path('', views.paginaInicial, name='home'),
+    path('monitoria/', views.exibe_monitoria, name='monitoria'),
+    path('monitorias/nova/', views.form_monitoria, name='form_monitoria'),
+
 ]
 
 urlpatterns += static('/assets/', document_root=os.path.join(settings.BASE_DIR, 'dist', 'assets'))

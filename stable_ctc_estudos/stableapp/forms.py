@@ -197,14 +197,76 @@ class ConteudoForm(forms.ModelForm):
         }
 
 class MonitoriaForm(forms.ModelForm):
+
     class Meta:
         model = Monitoria
-        fields = ['monitor', 'disciplina', 'semestre_atuacao']
+
+        fields = [
+            'monitor',
+            'disciplina',
+            'semestre_atuacao',
+            'dia_semana',
+            'horario',
+            'online',
+            'sala',
+            'link_reuniao'
+        ]
+
         widgets = {
-            'monitor': forms.Select(attrs={'class': 'form-select'}),
-            'disciplina': forms.Select(attrs={'class': 'form-select'}),
-            'semestre_atuacao': forms.TextInput(attrs={'class': 'form-input', 'placeholder': 'Ex: 2026.1'}),
+            'monitor': forms.Select(
+                attrs={'class': 'form-select'}
+            ),
+
+            'disciplina': forms.Select(
+                attrs={'class': 'form-select'}
+            ),
+
+            'semestre_atuacao': forms.TextInput(
+                attrs={
+                    'class': 'form-input',
+                    'placeholder': 'Ex: 2026.1'
+                }
+            ),
+
+            'dia_semana': forms.Select(
+                choices=[
+                    ('Segunda-feira', 'Segunda-feira'),
+                    ('Terça-feira', 'Terça-feira'),
+                    ('Quarta-feira', 'Quarta-feira'),
+                    ('Quinta-feira', 'Quinta-feira'),
+                    ('Sexta-feira', 'Sexta-feira'),
+                    ('Sábado', 'Sábado')
+                ],
+                attrs={'class': 'form-select'}
+            ),
+
+            'horario': forms.TextInput(
+                attrs={
+                    'class': 'form-input',
+                    'placeholder': 'Ex: 14h - 16h'
+                }
+            ),
+
+            'sala': forms.TextInput(
+                attrs={
+                    'class': 'form-input',
+                    'placeholder': 'Ex: L456'
+                }
+            ),
+
+            'link_reuniao': forms.URLInput(
+                attrs={
+                    'class': 'form-input',
+                    'placeholder':
+                    'https://meet.google.com/abc-defg-hij'
+                }
+            ),
         }
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            for field_name, field in self.fields.items():
+                if field_name != 'online':  
+                    field.widget.attrs.update({'class': 'form-input'})
 
 class SessaoEstudoForm(forms.ModelForm):
     class Meta:
