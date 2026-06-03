@@ -286,14 +286,46 @@ def paginaChat(request):
         }
     )
 
-def paginaDisciplinaDetalhe(
-    request,
-    nome
-):
+def paginaDisciplinaDetalhe(request, nome):
+
+    disciplina = None
+    topicos = []
+    turmas = []
+    monitorias = []
+
+    codigo = request.GET.get("codigo")
+
+    if codigo:
+
+        disciplina = Disciplina.objects.filter(
+            codigo__iexact=codigo
+        ).first()
+
+        if disciplina:
+
+            topicos = disciplina.topicos.all()
+
+            turmas = (
+                disciplina.turmas
+                .select_related("professor")
+                .all()
+            )
+
+            monitorias = (
+                disciplina.monitorias_ativas
+                .select_related("monitor")
+                .all()
+            )
 
     return render(
         request,
-        f"{nome}.html"
+        "disciplina_detalhe.html",
+        {
+            "disciplina": disciplina,
+            "topicos": topicos,
+            "turmas": turmas,
+            "monitorias": monitorias
+        }
     )
 
 def form_disciplina(request):

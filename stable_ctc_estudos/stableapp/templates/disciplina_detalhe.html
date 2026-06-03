@@ -1,0 +1,188 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Buscar Disciplina{% endblock %}
+
+{% block extra_css %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'css/disciplina_detalhe.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<header class="hero-header">
+    <h1>Busque por uma disciplina</h1>
+    <p>Digite o código da disciplina para visualizar suas informações.</p>
+</header>
+
+<main class="container">
+
+    <form method="get" class="search-bar">
+
+        <input
+            type="text"
+            name="codigo"
+            placeholder="Ex: INF1012"
+            class="search-input"
+            value="{{ request.GET.codigo }}">
+
+        <button type="submit" class="btn-primary-small">
+            Buscar
+        </button>
+
+    </form>
+
+    {% if disciplina %}
+
+        <div class="turma-card">
+
+            <div class="card-header math-bg">
+
+                <h2>
+                    {{ disciplina.codigo }} - {{ disciplina.nome }}
+                </h2>
+
+            </div>
+
+            <div class="card-body">
+
+                <p class="description">
+                    <strong>Descrição:</strong>
+                    {{ disciplina.descricao }}
+                </p>
+
+                <p class="description">
+                    <strong>Departamento:</strong>
+                    {{ disciplina.departamento }}
+                </p>
+
+                {% if disciplina.email %}
+                    <p class="description">
+                        <strong>E-mail:</strong>
+                        {{ disciplina.email }}
+                    </p>
+                {% endif %}
+
+            </div>
+
+        </div>
+
+        <br>
+
+        {% if topicos %}
+        <div class="turma-card">
+
+            <div class="card-header prog-bg">
+                <h2>Tópicos</h2>
+            </div>
+
+            <div class="card-body">
+
+                <ul>
+
+                    {% for topico in topicos %}
+                        <li>{{ topico.titulo_topico }}</li>
+                    {% endfor %}
+
+                </ul>
+
+            </div>
+
+        </div>
+
+        <br>
+        {% endif %}
+
+        {% if turmas %}
+        <div class="turma-card">
+
+            <div class="card-header hist-bg">
+                <h2>Turmas</h2>
+            </div>
+
+            <div class="card-body">
+
+                {% for turma in turmas %}
+
+                    <p class="description">
+                        <strong>Turma:</strong>
+                        {{ turma.codigo_turma }}
+                    </p>
+
+                    <p class="description">
+                        <strong>Professor:</strong>
+                        {{ turma.professor.nome }}
+                    </p>
+
+                    <p class="description">
+                        <strong>Semestre:</strong>
+                        {{ turma.semestre }}
+                    </p>
+
+                    <p class="description">
+                        <strong>Horário:</strong>
+                        {{ turma.horario }}
+                    </p>
+
+                    <hr>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+        {% endif %}
+
+        {% if monitorias %}
+        <br>
+
+        <div class="turma-card">
+
+            <div class="card-header prog-bg">
+                <h2>Monitorias</h2>
+            </div>
+
+            <div class="card-body">
+
+                {% for monitoria in monitorias %}
+
+                    <p class="description">
+                        <strong>Monitor:</strong>
+                        {{ monitoria.monitor.nome }}
+                    </p>
+
+                    <p class="description">
+                        <strong>Semestre:</strong>
+                        {{ monitoria.semestre_atuacao }}
+                    </p>
+
+                    <hr>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+        {% endif %}
+
+    {% elif request.GET.codigo %}
+
+        <div class="turma-card">
+
+            <div class="card-body">
+
+                <p class="description">
+                    Nenhuma disciplina encontrada com esse código.
+                </p>
+
+            </div>
+
+        </div>
+
+    {% endif %}
+
+</main>
+
+{% endblock %}
