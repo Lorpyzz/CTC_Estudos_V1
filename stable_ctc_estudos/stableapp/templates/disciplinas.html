@@ -31,8 +31,10 @@
                     <a href="{% url 'form_inscricao' %}" class="btn-publicar" style="text-decoration: none; display: inline-block; margin-bottom: 20px;">
                         <span class="plus-icon"></span> Inscrever-se em uma Turma
                     </a>
-                    <a href="{% url 'update_disciplina' id=disciplina.id %}" class="edit-link" onclick="event.stopPropagation()">Editar</a>
-                    <a href="delete/{{ disciplina.id }}" class="delete-link" onclick="event.stopPropagation()">Deletar</a>
+                    
+                    {% if disciplina.id in ids_disciplinas_monitoradas or user.is_superuser %}
+                        <a href="{% url 'update_disciplina' id=disciplina.id %}" class="edit-link" onclick="event.stopPropagation()">Editar</a>
+                    {% endif %}
                 </div>
             </button>
             {% endfor %}

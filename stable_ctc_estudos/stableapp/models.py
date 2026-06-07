@@ -66,6 +66,16 @@ class Disciplina(models.Model):
     def __str__(self):
         return f"{self.codigo} - {self.nome}"
     
+    def save(self, *args, **kwargs):
+        for campo in self._meta.fields:
+            if isinstance(campo, (models.CharField, models.TextField)):
+                valor = getattr(self, campo.name)
+
+                if isinstance(valor, str):
+                    setattr(self, campo.name, valor.upper())
+                    
+        super().save(*args, **kwargs)
+
     def delete(self, *args, **kwargs):
         raise ValidationError(
             "Não é permitido excluir disciplinas."
