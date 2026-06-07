@@ -532,18 +532,43 @@ def form_topico(request):
 
 
 def update_disciplina(request, id):
+
     disciplina = get_object_or_404(Disciplina, id=id)
+
+    monitor_desta_disciplina = Monitoria.objects.filter(
+        monitor=request.user, 
+        disciplina=disciplina
+    ).exists()
+
+    if not monitor_desta_disciplina and not request.user.is_superuser:
+        messages.error(request, 'Você não possui permissão para editar esta disciplina.')
+        return redirect('disciplinas')
+    
     if request.method == "POST":
         form = DisciplinaForm(request.POST, instance=disciplina)
         if form.is_valid():
             form.save()
             messages.success(request, 'Disciplina atualizada com sucesso!')
             return redirect('disciplinas')
-        else:
-            messages.error(request, 'Erro na atualização.')
     else:
         form = DisciplinaForm(instance=disciplina)
-    return render(request, "form_disciplina.html", context={"disciplina": disciplina, "form": form})
+        
+    return render(request, "form_disciplina.html", context={"disciplina": disciplina, "form": form}) 
+
+def lista_disciplinas(request):
+    disciplinas = Disciplina.objects.all()
+    
+    ids_disciplinas_monitoradas = []
+    if request.user.is_authenticated:
+        ids_disciplinas_monitoradas = Monitoria.objects.filter(
+            monitor=request.user
+        ).values_list('disciplina_id', flat=True)
+
+    context = {
+        'disciplinas': disciplinas,
+        'ids_disciplinas_monitoradas': ids_disciplinas_monitoradas,
+    }
+    return render(request, 'sua_lista.html', context)
 
 @login_required
 def delete_inscricao(request, turma_id):

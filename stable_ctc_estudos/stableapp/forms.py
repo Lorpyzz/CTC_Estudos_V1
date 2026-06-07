@@ -69,7 +69,7 @@ class DisciplinaForm(forms.ModelForm):
                 query = query.exclude(pk=self.instance.pk)
             if query.exists():
                 raise forms.ValidationError('Já existe uma disciplina cadastrada com este código.')
-        return codigo
+        return codigo.upper()
 
     def clean_nome(self):
         nome = self.cleaned_data.get('nome')
@@ -79,7 +79,7 @@ class DisciplinaForm(forms.ModelForm):
                 query = query.exclude(pk=self.instance.pk)
             if query.exists():
                 raise forms.ValidationError('Já existe uma disciplina cadastrada com este nome.')
-        return nome
+        return nome.upper()
 
 class TurmaForm(forms.ModelForm):
     disciplina = forms.CharField(
