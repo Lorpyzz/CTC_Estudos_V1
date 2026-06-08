@@ -1,4 +1,5 @@
 from django.shortcuts import render, get_list_or_404, get_object_or_404, redirect
+from django.db.models import Q
 from django.http import HttpResponseForbidden
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, get_user_model
@@ -779,21 +780,26 @@ def delete_monitoria(request):
 
 @login_required
 def exibe_monitoria(request):
+    usuario_atual = request.user
 
-    monitorias = Monitoria.objects.filter(
-        disciplina__turmas__inscricoes__user=request.user,
+    como_monitor = Monitoria.objects.filter(monitor=usuario_atual)
+    como_aluno = Monitoria.objects.filter(
+        disciplina__turmas__inscricoes__user=usuario_atual,
         disciplina__turmas__inscricoes__status='ATIVA'
-    ).distinct()
+    )
+
+    # Força a avaliação das querysets e junta em uma lista única
+    monitorias_unificadas = list(como_monitor) + list(como_aluno)
+    # Remove duplicados mantendo a ordem se você for monitor e aluno da mesma vaga
+    monitorias_finais = list(set(monitorias_unificadas))
 
     return render(
         request,
         'monitoria.html',
         {
-            'monitorias': monitorias,
-            
+            'monitorias': monitorias_finais,
         }
     )
-
 
 @login_required
 def form_professor(request):
