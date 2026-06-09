@@ -15,15 +15,57 @@
 
         {% if messages %}
             {% for message in messages %}
-                <div class="error-msg show">{{ message }}</div>
+                <div class="alert alert-{{ message.tags }} show">{{ message }}</div>
             {% endfor %}
         {% endif %}
 
-        <form method="POST">
+        <form method="POST" novalidate>
             {% csrf_token %}
-            {{ form.as_p }}
+            
+            {% for field in form %}
+                <div class="input-group">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                    
+                    {% if field.name == 'metodo_revisao' %}
+                        <div id="revisao-tip" class="tip-box hidden">
+                            <span class="tip-icon">💡</span>
+                            <p id="tip-text"></p>
+                        </div>
+                    {% endif %}
+
+                    {% if field.errors %}
+                        <div class="error-msg show">{{ field.errors|striptags }}</div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+
             <button type="submit" class="btn-entrar">Registrar Sessão</button>
         </form>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const selectMetodo = document.getElementById('id_metodo_revisao');
+        const tipBox = document.getElementById('revisao-tip');
+        const tipText = document.getElementById('tip-text');
+
+        if (selectMetodo) {
+            selectMetodo.addEventListener('change', function() {
+                const valor = this.value;
+                
+                if (valor === 'direto') {
+                    tipText.innerHTML = "<strong>Dica:</strong> A melhor maneira para estudar por conteúdos diretos é através de <strong>provas e exercícios</strong>. <br><small>Nota: Essa escolha não é excludente, você ainda poderá criar ou acessar seus flashcards normalmente!</small>";
+                    tipBox.classList.remove('hidden');
+                } else if (valor === 'teoria') {
+                    tipText.innerHTML = "<strong>Dica:</strong> Para revisar teorias, o ideal seria utilizar seus <strong>flashcards</strong>. <br><small>Nota: Essa escolha não é excludente, você ainda poderá acessar os conteúdos diretos e exercícios a qualquer momento!</small>";
+                    tipBox.classList.remove('hidden');
+                } else {
+                    tipBox.classList.add('hidden');
+                }
+            });
+        }
+    });
+</script>
 {% endblock %}

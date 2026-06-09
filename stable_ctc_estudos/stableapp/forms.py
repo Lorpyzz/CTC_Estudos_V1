@@ -308,11 +308,33 @@ class MonitoriaForm(forms.ModelForm):
                     field.widget.attrs.update({'class': 'form-input'})
 
 class SessaoEstudoForm(forms.ModelForm):
+    METODO_CHOICES = [
+        ('', 'Selecione uma opção...'),
+        ('direto', 'Conteúdos Diretos'),
+        ('teoria', 'Revisar Teoria'),
+    ]
+    
+    metodo_revisao = forms.ChoiceField(
+        choices=METODO_CHOICES,
+        required=True,
+        label="Método de Revisão",
+        widget=forms.Select(attrs={'class': 'form-select', 'id': 'id_metodo_revisao'})
+    )
+
     class Meta:
         model = SessaoEstudo
-        fields = ['topico', 'duracao_minutos', 'observacoes']
+        # Usando 'disciplina' que é o campo real do seu modelo atual
+        fields = ['disciplina', 'metodo_revisao', 'duracao_minutos', 'observacoes']
+        
+        # Labels acentuados corretamente
+        labels = {
+            'disciplina': 'Tópico / Disciplina',
+            'duracao_minutos': 'Duração (minutos)',
+            'observacoes': 'Observações',
+        }
+        
         widgets = {
-            'topico': forms.Select(attrs={'class': 'form-select'}),
+            'disciplina': forms.Select(attrs={'class': 'form-select'}),
             'duracao_minutos': forms.NumberInput(attrs={'class': 'form-input', 'placeholder': 'Duração (minutos)'}),
             'observacoes': forms.Textarea(attrs={'class': 'form-textarea', 'placeholder': 'Observações...', 'rows': 4}),
         }
@@ -320,7 +342,20 @@ class SessaoEstudoForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
+        
         if user:
-            turmas_do_aluno = InscricaoTurma.objects.filter(user=user, status__in=['ATIVA', 'CONCLUIDA']).values_list('turma', flat=True)
-            disciplinas_do_aluno = Turma.objects.filter(id__in=turmas_do_aluno).values_list('disciplina', flat=True)
-            self.fields['topico'].queryset = Topico.objects.filter(disciplina__in=disciplinas_do_aluno)
+            # 1. Mapeia os IDs das turmas onde o aluno está matriculado
+            turmas_do_aluno = InscricaoTurma.objects.filter(
+                user=user, 
+                status__in=['ATIVA', 'CONCLUIDA']
+            ).values_list('turma_id', flat=True).distinct()
+            
+            # 2. Mapeia os IDs das disciplinas vinculadas a essas turmas
+            disciplinas_do_aluno = Turma.objects.filter(
+                id__in=turmas_do_aluno
+            ).values_list('disciplina_id', flat=True).distinct()
+            
+            # 3. Alimenta o queryset do campo 'disciplina' com as disciplinas corretas
+            self.fields['disciplina'].queryset = Disciplina.objects.filter(
+                id__in=disciplinas_do_aluno
+            )

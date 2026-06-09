@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_list_or_404, get_object_or_404, redirect
 from django.db.models import Q
+from django.db import IntegrityError  # ADICIONADO para capturar erro de duplicidade
 from django.http import HttpResponseForbidden
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, get_user_model
@@ -41,39 +42,24 @@ def paginaInicial(request):
 
 
 def loginAluno(request):
-
     if request.user.is_authenticated:
         return redirect("home")
 
     if request.method == 'POST':
-
-        form = AuthenticationForm(
-            request,
-            data=request.POST
-        )
+        form = AuthenticationForm(request, data=request.POST)
 
         if form.is_valid():
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
 
-            username = form.cleaned_data.get(
-                'username'
-            )
-
-            password = form.cleaned_data.get(
-                'password'
-            )
-
-            user = authenticate(
-                username=username,
-                password=password
-            )
+            user = authenticate(username=username, password=password)
 
             if user is not None:
-
                 login(request, user)
 
                 nome_exibicao = (
                     user.nome
-                    if user.nome
+                    if hasattr(user, 'nome') and user.nome
                     else user.username
                 )
 
@@ -81,30 +67,24 @@ def loginAluno(request):
                     request,
                     f"Bem-vindo de volta, {nome_exibicao}!"
                 )
-
                 return redirect("disciplinas")
 
         messages.error(
             request,
             "Erro: Matrícula e/ou senha incorretos."
         )
-
     else:
         form = AuthenticationForm()
 
     if 'username' in form.fields:
-
         form.fields['username'].label = 'Matrícula'
-
         form.fields['username'].widget.attrs.update({
             'class': 'form-input',
             'placeholder': 'Matrícula'
         })
 
     if 'password' in form.fields:
-
         form.fields['password'].label = 'Senha'
-
         form.fields['password'].widget.attrs.update({
             'class': 'form-input',
             'placeholder': 'Senha'
@@ -118,42 +98,29 @@ def loginAluno(request):
 
 
 def paginaCadastro(request):
-
     if request.method == "POST":
-
         form = AlunoForm(request.POST)
 
         if form.is_valid():
-
             user = form.save(commit=False)
-
             user.username = user.matricula
-
-            user.set_password(
-                form.cleaned_data['password']
-            )
-
+            user.set_password(form.cleaned_data['password'])
             user.save()
 
             messages.success(
                 request,
                 'Cadastro realizado com sucesso!'
             )
-
             return redirect("disciplinas")
-
         else:
-
             messages.error(
                 request,
                 'Erro no cadastro.'
             )
-
     else:
         form = AlunoForm()
 
     alunos = User.objects.all()
-
     return render(
         request,
         "form_aluno.html",
@@ -163,28 +130,22 @@ def paginaCadastro(request):
         }
     )
 
+
 def paginaDisciplinas(request):
-
     if request.method == "POST":
-
         form = DisciplinaForm(request.POST)
 
         if form.is_valid():
-
             form.save()
-
             messages.success(
                 request,
                 'Disciplina criada com sucesso!'
             )
-
             return redirect('disciplinas')
-
     else:
         form = DisciplinaForm()
 
     disciplinas = Disciplina.objects.all()
-
     return render(
         request,
         "disciplinas.html",
@@ -197,21 +158,20 @@ def paginaDisciplinas(request):
 
 @login_required
 def paginaTurmas(request):
-
     inscricoes = (
         InscricaoTurma.objects
-        .filter(user=request.user, 
-                status__in=['ATIVA', 'CONCLUIDA'])
+        .filter(user=request.user, status__in=['ATIVA', 'CONCLUIDA'])
         .select_related(
             'turma__disciplina',
             'turma__professor'
         )
     )
 
+    # CORREÇÃO: Alterado de 'topico__disciplina' para 'disciplina'
     sessoes = (
         SessaoEstudo.objects
         .filter(aluno=request.user)
-        .select_related('topico__disciplina')
+        .select_related('disciplina')
         .order_by('-id')
     )
 
@@ -226,9 +186,7 @@ def paginaTurmas(request):
 
 
 def paginaFlashcards(request):
-
     disciplinas = Disciplina.objects.all()
-
     return render(
         request,
         "flashcards.html",
@@ -237,9 +195,7 @@ def paginaFlashcards(request):
 
 
 def paginaDuvidas(request):
-
     disciplinas = Disciplina.objects.all()
-
     return render(
         request,
         "duvidas.html",
@@ -249,36 +205,27 @@ def paginaDuvidas(request):
 
 @login_required
 def paginaChat(request):
-
     usuario = request.user
-
     chat_obj = Chat.objects.first()
 
     if not chat_obj:
-
         chat_obj = Chat.objects.create(
             usuario1=usuario,
             usuario2=usuario
         )
 
     if request.method == "POST":
-
         texto = request.POST.get("mensagem")
 
         if texto:
-
             Mensagem.objects.create(
                 chat=chat_obj,
                 usuario=usuario,
                 conteudo=texto
             )
-
         return redirect("chat")
 
-    mensagens = (
-        chat_obj.mensagens.all()
-    )
-
+    mensagens = chat_obj.mensagens.all()
     return render(
         request,
         "chat.html",
@@ -287,8 +234,8 @@ def paginaChat(request):
         }
     )
 
-def paginaDisciplinaDetalhe(request, nome):
 
+def paginaDisciplinaDetalhe(request, nome):
     disciplina = None
     topicos = []
     turmas = []
@@ -297,21 +244,17 @@ def paginaDisciplinaDetalhe(request, nome):
     codigo = request.GET.get("codigo")
 
     if codigo:
-
         disciplina = Disciplina.objects.filter(
             codigo__iexact=codigo
         ).first()
 
         if disciplina:
-
             topicos = disciplina.topicos.all()
-
             turmas = (
                 disciplina.turmas
                 .select_related("professor")
                 .all()
             )
-
             monitorias = (
                 disciplina.monitorias_ativas
                 .select_related("monitor")
@@ -329,64 +272,49 @@ def paginaDisciplinaDetalhe(request, nome):
         }
     )
 
+
 def form_disciplina(request):
-
     if request.method == "POST":
-
         form = DisciplinaForm(request.POST)
 
         if form.is_valid():
-
             form.save()
-
             messages.success(
                 request,
                 'Cadastro realizado com sucesso!'
             )
-
             return redirect('disciplinas')
-
         else:
-
             messages.error(
                 request,
                 'Erro no cadastro.'
             )
-
     else:
         form = DisciplinaForm()
 
     return render(
         request,
         "form_disciplina.html",
-        context = {"form":form,"action":"Cadastrar"}
+        context={"form": form, "action": "Cadastrar"}
     )
 
 
 def form_turma(request):
-
     if request.method == "POST":
-
         form = TurmaForm(request.POST)
 
         if form.is_valid():
-
             form.save()
-
             messages.success(
                 request,
                 'Cadastro realizado com sucesso!'
             )
-
             return redirect('disciplinas')
-
         else:
-
             messages.error(
                 request,
                 'Erro no cadastro.'
             )
-
     else:
         form = TurmaForm()
 
@@ -399,26 +327,19 @@ def form_turma(request):
 
 @login_required
 def form_sessao_estudo(request):
-
     if request.method == "POST":
-
         form = SessaoEstudoForm(request.POST, user=request.user)
 
         if form.is_valid():
-
             sessao = form.save(commit=False)
-
             sessao.aluno = request.user
-
             sessao.save()
 
             messages.success(
                 request,
                 'Sessão cadastrada!'
             )
-
             return redirect('disciplinas')
-
     else:
         form = SessaoEstudoForm(user=request.user)
 
@@ -431,60 +352,50 @@ def form_sessao_estudo(request):
 
 @login_required
 def form_inscricao(request):
-
     if request.method == "POST":
-
-        form = InscricaoTurmaForm(
-            request.POST
-        )
+        form = InscricaoTurmaForm(request.POST)
 
         if form.is_valid():
-
-            inscricao = form.save(
-                commit=False
-            )
-
+            inscricao = form.save(commit=False)
             inscricao.user = request.user
 
-            inscricao.save()
+            # CORREÇÃO DE SEGURANÇA: Bloqueia duplicidade antes do insert
+            ja_inscrito = InscricaoTurma.objects.filter(
+                user=inscricao.user,
+                turma=inscricao.turma
+            ).exists()
 
-            messages.success(
-                request,
-                'Inscrição realizada!'
-            )
+            if ja_inscrito:
+                messages.warning(
+                    request, 
+                    f"Você já possui uma inscrição ativa ou concluída na turma {inscricao.turma}!"
+                )
+                return redirect('turmas')
 
-            return redirect('turmas')
-
+            try:
+                inscricao.save()
+                messages.success(request, 'Inscrição realizada!')
+                return redirect('turmas')
+            except IntegrityError:
+                messages.error(request, 'Erro: Você já está matriculado nesta turma.')
+                return redirect('turmas')
         else:
-
             messages.error(
                 request,
                 'Erro no cadastro.'
             )
-
     else:
         form = InscricaoTurmaForm()
 
-    turmas = (
-        Turma.objects
-        .select_related('disciplina')
-        .all()
-    )
-
+    turmas = Turma.objects.select_related('disciplina').all()
     mapping = {}
 
     for t in turmas:
-
         disc_id = t.disciplina.id
-
         if disc_id not in mapping:
             mapping[disc_id] = []
-
         if t.codigo_turma not in mapping[disc_id]:
-
-            mapping[disc_id].append(
-                t.codigo_turma
-            )
+            mapping[disc_id].append(t.codigo_turma)
 
     mapping_json = json.dumps(mapping)
 
@@ -499,29 +410,21 @@ def form_inscricao(request):
 
 
 def form_topico(request):
-
     if request.method == "POST":
-
         form = TopicoForm(request.POST)
 
         if form.is_valid():
-
             form.save()
-
             messages.success(
                 request,
                 'Cadastro realizado!'
             )
-
             return redirect('disciplinas')
-
         else:
-
             messages.error(
                 request,
                 'Erro no cadastro.'
             )
-
     else:
         form = TopicoForm()
 
@@ -532,8 +435,8 @@ def form_topico(request):
     )
 
 
+@login_required
 def update_disciplina(request, id):
-
     disciplina = get_object_or_404(Disciplina, id=id)
 
     monitor_desta_disciplina = Monitoria.objects.filter(
@@ -549,12 +452,13 @@ def update_disciplina(request, id):
         form = DisciplinaForm(request.POST, instance=disciplina)
         if form.is_valid():
             form.save()
-            messages.success(request, 'Disciplina atualizada com sucesso!')
+            messages.success(request, 'Disciplina updated com sucesso!')
             return redirect('disciplinas')
     else:
         form = DisciplinaForm(instance=disciplina)
         
     return render(request, "form_disciplina.html", context={"disciplina": disciplina, "form": form}) 
+
 
 def lista_disciplinas(request):
     disciplinas = Disciplina.objects.all()
@@ -570,6 +474,7 @@ def lista_disciplinas(request):
         'ids_disciplinas_monitoradas': ids_disciplinas_monitoradas,
     }
     return render(request, 'sua_lista.html', context)
+
 
 @login_required
 def delete_inscricao(request, turma_id):
@@ -589,17 +494,18 @@ def delete_inscricao(request, turma_id):
     inscricao.status = 'CANCELADA'
     inscricao.save()
 
+    # CORREÇÃO: Alterado de 'topico__disciplina' para 'disciplina'
     SessaoEstudo.objects.filter(
         aluno=request.user,
-        topico__disciplina=inscricao.turma.disciplina
+        disciplina=inscricao.turma.disciplina
     ).delete()
 
     messages.success(
         request,
         "Inscrição cancelada com sucesso."
     )
-
     return redirect('turmas')
+
 
 @login_required
 def update_turma(request, id):
@@ -621,21 +527,45 @@ def update_turma(request, id):
         )
     return render(request, "form_turma.html", {"form": form, "turma": turma})
 
+
 @login_required
 def delete_turma(request, id):
     turma = get_object_or_404(Turma, id=id)
     
-    is_enrolled = InscricaoTurma.objects.filter(user=request.user, turma=turma, status__in=['ATIVA', 'CONCLUIDA']).exists()
+    is_enrolled = InscricaoTurma.objects.filter(
+        user=request.user, 
+        turma=turma, 
+        status__in=['ATIVA', 'CONCLUIDA']
+    ).exists()
+    
     if not is_enrolled:
         messages.error(request, "Você só pode deletar uma turma na qual esteja matriculado.")
         return redirect('disciplinas')
         
     enrolled_users = InscricaoTurma.objects.filter(turma=turma).values_list('user', flat=True)
-    SessaoEstudo.objects.filter(aluno_id__in=enrolled_users, topico__disciplina=turma.disciplina).delete()
+    
+    # CORREÇÃO: Alterado de 'topico__disciplina' para 'disciplina'
+    SessaoEstudo.objects.filter(
+        aluno_id__in=enrolled_users, 
+        disciplina=turma.disciplina
+    ).delete()
     
     turma.delete()
     messages.success(request, "Turma deletada com sucesso.")
     return redirect('disciplinas')
+
+
+def criar_sessao_estudo(request):
+    if request.method == 'POST':
+        form = SessaoEstudoForm(request.POST, user=request.user) 
+        if form.is_valid():
+            form.save()
+            return redirect('alguma_url')
+    else:
+        form = SessaoEstudoForm(user=request.user) 
+        
+    return render(request, 'form_sessao_estudo.html', {'form': form})
+
 
 @login_required
 def update_sessao_estudo(request, id):
@@ -652,12 +582,14 @@ def update_sessao_estudo(request, id):
         form = SessaoEstudoForm(instance=sessao, user=request.user)
     return render(request, "form_sessao_estudo.html", {"form": form, "sessao": sessao})
 
+
 @login_required
 def delete_sessao_estudo(request, id):
     sessao = get_object_or_404(SessaoEstudo, id=id, aluno=request.user)
     sessao.delete()
     messages.success(request, 'Sessão de estudo deletada com sucesso!')
     return redirect('disciplinas')
+
 
 @login_required
 def update_inscricao(request, id):
@@ -674,6 +606,7 @@ def update_inscricao(request, id):
         form = InscricaoTurmaForm(instance=inscricao)
     return render(request, "form_inscricao.html", {"form": form, "inscricao": inscricao})
 
+
 @login_required
 def update_topico(request, id):
     topico = get_object_or_404(Topico, id=id)
@@ -689,12 +622,14 @@ def update_topico(request, id):
         form = TopicoForm(instance=topico)
     return render(request, "form_topico.html", {"form": form, "topico": topico})
 
+
 @login_required
 def delete_topico(request, id):
     topico = get_object_or_404(Topico, id=id)
     topico.delete()
     messages.success(request, 'Tópico deletado com sucesso!')
     return redirect('disciplinas')
+
 
 @login_required
 def form_conteudo(request):
@@ -709,6 +644,7 @@ def form_conteudo(request):
     else:
         form = ConteudoForm()
     return render(request, "form_conteudo.html", {"form": form})
+
 
 @login_required
 def update_conteudo(request, id):
@@ -725,12 +661,14 @@ def update_conteudo(request, id):
         form = ConteudoForm(instance=conteudo)
     return render(request, "form_conteudo.html", {"form": form, "conteudo": conteudo})
 
+
 @login_required
 def delete_conteudo(request, id):
     conteudo = get_object_or_404(Conteudo, id=id)
     conteudo.delete()
     messages.success(request, 'Conteúdo deletado com sucesso!')
     return redirect('disciplinas')
+
 
 @login_required
 def form_monitoria(request):
@@ -752,8 +690,9 @@ def form_monitoria(request):
         form = MonitoriaForm(initial={'monitor': request.user})
     return render(request, "form_monitoria.html", {"form": form})
 
+
 @login_required
-def update_monitoria(request,  id):
+def update_monitoria(request, id):
     monitoria = get_object_or_404(Monitoria, id=id)
     if request.method == "POST":
         form = MonitoriaForm(request.POST, instance=monitoria)
@@ -768,15 +707,17 @@ def update_monitoria(request,  id):
         form = MonitoriaForm(instance=monitoria)
     return render(request, "form_monitoria.html", {"form": form, "monitoria": monitoria})
 
+
 @login_required
 def delete_monitoria(request):
     if request.user.is_monitor:
-        monitoria = get_object_or_404(Monitoria, nome= request.user.nome)
+        monitoria = get_object_or_404(Monitoria, nome=request.user.nome)
         monitoria.delete()
         messages.success(request, 'Monitoria deletada com sucesso!')
     else:
         messages.error(request, 'Você não possui permissão para deletar uma monitoria.')
     return redirect('disciplinas')
+
 
 @login_required
 def exibe_monitoria(request):
@@ -788,9 +729,7 @@ def exibe_monitoria(request):
         disciplina__turmas__inscricoes__status='ATIVA'
     )
 
-    # Força a avaliação das querysets e junta em uma lista única
     monitorias_unificadas = list(como_monitor) + list(como_aluno)
-    # Remove duplicados mantendo a ordem se você for monitor e aluno da mesma vaga
     monitorias_finais = list(set(monitorias_unificadas))
 
     return render(
@@ -800,6 +739,7 @@ def exibe_monitoria(request):
             'monitorias': monitorias_finais,
         }
     )
+
 
 @login_required
 def form_professor(request):
@@ -814,6 +754,7 @@ def form_professor(request):
     else:
         form = ProfessorForm()
     return render(request, "form_professor.html", {"form": form})
+
 
 @login_required
 def update_professor(request, id):
@@ -830,12 +771,14 @@ def update_professor(request, id):
         form = ProfessorForm(instance=professor)
     return render(request, "form_professor.html", {"form": form, "professor": professor})
 
+
 @login_required
 def delete_professor(request, id):
     professor = get_object_or_404(Professor, id=id)
     professor.delete()
     messages.success(request, 'Professor deletado com sucesso!')
     return redirect('disciplinas')
+
 
 @login_required
 def update_aluno(request, id):
@@ -855,6 +798,7 @@ def update_aluno(request, id):
         form = AlunoForm(instance=aluno)
     return render(request, "form_aluno.html", {"form": form, "aluno": aluno})
 
+
 @login_required
 def delete_aluno(request, id):
     if request.user.id != int(id):
@@ -864,6 +808,7 @@ def delete_aluno(request, id):
     aluno.delete()
     messages.success(request, 'Perfil deletado com sucesso.')
     return redirect('home')
+
 
 @login_required
 def editar_turma(request, turma_id):
@@ -881,4 +826,3 @@ def editar_turma(request, turma_id):
         return redirect('listar_turmas')
 
     return render(request, 'editar_turma.html', {'form': form})
-
