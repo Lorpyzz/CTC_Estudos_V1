@@ -723,23 +723,27 @@ def delete_monitoria(request):
 def exibe_monitoria(request):
     usuario_atual = request.user
 
-    como_monitor = Monitoria.objects.filter(monitor=usuario_atual)
-    como_aluno = Monitoria.objects.filter(
-        disciplina__turmas__inscricoes__user=usuario_atual,
-        disciplina__turmas__inscricoes__status='ATIVA'
-    )
+    disciplinas_ids = InscricaoTurma.objects.filter(
+        user=usuario_atual, 
+        status='ATIVA'
+    ).values_list('turma__disciplina_id', flat=True)
 
-    monitorias_unificadas = list(como_monitor) + list(como_aluno)
-    monitorias_finais = list(set(monitorias_unificadas))
+    monitorias_como_aluno = Monitoria.objects.filter(
+        disciplina_id__in=disciplinas_ids
+    ).exclude(monitor=usuario_atual).select_related('disciplina', 'monitor')
+
+    monitorias_como_monitor = Monitoria.objects.filter(
+        monitor=usuario_atual
+    ).select_related('disciplina')
 
     return render(
         request,
         'monitoria.html',
         {
-            'monitorias': monitorias_finais,
+            'monitorias_aluno': monitorias_como_aluno,
+            'monitorias_professor': monitorias_como_monitor,
         }
     )
-
 
 @login_required
 def form_professor(request):
