@@ -1,47 +1,56 @@
 {% extends "base.html" %}
-{% load static %}
-
-{% block content %}
-
+{% load static %} {% block content %}
 <link rel="stylesheet" href="{% static 'css/monitoria.css' %}">
 
-<div class="main-container">
+<div class="monitoria-container">
 
-    <h1>Monitorias</h1>
-
-    <a class="btn-publicar" href="{% url 'form_monitoria' %}">
-        Cadastrar monitoria
-    </a>
-
-    <h2>Disponíveis</h2>
-
-    {% for monitoria in monitorias %}
-
-        <div class="monitoria-card">
-
-            <h3>
-                {{ monitoria.disciplina.codigo }} - {{ monitoria.disciplina.nome }}
-            </h3>
-
-            <p><strong>Monitor:</strong> {{ monitoria.monitor.nome }}</p>
-            <p><strong>Dia:</strong> {{ monitoria.dia_semana }}</p>
-            <p><strong>Horário:</strong> {{ monitoria.horario }}</p>
-
-            {% if monitoria.online %}
-                <p>Online</p>
-                <a href="{{ monitoria.link_reuniao }}" target="_blank">
-                    Entrar na reunião
-                </a>
-            {% else %}
-                <p>Presencial - Sala {{ monitoria.sala }}</p>
-            {% endif %}
-
+    <div class="monitoria-header">
+        <div>
+            <h2>Monitorias das Minhas Disciplinas</h2>
+            <p>Horários disponíveis para as matérias que você está matriculado neste semestre.</p>
         </div>
+        <a href="{% url 'form_monitoria' %}" class="btn-criar-monitoria">
+            + Criar Monitoria
+        </a>
+    </div>
+    
+    <div class="monitoria-grid">
+        {% if monitorias_aluno %}
+            {% for monitoria in monitorias_aluno %}
+                <div class="monitoria-card card-aluno">
+                    <h5>{{ monitoria.disciplina.nome }}</h5>
+                    <p><strong>Código:</strong> {{ monitoria.disciplina.codigo }}</p>
+                    <p><strong>Monitor(a):</strong> {{ monitoria.monitor.first_name|default:monitoria.monitor.username }}</p>
+                    <div class="horario-badge"><strong>Horário:</strong> {{ monitoria.horario }}</div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="empty-state">
+                Nenhuma monitoria disponível para as suas disciplinas ativas no momento.
+            </div>
+        {% endif %}
+    </div>
 
-    {% empty %}
-        <p>Nenhuma monitoria disponível.</p>
-    {% endfor %}
+    <div style="margin-bottom: 20px;">
+        <h2>Monitorias Ministradas por Mim</h2>
+        <p>Disciplinas que você concluiu com êxito e atua como monitor do CTC.</p>
+    </div>
+    
+    <div class="monitoria-grid">
+        {% if monitorias_professor %}
+            {% for monitoria in monitorias_professor %}
+                <div class="monitoria-card card-monitor">
+                    <h5>{{ monitoria.disciplina.nome }}</h5>
+                    <p><strong>Código:</strong> {{ monitoria.disciplina.codigo }}</p>
+                    <div class="horario-badge"><strong>Seu Horário Cadastrado:</strong> {{ monitoria.horario }}</div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="empty-state">
+                Você ainda não está cadastrado como monitor de nenhuma disciplina.
+            </div>
+        {% endif %}
+    </div>
 
 </div>
-
 {% endblock %}
