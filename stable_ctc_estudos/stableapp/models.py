@@ -298,55 +298,42 @@ class Monitoria(models.Model):
 
 
 class SessaoEstudo(models.Model):
-
     aluno = models.ForeignKey(
         CtcEstudosUser,
         on_delete=models.CASCADE,
         related_name='sessoes_estudo'
     )
-
-    topico = models.ForeignKey(
-        Topico,
+    disciplina = models.ForeignKey(
+        Disciplina,
         on_delete=models.SET_NULL,
         null=True,
         related_name='sessoes_direcionadas'
     )
-
-    data_estudo = models.DateField(
-        auto_now_add=True
-    )
-
+    data_estudo = models.DateField(auto_now_add=True)
     duracao_minutos = models.PositiveIntegerField()
-
-    observacoes = models.TextField(
-        blank=True,
-        null=True
-    )
+    observacoes = models.TextField(blank=True, null=True)
 
     class Meta:
-
         verbose_name = "Sessão de Estudo"
-
         verbose_name_plural = "Sessões de Estudo"
 
     def __str__(self):
-
         nome_aluno = (
             self.aluno.first_name
             if self.aluno.first_name
             else self.aluno.username
         )
-
-        topico_nome = (
-            self.topico.titulo_topico
-            if self.topico
-            else "Tópico Geral"
+        
+        disciplina_nome = (
+            self.disciplina.nome  
+            if self.disciplina
+            else "Disciplina Removida"
         )
 
         return (
             f"{nome_aluno} dedicou "
             f"{self.duracao_minutos}min "
-            f"em {topico_nome}"
+            f"em {disciplina_nome}"
         )
 
 
