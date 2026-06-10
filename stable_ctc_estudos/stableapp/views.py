@@ -111,7 +111,7 @@ def paginaCadastro(request):
                 request,
                 'Cadastro realizado com sucesso!'
             )
-            return redirect("home")
+            return redirect("login")
         else:
             messages.error(
                 request,

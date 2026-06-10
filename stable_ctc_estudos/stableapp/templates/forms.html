@@ -2,7 +2,31 @@
 
 <form method="POST">
     {% csrf_token %}
-    {{ form.as_p }}
+    <div class="campo">
+        <label for="{{ form.nome.id_for_label }}">Nome Completo</label>
+        {{ form.nome }}
+    </div>
+    
+    <div class="campo">
+        <label for="{{ form.matricula.id_for_label }}">Matrícula</label>
+        {{ form.matricula }}
+    </div>
+    
+    <div class="campo">
+        <label for="{{ form.email.id_for_label }}">E-mail</label>
+        {{ form.email }}
+    </div>
+    
+    <div class="campo">
+        <label for="{{ form.data_nasc.id_for_label }}">Data de Nascimento</label>
+        {{ form.data_nasc }}
+    </div>
+    
+    <div class="campo">
+        <label for="{{ form.password.id_for_label }}">Senha</label>
+        {{ form.password }}
+    </div>
+    
     <input type="submit" value="Cadastrar">
 </form>
 

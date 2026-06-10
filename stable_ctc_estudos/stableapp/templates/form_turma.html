@@ -65,7 +65,32 @@
 
             <form method="POST">
                 {% csrf_token %}
-                {{ form.as_p }}
+                
+                <div class="campo">
+                    <label for="{{ form.disciplina.id_for_label }}">Disciplina</label>
+                    {{ form.disciplina }}
+                </div>
+                
+                <div class="campo">
+                    <label for="{{ form.professor.id_for_label }}">Professor</label>
+                    {{ form.professor }}
+                </div>
+                
+                <div class="campo">
+                    <label for="{{ form.codigo_turma.id_for_label }}">Código da Turma</label>
+                    {{ form.codigo_turma }}
+                </div>
+                
+                <div class="campo">
+                    <label for="{{ form.semestre.id_for_label }}">Semestre</label>
+                    {{ form.semestre }}
+                </div>
+                
+                <div class="campo">
+                    <label for="{{ form.horario.id_for_label }}">Horário</label>
+                    {{ form.horario }}
+                </div>
+
                 <div style="margin-top: 20px;">
                     <button type="submit" class="btn-publicar">
                         <span class="send-icon"></span> Abrir Turma

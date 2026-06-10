@@ -83,7 +83,22 @@
 
             <form method="POST">
                 {% csrf_token %}
-                {{ form.as_p }}
+
+                <div class="campo">
+                    <label for="{{ form.nome.id_for_label }}">Nome</label>
+                    {{ form.nome }}
+                </div>
+                
+                <div class="campo">
+                    <label for="{{ form.email.id_for_label }}">E-mail</label>
+                    {{ form.email }}
+                </div>
+                
+                <div class="campo">
+                    <label for="{{ form.departamento.id_for_label }}">Departamento</label>
+                    {{ form.departamento }}
+                </div>
+                
                 <div style="margin-top: 20px;">
                     <button type="submit" class="btn-publicar">
                         <span class="send-icon"></span> Salvar Professor

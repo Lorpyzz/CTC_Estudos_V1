@@ -30,7 +30,26 @@
 
         <form method="POST">
             {% csrf_token %}
-            {{ form.as_p }}
+            
+            <div class="campo">
+                <label for="{{ form.disciplina.id_for_label }}">Disciplina</label>
+                {{ form.disciplina }}
+            </div>
+            
+            <div class="campo">
+                <label for="{{ form.turma.id_for_label }}">Código da Turma</label>
+                {{ form.turma }}
+            </div>
+            
+            <div class="campo">
+                <label for="{{ form.status.id_for_label }}">Status</label>
+                {{ form.status }}
+            </div>
+            
+            <div class="campo">
+                <label for="{{ form.nota_final.id_for_label }}">Nota Final</label>
+                {{ form.nota_final }}
+            </div>
             <div style="margin-top: 20px;">
                 <button type="submit" class="btn-publicar">
                     <span class="send-icon"></span> Confirmar Inscrição

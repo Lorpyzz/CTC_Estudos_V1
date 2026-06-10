@@ -65,7 +65,17 @@
 
             <form method="POST">
                 {% csrf_token %}
-                {{ form.as_p }}
+
+                <div class="campo">
+                    <label for="{{ form.disciplina.id_for_label }}">Disciplina</label>
+                    {{ form.disciplina }}
+                </div>
+                
+                <div class="campo">
+                    <label for="{{ form.titulo_topico.id_for_label }}">Título do Tópico</label>
+                    {{ form.titulo_topico }}
+                </div>
+                
                 <div style="margin-top: 20px;">
                     <button type="submit" class="btn-publicar">
                         <span class="send-icon"></span> Salvar Tópico
