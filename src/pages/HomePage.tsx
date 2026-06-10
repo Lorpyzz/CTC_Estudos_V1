@@ -1,16 +1,15 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import './HomePage.css'; 
 
-const HomePage: React.FC = () => {
-  const navigate = useNavigate();
+const Login: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     console.log('Login:', { email, password });
-    navigate('/disciplinas');
+    
+    window.location.href = '/disciplinas/';
   };
 
   return (
@@ -52,11 +51,11 @@ const HomePage: React.FC = () => {
 
         <div className="login-footer">
           <a href="#">Esqueceu a senha?</a>
-          <a href="#">Cadastre-se</a>
+          <a href="/templates/forms">Cadastre-se</a>
         </div>
       </form>
     </div>
   );
 };
 
-export default HomePage;
+export default Login;

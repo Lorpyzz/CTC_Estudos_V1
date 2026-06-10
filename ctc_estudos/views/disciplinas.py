@@ -2,9 +2,9 @@ import json
 from django.shortcuts import render
 
 
-def lista_disciplinas(request):
 
-  dados_json = """
+
+dados_json = """
   {
     "disciplinas": [
       {
@@ -71,12 +71,11 @@ def lista_disciplinas(request):
   }
   """
 
-  dados = json.loads(dados_json)
 
-  disciplinas = dados["disciplinas"]
 
-  context = {
-        "disciplinas": disciplinas
-    }
+dados = json.loads(dados_json)
+disciplinas_lista = dados["disciplinas"]
 
-  return render(request, "disciplinas.html", context)
+def lista_disciplinas(request):
+    context = {"disciplinas": disciplinas_lista}
+    return render(request, "disciplinas.html", context)
