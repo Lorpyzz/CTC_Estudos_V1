@@ -22,7 +22,17 @@
 
         <form method="POST">
             {% csrf_token %}
-            {{ form.as_p }}
+            
+            <p>
+                <label for="id_username">Username:</label>
+                <input type="text" name="username" id="id_username" placeholder="Matrícula" required>
+            </p>
+            
+            <p>
+                <label for="id_password">Password:</label>
+                <input type="password" name="password" id="id_password" placeholder="Senha" required>
+            </p>
+
             <button type="submit" class="btn-entrar">Entrar</button>
         </form>
 

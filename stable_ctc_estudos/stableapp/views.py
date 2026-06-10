@@ -67,7 +67,7 @@ def loginAluno(request):
                     request,
                     f"Bem-vindo de volta, {nome_exibicao}!"
                 )
-                return redirect("disciplinas")
+                return redirect("home")
 
         messages.error(
             request,
@@ -111,7 +111,7 @@ def paginaCadastro(request):
                 request,
                 'Cadastro realizado com sucesso!'
             )
-            return redirect("disciplinas")
+            return redirect("home")
         else:
             messages.error(
                 request,

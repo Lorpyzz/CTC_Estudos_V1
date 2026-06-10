@@ -90,15 +90,19 @@ form p input:focus {
 }
 
 .btn-entrar {
-    padding: 14px;
-    background-color: #4A90D9;
-    color: white;
-    border: none;
-    border-radius: 10px;
-    font-size: 15px;
-    font-weight: 600;
+    padding: 14px !important;
+    background-color: #4A90D9 !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 10px !important;
+    font-size: 15px !important;
+    font-weight: 600 !important;
     cursor: pointer;
     width: 100%;
+    display: block;
+    margin-top: 10px;
+    transition: background-color 0.2s, transform 0.1s;
+    outline: none;
 }
 
 .btn-entrar:hover {

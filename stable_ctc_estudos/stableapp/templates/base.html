@@ -25,7 +25,7 @@
             <li><a href="{% url 'chat' %}">Chat</a></li>
         </ul>
 
-        {% if user.is_authenticated %}
+        {% if user.is_authenticated %}  <!-- apenas usuarios cadastrados -->
         <div class="user-menu">
             <button class="user-avatar-btn" onclick="toggleDropdown()">
                 <div class="avatar-circle">
@@ -39,6 +39,7 @@
                     <span>Mat: {{ user.matricula }}</span>
                 </div>
                 <hr class="dropdown-divider">
+
                 <form method="post" action="{% url 'logout' %}">
                     {% csrf_token %}
                     <button type="submit" class="btn-sair">
