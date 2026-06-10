@@ -1,39 +1,44 @@
-import json
 from django.shortcuts import render, redirect
-from datetime import datetime
+
+from chat.models import Chat, Mensagem
 
 
-def chat(request):
-    mensagens = []
-    try:
-        with open("mensagens.json", "r", encoding="utf-8") as arquivo:
-            mensagens = json.load(arquivo)
-    except:
-        mensagens = []
+def chat_view(request):
 
+    # PEGA O PRIMEIRO CHAT
+    chat = Chat.objects.first()
 
+    # SE NÃO EXISTIR CHAT, CRIA UM
+    if not chat:
+
+        chat = Chat.objects.create(
+            usuario1=request.user,
+            usuario2=request.user
+        )
+
+    # ENVIO DE MENSAGEM
     if request.method == "POST":
 
-        mensagem_usuario = request.POST.get("mensagem")
+        texto = request.POST.get("mensagem")
 
-        nova_mensagem = {
-            "usuario": "Isabele",
-            "mensagem": mensagem_usuario,
-            "horario": datetime.now().strftime("%H:%M")
-        }
-        mensagens.append(nova_mensagem)
+        if texto:
 
-        # salva json
-        with open("mensagens.json", "w", encoding="utf-8") as arquivo:
-            json.dump(
-                mensagens,
-                arquivo,
-                ensure_ascii=False,
-                indent=4
+            Mensagem.objects.create(
+                chat=chat,
+                usuario=request.user,
+                conteudo=texto
             )
-        return redirect("chat")
-    #envia variavel pro html
-    return render(request, "chat.html", {"mensagens": mensagens})
 
+        return redirect('chat')
 
+    # PEGA TODAS AS MENSAGENS
+    mensagens = chat.mensagens.all()
 
+    return render(
+        request,
+        "chat.html",
+        {
+            "mensagens": mensagens,
+            "chat": chat
+        }
+    )
