@@ -830,3 +830,7 @@ def editar_turma(request, turma_id):
         return redirect('listar_turmas')
 
     return render(request, 'editar_turma.html', {'form': form})
+
+@login_required
+def config(request):
+    return render(request, 'config.html')

@@ -12,6 +12,8 @@ urlpatterns = [
     path('login/', views.loginAluno, name='login'),
     path('logout/', auth_views.LogoutView.as_view(next_page='home'), name='logout'),
     
+    path('config/', views.config, name='config'),
+
     path('disciplinas/', views.paginaDisciplinas, name='disciplinas'),
     path('disciplinas/novo/', views.form_disciplina, name='form_disciplina'),
     path('disciplinas/update/<int:id>/', views.update_disciplina, name='update_disciplina'),
@@ -56,7 +58,6 @@ urlpatterns = [
     path('', views.paginaInicial, name='home'),
     path('monitoria/', views.exibe_monitoria, name='monitoria'),
     path('monitoria/nova/', views.form_monitoria, name='form_monitoria'),
-
 ]
 
 urlpatterns += static('/assets/', document_root=os.path.join(settings.BASE_DIR, 'dist', 'assets'))
