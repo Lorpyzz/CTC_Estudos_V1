@@ -5,72 +5,79 @@
 <link rel="stylesheet" href="{% static 'css/forms.css' %}">
 {% endblock %}
 
+{% block content %}
 <div class="main-container">
-    <h1>Cadastrar Nova Monitoria</h1>
-    
-    <form method="POST">
-        {% csrf_token %}
-        <div class="campo">
-            <label for="{{ form.monitor.id_for_label }}">Monitor</label>
-            {{ form.monitor }}
+    <header class="header-section">
+        <div class="icon-title">
+            <span class="blue-icon"></span>
+            <h1>Cadastrar Nova Monitoria</h1>
         </div>
-        
-        <div class="campo">
-            <label for="{{ form.disciplina.id_for_label }}">Disciplina</label>
-            {{ form.disciplina }}
-        </div>
-        
-        <div class="campo">
-            <label for="{{ form.semestre_atuacao.id_for_label }}">Semestre de Atuação</label>
-            {{ form.semestre_atuacao }}
-        </div>
-        
-        <div class="campo">
-            <label for="{{ form.dia_semana.id_for_label }}">Dia da Semana</label>
-            {{ form.dia_semana }}
-        </div>
-        
-        <div class="campo">
-            <label for="{{ form.horario.id_for_label }}">Horário</label>
-            {{ form.horario }}
-        </div>
-        
-        <div class="campo">
-            <label for="{{ form.online.id_for_label }}">Online</label>
-            {{ form.online }}
-        </div>
-        
-        <div class="campo">
-            <label for="{{ form.sala.id_for_label }}">Sala</label>
-            {{ form.sala }}
-        </div>
-        
-        <div class="campo">
-            <label for="{{ form.link_reuniao.id_for_label }}">Link da Reunião</label>
-            {{ form.link_reuniao }}
-        </div>
-        <button type="submit" class="btn-publicar">Salvar Monitoria</button>
-    </form>
+    </header>
+
+    <section class="form-card">
+        <form method="POST">
+            {% csrf_token %}
+
+            <div class="campo">
+                <label for="{{ form.monitor.id_for_label }}">Monitor</label>
+                {{ form.monitor }}
+            </div>
+
+            <div class="campo">
+                <label for="{{ form.disciplina.id_for_label }}">Disciplina</label>
+                {{ form.disciplina }}
+            </div>
+
+            <div class="campo">
+                <label for="{{ form.semestre_atuacao.id_for_label }}">Semestre de Atuação</label>
+                {{ form.semestre_atuacao }}
+            </div>
+
+            <div class="campo">
+                <label for="{{ form.dia_semana.id_for_label }}">Dia da Semana</label>
+                {{ form.dia_semana }}
+            </div>
+
+            <div class="campo">
+                <label for="{{ form.horario.id_for_label }}">Horário</label>
+                {{ form.horario }}
+            </div>
+
+            <div class="campo">
+                <label for="{{ form.online.id_for_label }}">Online</label>
+                {{ form.online }}
+            </div>
+
+            <div class="campo" id="campo-sala">
+                <label for="{{ form.sala.id_for_label }}">Sala</label>
+                {{ form.sala }}
+            </div>
+
+            <div class="campo" id="campo-link">
+                <label for="{{ form.link_reuniao.id_for_label }}">Link da Reunião</label>
+                {{ form.link_reuniao }}
+            </div>
+
+            <div style="margin-top: 20px;">
+                <button type="submit" class="btn-publicar">Salvar Monitoria</button>
+            </div>
+        </form>
+    </section>
 </div>
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         const checkboxOnline = document.querySelector('input[name="online"]');
-        const inputSala = document.querySelector('input[name="sala"]');
-        const inputLink = document.querySelector('input[name="link_reuniao"]');
+        const campoSala = document.getElementById("campo-sala");
+        const campoLink = document.getElementById("campo-link");
 
         function alternarCampos() {
-            if (!checkboxOnline || !inputSala || !inputLink) return;
-
-            const campoSala = inputSala.closest('p');
-            const campoLink = inputLink.closest('p');
+            if (!checkboxOnline || !campoSala || !campoLink) return;
 
             if (checkboxOnline.checked) {
-                
                 campoSala.style.display = 'none';
                 campoLink.style.display = 'flex';
             } else {
-                
                 campoSala.style.display = 'flex';
                 campoLink.style.display = 'none';
             }
@@ -78,7 +85,7 @@
 
         if (checkboxOnline) {
             checkboxOnline.addEventListener('change', alternarCampos);
-            alternarCampos(); 
+            alternarCampos();
         }
     });
 </script>
