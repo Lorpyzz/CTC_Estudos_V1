@@ -173,12 +173,12 @@ footer {
 }
 
 .btn-login {
-    background-color: #89CFF0;
+    background-color: #4A90D9;
     color: white;
     text-decoration: none;
     font-size: 0.95rem;
     padding: 8px 20px;
-    border-radius: 20px;
+    border-radius: 8px;
     font-weight: 500;
     transition: background-color 0.2s ease;
 }
