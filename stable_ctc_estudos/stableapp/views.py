@@ -6,6 +6,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, get_user_model
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
+from django.urls import reverse
 
 import json
 
@@ -206,12 +207,38 @@ def paginaDuvidas(request):
 @login_required
 def paginaChat(request):
     usuario = request.user
-    chat_obj = Chat.objects.first()
+
+    disciplina_id = request.GET.get("disciplina") or request.POST.get("disciplina")
+    disciplina_atual = None
+    monitor_atual = usuario  # fallback: "chat" do usuário com ele mesmo (Avisos Gerais)
+
+    if disciplina_id:
+        disciplina_atual = get_object_or_404(Disciplina, id=disciplina_id)
+
+        monitoria = (
+            Monitoria.objects
+            .filter(disciplina=disciplina_atual)
+            .select_related('monitor')
+            .first()
+        )
+
+        if monitoria:
+            monitor_atual = monitoria.monitor
+        else:
+            messages.warning(
+                request,
+                f"Ainda não há monitor cadastrado para {disciplina_atual.nome}."
+            )
+
+    chat_obj = Chat.objects.filter(
+        Q(usuario1=usuario, usuario2=monitor_atual) |
+        Q(usuario1=monitor_atual, usuario2=usuario)
+    ).first()
 
     if not chat_obj:
         chat_obj = Chat.objects.create(
             usuario1=usuario,
-            usuario2=usuario
+            usuario2=monitor_atual
         )
 
     if request.method == "POST":
@@ -223,14 +250,21 @@ def paginaChat(request):
                 usuario=usuario,
                 conteudo=texto
             )
+
+        if disciplina_id:
+            return redirect(f"{reverse('chat')}?disciplina={disciplina_id}")
         return redirect("chat")
 
     mensagens = chat_obj.mensagens.all()
+    disciplinas = Disciplina.objects.all()
+
     return render(
         request,
         "chat.html",
         {
-            "mensagens": mensagens
+            "mensagens": mensagens,
+            "disciplinas": disciplinas,
+            "disciplina_atual": disciplina_atual,
         }
     )
 

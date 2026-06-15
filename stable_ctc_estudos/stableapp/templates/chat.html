@@ -1,161 +1,125 @@
 {% extends "base.html" %}
 {% load static %}
+{% load humanize %}
 
-{% block title %}
-Chat
+{% block title %}Chat - CTC Estudos{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/chat.css' %}">
 {% endblock %}
 
 {% block content %}
-
-<link rel="stylesheet" href="{% static 'css/chat.css' %}">
-
 <div class="app-container">
 
     <!-- SIDEBAR -->
-    <aside class="sidebar">
-
-        <div class="sidebar-header">
-            <h2>Conversas</h2>
-        </div>
-
-        <div class="chat-list">
-
-            <div class="chat-item active">
-
-                <div class="avatar light-blue">
-                    CG
-                </div>
-
-                <div class="chat-info">
-
-                    <div class="chat-top">
-                        <strong>Chat Geral</strong>
-                    </div>
-
-                    <p class="preview">
-                        Conversa geral do sistema
-                    </p>
-
+    <aside class="channels-sidebar">
+        <div class="sidebar-title">
+            <div class="title-with-icon">
+                <span class="icon-megaphone">📢</span>
+                <div>
+                    <h3>Canais</h3>
+                    <span>Avisos e monitorias por disciplina</span>
                 </div>
             </div>
+        </div>
+
+        <div class="channel-list">
+            <a href="{% url 'chat' %}" class="channel-item {% if not disciplina_atual %}active{% endif %}">
+                <div class="channel-avatar">AG</div>
+                <div class="channel-info">
+                    <strong>Avisos Gerais</strong>
+                    <p>Apenas monitores publicam aqui</p>
+                </div>
+            </a>
+
+            {% for disciplina in disciplinas %}
+            <a href="{% url 'chat' %}?disciplina={{ disciplina.id }}" class="channel-item {% if disciplina_atual.id == disciplina.id %}active{% endif %}">
+                <div class="channel-avatar">{{ disciplina.codigo|slice:":2"|upper }}</div>
+                <div class="channel-info">
+                    <strong>{{ disciplina.codigo }} — {{ disciplina.nome }}</strong>
+                    <p>Chat de monitoria</p>
+                </div>
+            </a>
+            {% endfor %}
         </div>
     </aside>
 
-    <!-- AREA DO CHAT -->
-    <main class="chat-window">
-
-        <!-- HEADER -->
-        <header class="chat-header">
-
-            <div class="avatar-small light-blue">
-                CG
+    <!-- CONTEUDO -->
+    <main class="channel-content">
+        <!-- TOPO -->
+        <header class="channel-header">
+            <div class="header-left">
+                {% if disciplina_atual %}
+                    <div class="channel-avatar small">{{ disciplina_atual.codigo|slice:":2"|upper }}</div>
+                    <h2>{{ disciplina_atual.nome }}</h2>
+                    <span class="tag-monitor">💬 Monitoria</span>
+                {% else %}
+                    <div class="channel-avatar small">AG</div>
+                    <h2>Avisos Gerais</h2>
+                    <span class="tag-monitor">📢 Somente monitores</span>
+                {% endif %}
             </div>
-
-            <h3>
-                Chat Geral
-            </h3>
-
         </header>
 
         <!-- MENSAGENS -->
-        <div
-            class="messages-container"
-            id="messages-container"
-        >
-
-            {% for msg in mensagens %}
-
-                <div class="message-row
-                    {% if msg.usuario == request.user %}
-                        sent
-                    {% else %}
-                        received
-                    {% endif %}
-                ">
-
-                    <!-- AVATAR -->
-                    <div class="avatar-small
-                        {% if msg.usuario == request.user %}
-                            user-blue
+        <div class="posts-container">
+            {% for mensagem in mensagens %}
+            <div class="post-card">
+                <div class="post-header">
+                    <div class="{% if mensagem.usuario.is_monitor %}avatar-monitor{% else %}avatar-aluno{% endif %}">
+                        {{ mensagem.usuario.nome|default:mensagem.usuario.username|slice:":2"|upper }}
+                    </div>
+                    <div class="monitor-meta">
+                        <strong>{{ mensagem.usuario.nome|default:mensagem.usuario.username }}</strong>
+                        {% if mensagem.usuario.is_monitor %}
+                            <span class="cargo">Monitor</span>
                         {% else %}
-                            gray
+                            <span class="cargo-aluno">Aluno</span>
                         {% endif %}
-                    ">
-
-                        {{ msg.usuario.nome|first|upper }}
-
+                        <small>{{ mensagem.enviado_em|naturaltime }}</small>
                     </div>
-
-                    <!-- CONTEUDO -->
-                    <div class="message-content">
-
-                        <span class="sender-name">
-
-                            {{ msg.usuario.nome }}
-
-                            <small>
-                                {{ msg.enviado_em|date:"H:i" }}
-                            </small>
-
-                        </span>
-
-                        <div class="bubble">
-                            {{ msg.conteudo }}
-                        </div>
-
-                    </div>
-
                 </div>
-
+                <div class="post-body">
+                    {{ mensagem.conteudo }}
+                </div>
+            </div>
             {% empty %}
-
-                <div class="empty-msg">
-                    Nenhuma mensagem ainda.
+                {% if disciplina_atual %}
+                <div class="empty-state">
+                    <p>Nenhuma mensagem ainda. Envie a primeira pergunta para o monitor de {{ disciplina_atual.nome }}!</p>
                 </div>
-
+                {% else %}
+                <div class="post-card">
+                    <div class="post-header">
+                        <div class="avatar-monitor">MC</div>
+                        <div class="monitor-meta">
+                            <strong>Monitoria CTC</strong>
+                            <span class="cargo">Monitor</span>
+                            <small>agora mesmo</small>
+                        </div>
+                    </div>
+                    <div class="post-body">
+                        Bem-vindos ao canal de avisos da monitoria! Apenas monitores podem postar aqui.
+                    </div>
+                </div>
+                {% endif %}
             {% endfor %}
-
         </div>
 
-        <!-- FORM -->
-        <form
-            method="POST"
-            class="chat-input-area"
-        >
-
+        <!-- RODAPE -->
+        {% if disciplina_atual or request.user.is_monitor %}
+        <form method="post" class="message-form">
             {% csrf_token %}
-
-            <input
-                type="text"
-                name="mensagem"
-                id="message-input"
-                placeholder="Digite sua mensagem..."
-                required
-            >
-
-            <button
-                type="submit"
-                class="send-btn"
-            >
-                <i class="fa-solid fa-paper-plane"></i>
-            </button>
-
+            {% if disciplina_atual %}<input type="hidden" name="disciplina" value="{{ disciplina_atual.id }}">{% endif %}
+            <input type="text" name="mensagem" class="message-input" placeholder="Digite sua mensagem..." required autocomplete="off">
+            <button type="submit" class="btn-send">Enviar</button>
         </form>
-
+        {% else %}
+        <div class="read-only-footer">
+            <span class="icon-lock">🔒</span>
+            Este canal é somente leitura. Apenas monitores podem publicar avisos.
+        </div>
+        {% endif %}
     </main>
-
 </div>
-
-<script>
-
-    const container =
-        document.getElementById(
-            'messages-container'
-        );
-
-    container.scrollTop =
-        container.scrollHeight;
-
-</script>
-
 {% endblock %}
