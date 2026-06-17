@@ -66,16 +66,12 @@
             {% for mensagem in mensagens %}
             <div class="post-card">
                 <div class="post-header">
-                    <div class="{% if mensagem.usuario.is_monitor %}avatar-monitor{% else %}avatar-aluno{% endif %}">
-                        {{ mensagem.usuario.nome|default:mensagem.usuario.username|slice:":2"|upper }}
+                    <div class="avatar-monitor">
+                        {{  mensagem.usuario.nome|default:mensagem.usuario.first_name|default:"Monitor"|slice:":2"|upper }}
                     </div>
                     <div class="monitor-meta">
-                        <strong>{{ mensagem.usuario.nome|default:mensagem.usuario.username }}</strong>
-                        {% if mensagem.usuario.is_monitor %}
-                            <span class="cargo">Monitor</span>
-                        {% else %}
-                            <span class="cargo-aluno">Aluno</span>
-                        {% endif %}
+                        <strong>{{  mensagem.usuario.nome|default:mensagem.usuario.first_name|default:"Monitor" }}</strong>
+                        <span class="cargo">Monitor</span>
                         <small>{{ mensagem.enviado_em|naturaltime }}</small>
                     </div>
                 </div>
@@ -107,7 +103,7 @@
         </div>
 
         <!-- RODAPE -->
-        {% if disciplina_atual or request.user.is_monitor %}
+        {% if pode_enviar %}
         <form method="post" class="message-form">
             {% csrf_token %}
             {% if disciplina_atual %}<input type="hidden" name="disciplina" value="{{ disciplina_atual.id }}">{% endif %}
