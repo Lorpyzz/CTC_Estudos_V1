@@ -59,7 +59,7 @@ urlpatterns = [
     path('monitoria/', views.exibe_monitoria, name='monitoria'),
     path('monitoria/nova/', views.form_monitoria, name='form_monitoria'),
     path('perfil/', views.perfil, name = 'perfil'),
-    path('ajuda/', views.ajuda, name = 'ajuda')
+    path('ajuda/', views.ajuda_view, name = 'ajuda')
 
 ]
 

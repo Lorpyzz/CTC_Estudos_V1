@@ -17,8 +17,14 @@
     <div class="faq-card">
         {% for item in perguntas %}
             <div class="faq-item">
-                <h3>{{ item.pergunta }}</h3>
-                <p>{{ item.resposta|safe }}</p>
+                <div class="faq-pergunta-header" onclick="toggleResposta(this)">
+                    <h3>{{ item.pergunta }}</h3>
+                    <span class="icone-toggle">+</span>
+                </div>
+                
+                <div class="faq-resposta oculta">
+                    <p>{{ item.resposta|safe }}</p>
+                </div>
             </div>
         {% empty %}
             <p>Nenhuma dúvida cadastrada no momento.</p>
