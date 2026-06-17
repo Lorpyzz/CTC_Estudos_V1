@@ -366,7 +366,18 @@ class Mensagem(models.Model):
     chat = models.ForeignKey(
         Chat,
         on_delete=models.CASCADE,
-        related_name='mensagens'
+        related_name='mensagens',
+        null=True,
+        blank=True
+    )
+
+    #liga a mensagem diretamente à disciplina
+    disciplina = models.ForeignKey(
+        'Disciplina',
+        on_delete=models.CASCADE,
+        related_name='mensagens',
+        null=True,
+        blank=True
     )
 
     usuario = models.ForeignKey(
@@ -376,19 +387,13 @@ class Mensagem(models.Model):
 
     conteudo = models.TextField()
 
-    enviado_em = models.DateTimeField(
-        auto_now_add=True
-    )
+    enviado_em = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         ordering = ['enviado_em']
 
     def __str__(self):
-
-        return (
-            f"{self.usuario.username}: "
-            f"{self.conteudo[:20]}"
-        )
+        return f"{self.usuario.username}: {self.conteudo[:20]}"
     
     from django.db import models
 
