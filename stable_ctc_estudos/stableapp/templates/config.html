@@ -1,0 +1,174 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Configurações - CTC Estudos{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/config.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="config-wrapper">
+
+    <!-- Header do perfil -->
+    <div class="profile-header">
+        <div class="profile-header-left">
+            <div class="avatar-large">
+                {{ user.nome|slice:":2"|upper }}
+            </div>
+            <div class="profile-info">
+                <h2>{{ user.nome }}</h2>
+                <span>Matrícula: {{ user.matricula }}</span>
+                <span>{{ user.email }}</span>
+            </div>
+        </div>
+        <form method="POST" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit" class="btn-sair-perfil">
+                <i class="fa-solid fa-arrow-right-from-bracket"></i> Sair
+            </button>
+        </form>
+    </div>
+
+    <!-- Abas -->
+    <div class="config-tabs">
+        <button class="tab-btn active" data-tab="perfil">
+            <i class="fa-regular fa-user"></i> Perfil
+        </button>
+        <button class="tab-btn" data-tab="seguranca">
+            <i class="fa-solid fa-lock"></i> Segurança
+        </button>
+        <button class="tab-btn" data-tab="notificacoes">
+            <i class="fa-regular fa-bell"></i> Notificações
+        </button>
+        <button class="tab-btn" data-tab="preferencias">
+            <i class="fa-solid fa-sliders"></i> Preferências
+        </button>
+    </div>
+
+    <!-- Aba: Perfil -->
+    <div class="tab-content active" id="tab-perfil">
+        <div class="config-card">
+            <h3>Informações pessoais</h3>
+            <p class="card-subtitle">Atualize seus dados acadêmicos e de contato.</p>
+
+            <form method="POST" action="#">
+                {% csrf_token %}
+                <div class="field-grid">
+                    <div class="campo">
+                        <label>Nome completo</label>
+                        <input type="text" value="{{ user.nome }}" class="form-input" readonly>
+                    </div>
+                    <div class="campo">
+                        <label>E-mail</label>
+                        <input type="email" name="email" value="{{ user.email }}" class="form-input">
+                    </div>
+                    <div class="campo">
+                        <label>Matrícula</label>
+                        <input type="text" value="{{ user.matricula }}" class="form-input" readonly>
+                    </div>
+                    <div class="campo">
+                        <label>Telefone</label>
+                        <input type="tel" name="telefone" value="{{ user.telefone|default:'' }}" placeholder="(21) 99999-9999" class="form-input">
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn-salvar">Salvar alterações</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Aba: Segurança -->
+    <div class="tab-content" id="tab-seguranca">
+        <div class="config-card">
+            <h3>Alterar e-mail</h3>
+            <p class="card-subtitle">Atualize o endereço de e-mail da sua conta.</p>
+
+            <form method="POST" action="#">
+                {% csrf_token %}
+                <div class="campo">
+                    <label>E-mail atual</label>
+                    <input type="email" value="{{ user.email }}" class="form-input" readonly>
+                </div>
+                <div class="campo">
+                    <label>Novo e-mail</label>
+                    <input type="email" name="email" placeholder="novo@email.com" class="form-input">
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn-salvar">Alterar e-mail</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Aba: Notificações -->
+    <div class="tab-content" id="tab-notificacoes">
+        <div class="config-card">
+            <h3>Notificações</h3>
+            <p class="card-subtitle">Escolha como deseja ser avisado.</p>
+
+            <div class="toggle-row">
+                <div class="toggle-info">
+                    <strong>Avisos por e-mail</strong>
+                    <span>Receba respostas e atualizações no seu e-mail.</span>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" checked>
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+            <div class="toggle-divider"></div>
+            <div class="toggle-row">
+                <div class="toggle-info">
+                    <strong>Notificações push</strong>
+                    <span>Receba alertas em tempo real no navegador.</span>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox">
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+            <div class="form-actions">
+                <button type="button" class="btn-salvar">Salvar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Aba: Preferências -->
+    <div class="tab-content" id="tab-preferencias">
+        <div class="config-card">
+            <h3>Preferências de exibição</h3>
+            <p class="card-subtitle">Personalize a aparência do CTC Estudos.</p>
+
+            <div class="campo">
+                <label>Tema</label>
+                <select class="form-input">
+                    <option>Sistema</option>
+                    <option>Claro</option>
+                    <option>Escuro</option>
+                </select>
+            </div>
+            <div class="form-actions">
+                <button type="button" class="btn-salvar">Salvar</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    tabBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            tabBtns.forEach(b => b.classList.remove('active'));
+            tabContents.forEach(c => c.classList.remove('active'));
+
+            btn.classList.add('active');
+            document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+        });
+    });
+</script>
+{% endblock %}

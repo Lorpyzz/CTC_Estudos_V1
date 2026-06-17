@@ -37,7 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    "django.contrib.humanize",
     'stableapp'
+    
 ]
 LOGOUT_REDIRECT_URL = '/'  # ou '/login/' ou qualquer página
 
@@ -122,3 +124,5 @@ STATIC_URL = 'static/'
 LOGIN_URL = 'login'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+LANGUAGE_CODE = "pt-br"

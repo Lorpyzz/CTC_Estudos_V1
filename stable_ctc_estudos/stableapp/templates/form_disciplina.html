@@ -23,47 +23,6 @@
         </div>
         {% endif %}
 
-<<<<<<< Updated upstream
-            <form method="POST">
-                {% csrf_token %}
-                
-                <div class="campo">
-                    <label for="{{ form.nome.id_for_label }}">Nome da Disciplina</label>
-                    {{ form.nome }}
-                </div>
-                
-                <div class="campo">
-                    <label for="{{ form.codigo.id_for_label }}">Código</label>
-                    {{ form.codigo }}
-                </div>
-                
-                <div class="campo">
-                    <label for="{{ form.descricao.id_for_label }}">Descrição</label>
-                    {{ form.descricao }}
-                </div>
-                
-                <div class="campo">
-                    <label for="{{ form.departamento.id_for_label }}">Departamento</label>
-                    {{ form.departamento }}
-                </div>
-                
-                <div class="campo">
-                    <label for="{{ form.email.id_for_label }}">Email do Professor</label>
-                    {{ form.email }}
-                </div>
-
-                <div style="margin-top: 20px;">
-                    <button type="submit" class="btn-publicar">
-                        <span class="send-icon"></span> Salvar Disciplina
-                    </button>
-                </div>
-            </form>
-        </section>
-    </div>
-</body>
-{% endblock %}
-</html>
-=======
         <form method="POST">
             {% csrf_token %}
             {{ form.as_p }}
@@ -76,4 +35,3 @@
     </section>
 </div>
 {% endblock %}
->>>>>>> Stashed changes

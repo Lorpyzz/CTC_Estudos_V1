@@ -5,51 +5,48 @@
 <link rel="stylesheet" href="{% static 'css/forms.css' %}">
 {% endblock %}
 
+{% block content %}
 <div class="main-container">
     <header class="header-section">
-        <div class="title-group">
-            <div class="icon-title">
-                <span class="blue-icon"></span>
-                <h1>Inscrição em Turma</h1>
-            </div>
-            <p class="subtitle">Inscreva-se em uma turma específica.</p>
+        <div class="icon-title">
+            <span class="blue-icon"></span>
+            <h1>Inscrição em Turma</h1>
         </div>
+        <p class="subtitle">Inscreva-se em uma turma específica.</p>
     </header>
 
     <section class="form-card">
         {% if messages %}
-        <div class="messages-container" style="margin-bottom: 20px;">
+        <div class="messages-container">
             {% for message in messages %}
-            <div class="alert {% if message.tags == 'error' %}alert-danger{% else %}alert-success{% endif %}" 
-                 style="padding: 10px; border-radius: 5px; {% if message.tags == 'error' %}background-color: #f8d7da; color: #721c24;{% else %}background-color: #d4edda; color: #155724;{% endif %}">
-                {{ message }}
-            </div>
+            <div class="message {{ message.tags }}">{{ message }}</div>
             {% endfor %}
         </div>
         {% endif %}
 
         <form method="POST">
             {% csrf_token %}
-            
+
             <div class="campo">
                 <label for="{{ form.disciplina.id_for_label }}">Disciplina</label>
                 {{ form.disciplina }}
             </div>
-            
+
             <div class="campo">
                 <label for="{{ form.turma.id_for_label }}">Código da Turma</label>
                 {{ form.turma }}
             </div>
-            
+
             <div class="campo">
                 <label for="{{ form.status.id_for_label }}">Status</label>
                 {{ form.status }}
             </div>
-            
+
             <div class="campo">
                 <label for="{{ form.nota_final.id_for_label }}">Nota Final</label>
                 {{ form.nota_final }}
             </div>
+
             <div style="margin-top: 20px;">
                 <button type="submit" class="btn-publicar">
                     <span class="send-icon"></span> Confirmar Inscrição
@@ -65,7 +62,6 @@
         const disciplinaSelect = document.getElementById("id_disciplina");
         const codigoTurmaInput = document.getElementById("id_codigo_turma");
 
-        
         const datalist = document.createElement("datalist");
         datalist.id = "turmas-sugeridas";
         codigoTurmaInput.parentNode.appendChild(datalist);
@@ -73,17 +69,12 @@
 
         function updateTurmas() {
             if (!disciplinaSelect || !codigoTurmaInput) return;
-            
             const discId = disciplinaSelect.value;
-            
-            
             datalist.innerHTML = '';
-            
-            
             if (discId && mapping[discId]) {
                 mapping[discId].forEach(function(code) {
                     const option = document.createElement("option");
-                    option.value = code; 
+                    option.value = code;
                     datalist.appendChild(option);
                 });
             }
@@ -92,22 +83,21 @@
         if (disciplinaSelect && codigoTurmaInput) {
             disciplinaSelect.addEventListener("change", function() {
                 updateTurmas();
-                codigoTurmaInput.value = ""; 
+                codigoTurmaInput.value = "";
             });
-            updateTurmas(); 
+            updateTurmas();
         }
 
-        
-        const selectStatus = document.getElementById("id_status"); 
+        const selectStatus = document.getElementById("id_status");
         const inputNotaFinal = document.getElementById("id_nota_final");
 
         if (selectStatus && inputNotaFinal) {
             function gerenciarCampoNota() {
                 if (selectStatus.value === 'CONCLUIDA') {
-                    inputNotaFinal.disabled = false; 
+                    inputNotaFinal.disabled = false;
                 } else {
-                    inputNotaFinal.disabled = true;  
-                    inputNotaFinal.value = "";       
+                    inputNotaFinal.disabled = true;
+                    inputNotaFinal.value = "";
                 }
             }
             gerenciarCampoNota();
