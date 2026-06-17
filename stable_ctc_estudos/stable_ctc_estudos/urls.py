@@ -56,6 +56,8 @@ urlpatterns = [
     path('', views.paginaInicial, name='home'),
     path('monitoria/', views.exibe_monitoria, name='monitoria'),
     path('monitoria/nova/', views.form_monitoria, name='form_monitoria'),
+    path('perfil/', views.perfil, name = 'perfil'),
+    path('ajuda/', views.ajuda, name = 'ajuda')
 
 ]
 

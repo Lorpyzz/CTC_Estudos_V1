@@ -830,3 +830,9 @@ def editar_turma(request, turma_id):
         return redirect('listar_turmas')
 
     return render(request, 'editar_turma.html', {'form': form})
+
+def perfil(request):
+    return render(request, 'perfil.html')
+
+def ajuda(request):
+    return render(request, 'ajuda.html')

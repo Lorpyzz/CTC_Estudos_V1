@@ -1,0 +1,48 @@
+
+.perfil-page {
+    padding: 40px 24px;
+}
+
+.perfil-header {
+    margin-bottom: 32px;
+}
+
+.perfil-header h1 {
+    color: black;
+    font-size: 2rem;
+    margin: 0 0 10px;
+}
+
+.perfil-header p {
+    color: #4b5563;
+    margin: 0;
+}
+
+.perfil-card {
+    max-width: 760px;
+    background: white;
+    border: 1px solid #dfe3e8;
+    border-radius: 10px;
+    padding: 28px;
+    box-sizing: border-box;
+}
+
+.perfil-info {
+    display: grid;
+    gap: 18px;
+}
+
+.dado {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    border: 1px solid #dfe3e8;
+    border-radius: 10px;
+    padding: 18px 22px;
+    background-color: white;
+    color: #6b7280;
+    font-size: 0.9rem;
+}
+
+  
+

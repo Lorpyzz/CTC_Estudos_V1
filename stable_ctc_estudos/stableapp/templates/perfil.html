@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+{% block title %}Perfil{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/perfil.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="perfil-page">
+    <section class="perfil-header">
+        <h1>Perfil</h1>
+        <p>Veja suas informações cadastradas no CTC Estudos.</p>
+    </section>
+
+    <section class="perfil-card">
+        <div class="perfil-info">
+            
+            <div class="dado">
+                <label>Nome:</label>
+            </div>
+
+            <div class="dado">
+                <label>Matrícula:</label>
+            </div>
+
+            <div class="dado">
+                <label>Turma:</label>
+            </div>
+
+            <div class="dado">
+                <label>E-mail:</label>
+            </div>
+
+              <div class="dado">
+                <label>Data de nascimento:</label>
+            </div>
+        
+        </div>
+    </section>
+</div>
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+{% block title %}Perfil{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/ajuda.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="faq-page">
+    <div class="faq-header">
+        <h1>Seção de ajuda</h1>
+        <p>Encontre respostas rápidas para as principais dúvidas sobre o CTC Estudos.</p>
+    </div>
+
+    <div class="faq-card">
+        <div class="faq-item">
+            <h3>Como acesso minhas disciplinas?</h3>
+            <p>Acesse o menu <b>Disciplinas</b> no topo da página para visualizar seus materiais.</p>
+        </div>
+
+        <div class="faq-item">
+            <h3>Como envio uma dúvida?</h3>
+            <p>Entre na página <b>Central de Dúvidas</b>, clique em "Nova dúvida" e poste sua dúvida</p>
+        </div>
+
+        <div class="faq-item">
+            <h3>Onde encontro os flashcards?</h3>
+            <p>Você pode encontrar seus flashcards no menu <b>Flashcards</b> .</p>
+        </div>
+    </div>
+</div>
+{% endblock %}
