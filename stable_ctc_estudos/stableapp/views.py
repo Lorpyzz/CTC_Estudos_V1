@@ -870,3 +870,6 @@ def perfil(request):
 
 def ajuda(request):
     return render(request, 'ajuda.html')
+
+def config(request):
+    return render(request,'config.html')

@@ -20,22 +20,31 @@
             
             <div class="dado">
                 <label>Nome:</label>
+                    {{ user.nome }}
             </div>
 
             <div class="dado">
                 <label>Matrícula:</label>
+                    {{ user.matricula }}
             </div>
 
             <div class="dado">
                 <label>Turma:</label>
+                {% for turma in user.turmas_inscritas.all %}
+                    {{ turma }}{% if not forloop.last %}, {% endif %}
+                {% empty %}
+                    Nenhuma turma inscrita
+                {% endfor %}
             </div>
 
             <div class="dado">
                 <label>E-mail:</label>
+                    {{ user.email }}
             </div>
 
               <div class="dado">
                 <label>Data de nascimento:</label>
+                    {{ user.data_nasc|default:"Não informada"|date:"d/m/Y" }}
             </div>
         
         </div>
