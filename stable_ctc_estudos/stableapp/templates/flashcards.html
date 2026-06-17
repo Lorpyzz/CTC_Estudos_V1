@@ -15,9 +15,17 @@
     <button class="btn-criar-deck" onclick="abrirModal()">+ Criar Deck</button>
 </header>
 
+<div class="busca-decks">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <input type="text" id="buscaInput"
+           placeholder="Pesquisar decks por nome, código ou disciplina..."
+           onkeyup="filtrarDecks()" autocomplete="off">
+</div>
+
 <div class="decks-container" id="decksContainer">
     {% for deck in decks %}
-        <a href="{% url 'deck_detalhe' deck.id %}" class="deck-card">
+        <a href="{% url 'deck_detalhe' deck.id %}" class="deck-card"
+           data-busca="{{ deck.nome }} {{ deck.disciplina.codigo }} {{ deck.disciplina.nome }}">
             <span class="deck-card-codigo">{{ deck.disciplina.codigo }}</span>
             <h3 class="deck-card-nome">{{ deck.nome }}</h3>
             <div class="deck-card-footer">
@@ -27,6 +35,10 @@
         </a>
     {% endfor %}
 </div>
+
+<p id="semResultado" class="busca-vazio" style="display:none;">
+    Nenhum deck encontrado para a sua busca.
+</p>
 
 <div class="modal-overlay" id="modalOverlay" onclick="fecharModal(event)">
     <div class="modal">
@@ -60,6 +72,22 @@
         if (!e || e.target === document.getElementById('modalOverlay')) {
             document.getElementById('modalOverlay').classList.remove('ativo');
         }
+    }
+
+    function filtrarDecks() {
+        const termo = document.getElementById('buscaInput').value.toLowerCase().trim();
+        const cards = document.querySelectorAll('#decksContainer .deck-card');
+        let visiveis = 0;
+
+        cards.forEach(card => {
+            const texto = card.dataset.busca.toLowerCase();
+            const achou = texto.includes(termo);
+            card.style.display = achou ? '' : 'none';
+            if (achou) visiveis++;
+        });
+
+        document.getElementById('semResultado').style.display =
+            (visiveis === 0 && termo !== '') ? 'block' : 'none';
     }
 </script>
 

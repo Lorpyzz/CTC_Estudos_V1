@@ -418,3 +418,42 @@ header p { color: #6b7280; font-size: 15px; margin: 0; }
 .estudar-banner-texto h3 { margin: 0 0 2px; font-size: 16px; font-weight: 700; color: #0f172a; }
 .estudar-banner-texto p { margin: 0; font-size: 13px; color: #64748b; }
 .estudar-banner-seta { color: #94a3b8; font-size: 14px; flex-shrink: 0; }
+
+.busca-decks {
+  max-width: 1100px;
+  margin: 8px auto 0;
+  padding: 0 20px;
+  position: relative;
+}
+.busca-decks i {
+  position: absolute;
+  left: 38px;               /* 20px do padding + ~18px pra dentro do input */
+  top: 50%;
+  transform: translateY(-50%);
+  color: #94a3b8;
+  font-size: 14px;
+  pointer-events: none;
+}
+.busca-decks input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 14px 16px 14px 44px;   /* o 44px à esquerda abre espaço pra lupa */
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.busca-decks input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
+}
+
+.busca-vazio {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  text-align: center;
+  color: #94a3b8;
+  font-size: 14px;
+}
