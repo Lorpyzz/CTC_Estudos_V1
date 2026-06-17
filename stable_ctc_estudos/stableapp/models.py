@@ -389,3 +389,16 @@ class Mensagem(models.Model):
             f"{self.usuario.username}: "
             f"{self.conteudo[:20]}"
         )
+    
+    from django.db import models
+
+class PerguntaFrequente(models.Model):
+    pergunta = models.CharField(max_length=255)
+    resposta = models.TextField()
+
+    class Meta:
+        verbose_name = "Pergunta Frequente"
+        verbose_name_plural = "Perguntas Frequentes"
+
+    def __str__(self):
+        return self.pergunta

@@ -8,15 +8,16 @@
 {% endblock %}
 
 {% block content %}
-<div class="page-wrapper">
     <div class="titulo">
         <div>
             <h1>Disciplinas</h1>
             <p>Encontre materiais e recursos para suas disciplinas do CTC</p>
         </div>
+        
+        {% if user.is_superuser %}
         <a href="{% url 'form_disciplina' %}" class="btn-add">+ Adicionar Disciplina</a>
+        {% endif %}
     </div>
-
     <div class="disciplinas">
         <div class="row">
             {% for disciplina in disciplinas %}

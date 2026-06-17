@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_list_or_404, get_object_or_404, redirect
-from django.db.models import Q
+from django.db.models import Q 
 from django.db import IntegrityError  # ADICIONADO para capturar erro de duplicidade
 from django.http import HttpResponseForbidden
 from django.contrib import messages
@@ -7,6 +7,7 @@ from django.contrib.auth import authenticate, login, get_user_model
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
+from .models import PerguntaFrequente
 
 import json
 
@@ -134,6 +135,9 @@ def paginaCadastro(request):
 
 def paginaDisciplinas(request):
     if request.method == "POST":
+        if not request.user.is_authenticated or not request.user.is_superuser:
+            messages.error(request, "Acesso negado: Apenas administradores podem criar disciplinas.")
+            return redirect('disciplinas')
         form = DisciplinaForm(request.POST)
 
         if form.is_valid():
@@ -306,9 +310,12 @@ def paginaDisciplinaDetalhe(request, nome):
         }
     )
 
-
+@login_required
 def form_disciplina(request):
     if request.method == "POST":
+        if not request.user.is_superuser:
+            messages.error(request, "Acesso negado: Apenas administradores podem acessar esta página.")
+            return redirect('disciplinas')
         form = DisciplinaForm(request.POST)
 
         if form.is_valid():
@@ -873,3 +880,11 @@ def ajuda(request):
 
 def config(request):
     return render(request,'config.html')
+
+def ajuda_view(request):
+    perguntas = PerguntaFrequente.objects.all() 
+    
+    context = {
+        'perguntas': perguntas
+    }
+    return render(request, 'ajuda.html', context)
