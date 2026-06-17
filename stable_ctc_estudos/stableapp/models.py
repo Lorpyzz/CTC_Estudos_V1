@@ -402,3 +402,44 @@ class PerguntaFrequente(models.Model):
 
     def __str__(self):
         return self.pergunta
+    
+
+class Deck(models.Model):
+
+    disciplina = models.ForeignKey(
+        Disciplina,
+        on_delete=models.CASCADE,
+        related_name='decks'
+    )
+
+    nome = models.CharField(max_length=120)
+
+    criado_em = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-criado_em']
+
+    def __str__(self):
+        return f"{self.disciplina.codigo} - {self.nome}"
+
+
+class Flashcard(models.Model):
+
+    deck = models.ForeignKey(
+        Deck,
+        on_delete=models.CASCADE,
+        related_name='cards'
+    )
+
+    pergunta = models.TextField()
+
+    resposta = models.TextField()
+
+    criado_em = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['criado_em']
+        verbose_name = "Flashcard"
+
+    def __str__(self):
+        return self.pergunta[:50]   

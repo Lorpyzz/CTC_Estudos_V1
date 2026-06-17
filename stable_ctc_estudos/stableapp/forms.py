@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.hashers import make_password
-from .models import CtcEstudosUser, Professor, Disciplina, Turma, InscricaoTurma, Topico, Conteudo, Monitoria, SessaoEstudo
+from .models import CtcEstudosUser, Professor, Disciplina, Turma, InscricaoTurma, Topico, Conteudo, Monitoria, SessaoEstudo, Deck, Flashcard
+
 
 
 class AlunoForm(forms.ModelForm):
@@ -359,3 +360,14 @@ class SessaoEstudoForm(forms.ModelForm):
             self.fields['disciplina'].queryset = Disciplina.objects.filter(
                 id__in=disciplinas_do_aluno
             )
+
+class DeckForm(forms.ModelForm):
+    class Meta:
+        model = Deck
+        fields = ['disciplina', 'nome']
+
+
+class FlashcardForm(forms.ModelForm):
+    class Meta:
+        model = Flashcard
+        fields = ['pergunta', 'resposta']
