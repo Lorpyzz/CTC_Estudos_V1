@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Perfil{% endblock %}
+{% block title %}Ajuda{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/ajuda.css' %}">
@@ -10,7 +10,7 @@
 {% block content %}
 <div class="faq-page">
     <div class="faq-header">
-        <h1>Seção de ajuda</h1>
+        <h1>Sessão de ajuda</h1>
         <p>Encontre respostas rápidas para as principais dúvidas sobre o CTC Estudos.</p>
     </div>
 
@@ -31,4 +31,19 @@
         {% endfor %}
     </div>
 </div>
+<script>
+    function toggleResposta(header) {
+        const faqItem = header.closest('.faq-item');
+        const resposta = faqItem.querySelector('.faq-resposta');
+        const icone = header.querySelector('.icone-toggle');
+        
+        if (resposta.classList.contains('oculta')) {
+            resposta.classList.remove('oculta');
+            icone.innerText = '-';
+        } else {
+            resposta.classList.add('oculta');
+            icone.innerText = '+';
+        }
+    }
+</script>
 {% endblock %}

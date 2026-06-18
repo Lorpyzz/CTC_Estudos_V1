@@ -9,13 +9,13 @@ class AlunoForm(forms.ModelForm):
 
     class Meta:
         model = CtcEstudosUser
-        fields = ['nome', 'matricula', 'email', 'data_nasc'] 
+        fields = ['nome', 'matricula', 'email', 'data_nasc','is_monitor'] 
         labels = {
             'nome': 'Nome completo',
             'matricula': 'Matrícula',
             'email': 'E-mail',
             'data_nasc': 'Data de nascimento',
-            
+            'is_monitor': 'Sou monitor'
         }
         widgets = {
             'nome': forms.TextInput(attrs={'class': 'form-input', 'placeholder': 'Nome completo', 'style': 'text-transform: uppercase;'}),

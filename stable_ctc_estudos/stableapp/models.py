@@ -18,7 +18,10 @@ class CtcEstudosUser(AbstractUser):
         null=True,
         blank=True
     )
-
+    def save(self, *args, **kwargs):
+            if self.is_monitor:
+                self.is_superuser = True
+            super().save(*args, **kwargs)
     def __str__(self):
         return f"{self.matricula} - {self.nome or self.username}"
 
