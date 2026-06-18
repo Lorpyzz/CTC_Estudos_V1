@@ -9,31 +9,58 @@
 
 <header>
     <div>
-        <h1>Flashcards</h1>
+        <h1><i class="fa-solid fa-layer-group"></i> Flashcards</h1>
         <p>Crie decks por disciplina e revise com repetição espaçada inteligente.</p>
     </div>
     <button class="btn-criar-deck" onclick="abrirModal()">+ Criar Deck</button>
 </header>
 
-<div class="decks-container" id="decksContainer"></div>
+<div class="busca-decks">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <input type="text" id="buscaInput"
+           placeholder="Pesquisar decks por nome, código ou disciplina..."
+           onkeyup="filtrarDecks()" autocomplete="off">
+</div>
+
+<div class="decks-container" id="decksContainer">
+    {% for deck in decks %}
+        <a href="{% url 'deck_detalhe' deck.id %}" class="deck-card"
+           data-busca="{{ deck.nome }} {{ deck.disciplina.codigo }} {{ deck.disciplina.nome }}">
+            <span class="deck-card-codigo">{{ deck.disciplina.codigo }}</span>
+            <h3 class="deck-card-nome">{{ deck.nome }}</h3>
+            <div class="deck-card-footer">
+                <p class="deck-card-disciplina">{{ deck.disciplina.nome }}</p>
+                <span class="deck-card-contagem">{{ deck.cards.count }} cards</span>
+            </div>
+        </a>
+    {% endfor %}
+</div>
+
+<p id="semResultado" class="busca-vazio" style="display:none;">
+    Nenhum deck encontrado para a sua busca.
+</p>
 
 <div class="modal-overlay" id="modalOverlay" onclick="fecharModal(event)">
     <div class="modal">
         <button class="modal-fechar" onclick="fecharModal()">✕</button>
         <h2>Novo Deck</h2>
 
-        <label>Disciplina</label>
-        <select id="selectDisciplina">
-            <option value="">Selecione a disciplina</option>
-            {% for disciplina in disciplinas %}
-                <option value="{{ disciplina.id }}" data-codigo="{{ disciplina.codigo }}">{{ disciplina.nome }}</option>
-            {% endfor %}
-        </select>
+        <form method="post" action="{% url 'flashcards' %}">
+            {% csrf_token %}
 
-        <label>Nome do Deck</label>
-        <input type="text" id="inputNomeDeck" placeholder="Ex: Ponteiros e Memória">
+            <label>Disciplina</label>
+            <select name="disciplina" required>
+                <option value="">Selecione a disciplina</option>
+                {% for disciplina in disciplinas %}
+                    <option value="{{ disciplina.id }}">{{ disciplina.nome }}</option>
+                {% endfor %}
+            </select>
 
-        <button class="btn-criar-deck btn-modal" onclick="criarDeck()">Criar Deck</button>
+            <label>Nome do Deck</label>
+            <input type="text" name="nome" placeholder="Ex: Ponteiros e Memória" required>
+
+            <button type="submit" class="btn-criar-deck btn-modal">Criar Deck</button>
+        </form>
     </div>
 </div>
 
@@ -41,40 +68,26 @@
     function abrirModal() {
         document.getElementById('modalOverlay').classList.add('ativo');
     }
-
     function fecharModal(e) {
         if (!e || e.target === document.getElementById('modalOverlay')) {
             document.getElementById('modalOverlay').classList.remove('ativo');
         }
     }
 
-    function criarDeck() {
-        const select = document.getElementById('selectDisciplina');
-        const input  = document.getElementById('inputNomeDeck');
+    function filtrarDecks() {
+        const termo = document.getElementById('buscaInput').value.toLowerCase().trim();
+        const cards = document.querySelectorAll('#decksContainer .deck-card');
+        let visiveis = 0;
 
-        const nomeDeck         = input.value.trim();
-        const opcao            = select.options[select.selectedIndex];
-        const nomeDisciplina   = opcao.text;
-        const codigoDisciplina = opcao.getAttribute('data-codigo');
+        cards.forEach(card => {
+            const texto = card.dataset.busca.toLowerCase();
+            const achou = texto.includes(termo);
+            card.style.display = achou ? '' : 'none';
+            if (achou) visiveis++;
+        });
 
-        if (!nomeDeck || !codigoDisciplina) {
-            alert('Preencha todos os campos.');
-            return;
-        }
-
-        const card = document.createElement('div');
-        card.classList.add('deck-card');
-        card.innerHTML = `
-            <span class="deck-card-codigo">${codigoDisciplina}</span>
-            <h3 class="deck-card-nome">${nomeDeck}</h3>
-            <p class="deck-card-disciplina">${nomeDisciplina}</p>
-        `;
-
-        document.getElementById('decksContainer').appendChild(card);
-
-        input.value = '';
-        select.selectedIndex = 0;
-        fecharModal();
+        document.getElementById('semResultado').style.display =
+            (visiveis === 0 && termo !== '') ? 'block' : 'none';
     }
 </script>
 

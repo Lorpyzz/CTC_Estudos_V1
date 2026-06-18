@@ -1,0 +1,200 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/flashcards.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<header>
+    <div>
+        <h1><i class="fa-solid fa-layer-group"></i> Flashcards</h1>
+        <p>Crie decks por disciplina e revise com repetição espaçada inteligente.</p>
+    </div>
+</header>
+
+<div class="estudo-page">
+    <a href="{% url 'deck_detalhe' deck.id %}" class="voltar-link">‹ Voltar ao deck</a>
+
+    {{ cards|json_script:"cards-data" }}
+
+    <div class="estudo-progresso" id="progressoBox">
+        <span class="estudo-progresso-contador">
+            <i class="fa-solid fa-check"></i> <span id="seiCount">0</span>/<span id="totalCount">0</span>
+        </span>
+        <div class="estudo-progresso-barra">
+            <div class="estudo-progresso-fill" id="progressoFill"></div>
+        </div>
+        <span id="progressoPct">0%</span>
+    </div>
+
+    <div class="estudo-card-grande" id="cardBox" onclick="virarCard()">
+        <span class="estudo-label" id="estudoLabel">Pergunta</span>
+        <p id="estudoTexto"></p>
+        <i class="fa-solid fa-rotate-left estudo-vira-icone" id="viraIcone"></i>
+    </div>
+
+    <div class="estudo-acoes" id="acoesBox">
+        <button class="btn-sei" onclick="handleSei()">
+            <i class="fa-solid fa-check"></i> Sei
+        </button>
+        <button class="btn-naosei" onclick="handleNaoSei()">
+            <i class="fa-solid fa-circle-xmark"></i> Não sei
+        </button>
+    </div>
+
+    <div class="estudo-dificuldade" id="dificuldadeBox" style="display:none;">
+        <p>Qual a dificuldade desta questão?</p>
+        <div class="estudo-dificuldade-botoes">
+            <button class="btn-facil" onclick="handleDificuldade('facil')">Fácil</button>
+            <button class="btn-media" onclick="handleDificuldade('media')">Média</button>
+            <button class="btn-dificil" onclick="handleDificuldade('dificil')">Difícil</button>
+        </div>
+    </div>
+
+    <div class="estudo-fim" id="fimBox" style="display:none;">
+        <div class="estudo-fim-emoji">🎉</div>
+        <h2>Parabéns!</h2>
+        <p id="fimTexto"></p>
+        <div class="estudo-fim-botoes">
+            <button class="btn-secundario" onclick="resetSessao()">
+                <i class="fa-solid fa-rotate-left"></i> Estudar novamente
+            </button>
+            <a href="{% url 'deck_detalhe' deck.id %}" class="btn-criar-deck">Voltar ao deck</a>
+        </div>
+    </div>
+
+    <div class="estudo-vazio" id="vazioBox" style="display:none;">
+        <p>Este deck ainda não tem flashcards.</p>
+        <a href="{% url 'deck_detalhe' deck.id %}" class="btn-secundario">Voltar ao deck</a>
+    </div>
+</div>
+
+<script>
+    const cardsData = JSON.parse(document.getElementById('cards-data').textContent);
+    let cards = cardsData.map(c => ({
+        pergunta: c.pergunta, resposta: c.resposta, status: null, dificuldade: null
+    }));
+
+    let queue = [];
+    let qi = 0;
+    let showAnswer = false;
+    let showDifficulty = false;
+
+    function el(id) { return document.getElementById(id); }
+
+    function buildQueue() {
+        const pending = cards
+            .map((c, i) => ({ card: c, index: i }))
+            .filter(it => it.card.status !== 'sei');
+        const order = { dificil: 0, media: 1, facil: 2 };
+        pending.sort((a, b) => {
+            const da = a.card.dificuldade ? order[a.card.dificuldade] : 1.5;
+            const db = b.card.dificuldade ? order[b.card.dificuldade] : 1.5;
+            return da - db;
+        });
+        const expanded = [];
+        for (const it of pending) {
+            const reps = it.card.dificuldade === 'dificil' ? 3
+                       : it.card.dificuldade === 'media' ? 2 : 1;
+            for (let r = 0; r < reps; r++) expanded.push(it);
+        }
+        return expanded;
+    }
+
+    function seiCount() { return cards.filter(c => c.status === 'sei').length; }
+
+    function currentIndex() {
+        queue = buildQueue();
+        const current = queue[qi % Math.max(queue.length, 1)];
+        return current ? current.index : null;
+    }
+
+    function render() {
+        const total = cards.length;
+        el('totalCount').textContent = total;
+
+        if (total === 0) {
+            ['progressoBox','cardBox','acoesBox','dificuldadeBox','fimBox']
+                .forEach(id => el(id).style.display = 'none');
+            el('vazioBox').style.display = 'block';
+            return;
+        }
+
+        const sei = seiCount();
+        const pct = Math.round((sei / total) * 100);
+        el('seiCount').textContent = sei;
+        el('progressoPct').textContent = pct + '%';
+        el('progressoFill').style.width = pct + '%';
+
+        if (sei >= total) {
+            ['cardBox','acoesBox','dificuldadeBox'].forEach(id => el(id).style.display = 'none');
+            el('fimBox').style.display = 'block';
+            el('fimTexto').textContent =
+                'Você completou todas as ' + total + ' questões deste deck!';
+            return;
+        }
+
+        queue = buildQueue();
+        const current = queue[qi % Math.max(queue.length, 1)];
+        if (!current) return;
+        const card = current.card;
+
+        el('fimBox').style.display = 'none';
+        el('cardBox').style.display = 'flex';
+
+        el('estudoLabel').textContent = showAnswer ? 'Resposta' : 'Pergunta';
+        el('estudoTexto').textContent = showAnswer ? card.resposta : card.pergunta;
+        el('viraIcone').style.display = showAnswer ? 'none' : 'block';
+
+        if (showDifficulty) {
+            el('acoesBox').style.display = 'none';
+            el('dificuldadeBox').style.display = 'block';
+        } else {
+            el('acoesBox').style.display = 'flex';
+            el('dificuldadeBox').style.display = 'none';
+        }
+    }
+
+    function virarCard() {
+        if (showDifficulty) return;
+        showAnswer = !showAnswer;
+        render();
+    }
+
+    function handleSei() {
+        const idx = currentIndex();
+        if (idx === null) return;
+        cards[idx].status = 'sei';
+        cards[idx].dificuldade = null;
+        showAnswer = false; showDifficulty = false; qi++;
+        render();
+    }
+
+    function handleNaoSei() {
+        const idx = currentIndex();
+        if (idx === null) return;
+        cards[idx].status = 'nao_sei';
+        showAnswer = true; showDifficulty = true;
+        render();
+    }
+
+    function handleDificuldade(d) {
+        const idx = currentIndex();
+        if (idx === null) return;
+        cards[idx].dificuldade = d;
+        showAnswer = false; showDifficulty = false; qi++;
+        render();
+    }
+
+    function resetSessao() {
+        cards.forEach(c => { c.status = null; c.dificuldade = null; });
+        qi = 0; showAnswer = false; showDifficulty = false;
+        render();
+    }
+
+    render();
+</script>
+
+{% endblock %}

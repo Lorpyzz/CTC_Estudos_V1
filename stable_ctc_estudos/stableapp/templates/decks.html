@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/flashcards.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<header>
+    <div>
+        <h1><i class="fa-solid fa-layer-group"></i> Flashcards</h1>
+        <p>Crie decks por disciplina e revise com repetição espaçada inteligente.</p>
+    </div>
+</header>
+
+<div class="deck-detalhe">
+    <a href="{% url 'flashcards' %}" class="voltar-link">‹ Voltar aos decks</a>
+
+    <div class="deck-detalhe-topo">
+        <div class="deck-detalhe-titulo">
+            <span class="deck-card-codigo">{{ deck.disciplina.codigo }}</span>
+            <h2>{{ deck.nome }}</h2>
+        </div>
+        <div class="deck-detalhe-acoes">
+            <button class="btn-secundario" onclick="abrirModalCard()">
+                <i class="fa-solid fa-plus"></i> Adicionar Card
+            </button>
+            <form method="post" action="{% url 'delete_deck' deck.id %}"
+                  onsubmit="return confirm('Excluir este deck e todos os seus cards?');">
+                {% csrf_token %}
+                <button type="submit" class="btn-excluir-deck">
+                    <i class="fa-solid fa-trash"></i> Excluir Deck
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <p class="deck-detalhe-info">{{ deck.disciplina.nome }} · {{ cards|length }} cards</p>
+
+    {% if cards %}
+    <a href="{% url 'estudar_deck' deck.id %}" class="estudar-banner">
+        <div class="estudar-banner-icone"><i class="fa-solid fa-book-open"></i></div>
+        <div class="estudar-banner-texto">
+            <h3>Começar a estudar</h3>
+            <p>Revise os {{ cards|length }} cards deste deck com repetição espaçada</p>
+        </div>
+        <i class="fa-solid fa-chevron-right estudar-banner-seta"></i>
+    </a>
+    {% endif %}
+
+    <div class="cards-lista">
+        {% for card in cards %}
+        <div class="card-item"
+             data-id="{{ card.id }}"
+             data-pergunta="{{ card.pergunta }}"
+             data-resposta="{{ card.resposta }}">
+            <div class="card-item-texto">
+                <h4>{{ card.pergunta }}</h4>
+            </div>
+            <div class="card-item-acoes">
+                <button class="icone-btn editar"
+                        onclick="editarCard({{ card.id }})" title="Editar">
+                    <i class="fa-solid fa-pen"></i>
+                </button>
+                <form method="post"
+                      action="{% url 'delete_card' card.id %}"
+                      onsubmit="return confirm('Excluir este card?');">
+                    {% csrf_token %}
+                    <button type="submit" class="icone-btn excluir" title="Excluir">
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+        {% empty %}
+        <p class="cards-vazio">Nenhum card ainda. Clique em "Adicionar Card" para começar.</p>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Modal criar/editar card -->
+<div class="modal-overlay" id="modalCardOverlay" onclick="fecharModalCard(event)">
+    <div class="modal">
+        <button class="modal-fechar" onclick="fecharModalCard()">✕</button>
+        <h2 id="modalCardTitulo">Novo Card</h2>
+
+        <form method="post" id="formCard" action="{% url 'criar_card' deck.id %}">
+            {% csrf_token %}
+
+            <label>Pergunta (frente)</label>
+            <textarea name="pergunta" id="inputPergunta" rows="3"
+                      placeholder="Ex: O que é um ponteiro em C?" required></textarea>
+
+            <label>Resposta (verso)</label>
+            <textarea name="resposta" id="inputResposta" rows="3"
+                      placeholder="Ex: Uma variável que armazena um endereço de memória." required></textarea>
+
+            <button type="submit" class="btn-criar-deck btn-modal">Salvar Card</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    const URL_CRIAR = "{% url 'criar_card' deck.id %}";
+
+    function abrirModalCard() {
+        document.getElementById('modalCardTitulo').textContent = 'Novo Card';
+        document.getElementById('formCard').action = URL_CRIAR;
+        document.getElementById('inputPergunta').value = '';
+        document.getElementById('inputResposta').value = '';
+        document.getElementById('modalCardOverlay').classList.add('ativo');
+    }
+    function editarCard(id) {
+        const item = document.querySelector('.card-item[data-id="' + id + '"]');
+        document.getElementById('modalCardTitulo').textContent = 'Editar Card';
+        document.getElementById('formCard').action = '/flashcards/card/' + id + '/update/';
+        document.getElementById('inputPergunta').value = item.dataset.pergunta;
+        document.getElementById('inputResposta').value = item.dataset.resposta;
+        document.getElementById('modalCardOverlay').classList.add('ativo');
+    }
+    function fecharModalCard(e) {
+        if (!e || e.target === document.getElementById('modalCardOverlay')) {
+            document.getElementById('modalCardOverlay').classList.remove('ativo');
+        }
+    }
+</script>
+
+{% endblock %}

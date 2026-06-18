@@ -1,46 +1,60 @@
-html {
-  overflow-y: scroll;
-}
+html { overflow-y: scroll; }
 
+/* ===== Página inicial (lista de decks) ===== */
 header {
-  max-width: 900px;
+  max-width: 1100px;
   margin: 0 auto;
-  padding: 40px 20px;
+  padding: 40px 20px 16px;
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
-
 header h1 {
-  color: black;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #111;
+  font-size: 28px;
+  margin: 0 0 6px 0;
 }
+header h1 i { color: #3b82f6; font-size: 24px; }
+header p { color: #6b7280; font-size: 15px; margin: 0; }
 
 .btn-criar-deck {
   display: flex;
   align-items: center;
   gap: 8px;
-  background-color: #4A90D9;
+  background-color: #3b82f6;
   color: white;
   border: none;
   border-radius: 8px;
-  padding: 10px 18px;
+  padding: 11px 20px;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
+  flex-shrink: 0;
+  transition: background-color 0.2s ease;
 }
+.btn-criar-deck:hover { background-color: #2563eb; }
 
-/* Grid de cards */
 .decks-container {
-  max-width: 900px;
-  margin: 32px auto;
+  max-width: 1100px;
+  margin: 24px auto 60px;
   padding: 0 20px;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: 20px;
-  min-height: calc(100vh - 450px);
+  align-items: start;
+}
+.decks-container:empty::before {
+  content: "Nenhum deck criado ainda. Clique em \"+ Criar Deck\" para começar.";
+  grid-column: 1 / -1;
+  text-align: center;
+  color: #9ca3af;
+  font-size: 14px;
+  padding: 60px 20px;
 }
 
-/* Card individual */
 .deck-card {
   background: white;
   border: 1px solid #e5e7eb;
@@ -48,36 +62,57 @@ header h1 {
   padding: 20px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
   cursor: pointer;
-  height: fit-content;
+  text-decoration: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
 }
-
+.deck-card:hover {
+  border-color: #93c5fd;
+  box-shadow: 0 4px 14px rgba(59, 130, 246, 0.12);
+  transform: translateY(-2px);
+}
 .deck-card-codigo {
   display: inline-block;
-  background: #f1f5f9;
-  color: #475569;
+  background: #eff6ff;
+  color: #3b82f6;
   font-size: 11px;
-  font-weight: 600;
-  padding: 3px 8px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  padding: 4px 10px;
   border-radius: 6px;
   width: fit-content;
 }
-
-.deck-card-nome {
-  margin: 0;
-  font-size: 16px;
-  font-weight: 700;
-  color: #111;
+.deck-card-nome { margin: 0; font-size: 17px; font-weight: 700; color: #111; line-height: 1.3; }
+.deck-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 2px;
+  padding-top: 10px;
+  border-top: 1px solid #f1f5f9;
 }
-
 .deck-card-disciplina {
   margin: 0;
   font-size: 13px;
   color: #6b7280;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.deck-card-contagem {
+  font-size: 12px;
+  font-weight: 600;
+  color: #475569;
+  background: #f8fafc;
+  padding: 3px 9px;
+  border-radius: 999px;
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 
-/* Modal */
+/* ===== Modal ===== */
 .modal-overlay {
   display: none;
   position: fixed;
@@ -87,11 +122,7 @@ header h1 {
   align-items: center;
   z-index: 100;
 }
-
-.modal-overlay.ativo {
-  display: flex;
-}
-
+.modal-overlay.ativo { display: flex; }
 .modal {
   background: white;
   border-radius: 12px;
@@ -103,35 +134,24 @@ header h1 {
   gap: 10px;
   position: relative;
 }
-
-.modal h2 {
-  margin: 0 0 8px 0;
-  color: black;
-  font-size: 20px;
-}
-
-.modal label {
-  font-size: 13px;
-  font-weight: 600;
-  color: #333;
-}
-
+.modal h2 { margin: 0 0 8px 0; color: black; font-size: 20px; }
+.modal label { font-size: 13px; font-weight: 600; color: #333; }
 .modal select,
-.modal input {
+.modal input,
+.modal textarea {
   padding: 10px 12px;
   border: 1px solid #ddd;
   border-radius: 8px;
   font-size: 14px;
+  font-family: inherit;
   outline: none;
   width: 100%;
   box-sizing: border-box;
 }
-
+.modal textarea { resize: vertical; }
 .modal select:focus,
-.modal input:focus {
-  border-color: #4A90D9;
-}
-
+.modal input:focus,
+.modal textarea:focus { border-color: #3b82f6; }
 .modal-fechar {
   position: absolute;
   top: 16px;
@@ -142,11 +162,298 @@ header h1 {
   cursor: pointer;
   color: #888;
 }
+.btn-modal { margin-top: 8px; justify-content: center; width: 100%; padding: 12px; font-size: 15px; }
 
-.btn-modal {
-  margin-top: 8px;
+/* ===== Detalhe do deck (decks.html) ===== */
+.deck-detalhe { max-width: 900px; margin: 8px auto 80px; padding: 0 24px; }
+
+.voltar-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: #3b82f6;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  margin-bottom: 24px;
+}
+.voltar-link:hover { text-decoration: underline; }
+
+.deck-detalhe-topo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.deck-detalhe-titulo { display: flex; align-items: center; gap: 12px; }
+.deck-detalhe-titulo h2 { margin: 0; font-size: 21px; font-weight: 700; color: #0f172a; }
+.deck-detalhe-titulo .deck-card-codigo { background: #f1f5f9; color: #475569; }
+
+.deck-detalhe-acoes { display: flex; gap: 10px; }
+.deck-detalhe-acoes a.btn-criar-deck { text-decoration: none; }
+
+.btn-secundario {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #fff;
+  color: #0f172a;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+.btn-secundario:hover { border-color: #cbd5e1; background: #f8fafc; }
+
+.deck-detalhe-info { color: #64748b; font-size: 14px; margin: 14px 0 24px; }
+
+.cards-lista { display: flex; flex-direction: column; gap: 14px; }
+.card-item {
+  align-items: center;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 18px 20px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+.card-item:hover { border-color: #dbe2ea; box-shadow: 0 4px 16px rgba(15, 23, 42, 0.07); }
+.card-item-texto { min-width: 0; }
+.card-item-texto h4 { margin: 0 0 6px; font-size: 15px; font-weight: 600; color: #0f172a; line-height: 1.4; }
+.card-item-texto p { margin: 0; font-size: 14px; color: #64748b; line-height: 1.55; }
+
+.card-item-acoes { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
+.card-item-acoes form { margin: 0; line-height: 0; }
+.icone-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
   justify-content: center;
+  border-radius: 8px;
+  color: #64748b;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+.icone-btn.editar:hover { background: #eff6ff; color: #3b82f6; }
+.icone-btn.excluir { color: #ef4444; }
+.icone-btn.excluir:hover { background: #fef2f2; }
+
+.cards-vazio {
+  text-align: center;
+  color: #94a3b8;
+  font-size: 14px;
+  border: 2px dashed #e2e8f0;
+  border-radius: 12px;
+  padding: 48px 20px;
+}
+
+/* ===== Página de estudo (estudo.html) ===== */
+.estudo-page {
+  max-width: 1100px;        /* antes era 900px — caixa mais larga */
+  margin: 8px auto 80px;
+  padding: 0 24px;
+}
+.estudo-page .voltar-link { margin-bottom: 28px; }
+
+.estudo-progresso {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+  font-size: 13px;
+  color: #64748b;
+}
+.estudo-progresso-contador { display: inline-flex; align-items: center; gap: 5px; white-space: nowrap; }
+.estudo-progresso-contador i { color: #22c55e; font-size: 12px; }
+.estudo-progresso-barra { flex: 1; height: 8px; border-radius: 999px; background: #f1f5f9; overflow: hidden; }
+.estudo-progresso-fill { height: 100%; width: 0; border-radius: 999px; background: #22c55e; transition: width 0.3s ease; }
+
+.estudo-card-grande {
+  position: relative;
+  width: 720px;           /* largura FIXA em pixels — não depende do texto nem do pai */
+  max-width: 100%;        /* só pra não estourar em tela pequena */
+  height: 380px;          /* altura FIXA */
+  box-sizing: border-box;
+  margin: 0 auto;         /* centraliza */
+  flex-shrink: 0;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  background: #fff;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  text-align: center;
+  cursor: pointer;
+  user-select: none;
+  overflow: hidden;
+  transition: box-shadow 0.2s ease;
+}
+.estudo-card-grande:hover { box-shadow: 0 6px 22px rgba(15, 23, 42, 0.08); }
+.estudo-card-grande .estudo-label {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #94a3b8;
+}
+.estudo-card-grande p {
+  margin: 0;
+  font-size: 19px;
+  font-weight: 600;
+  color: #0f172a;
+  line-height: 1.5;
+  max-width: 100%;          /* antes era 460px — deixava o texto estreito */
+  overflow-wrap: break-word;
+  word-break: break-word;   /* quebra "324324324..." pra próxima linha */
+}
+.estudo-vira-icone { position: absolute; bottom: 16px; right: 16px; color: #cbd5e1; font-size: 15px; }
+
+.estudo-acoes { display: flex; justify-content: center; gap: 16px; margin-top: 28px; }
+.btn-sei, .btn-naosei {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #fff;
+  border-radius: 8px;
+  padding: 11px 26px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+.btn-sei { color: #16a34a; border: 1px solid #bbf7d0; }
+.btn-sei:hover { background: #f0fdf4; }
+.btn-naosei { color: #ef4444; border: 1px solid #fecaca; }
+.btn-naosei:hover { background: #fef2f2; }
+
+.estudo-dificuldade { margin-top: 28px; text-align: center; }
+.estudo-dificuldade > p { font-size: 14px; color: #64748b; margin: 0 0 14px; }
+.estudo-dificuldade-botoes { display: flex; justify-content: center; gap: 12px; }
+.btn-facil, .btn-media, .btn-dificil {
+  background: #fff;
+  border-radius: 8px;
+  padding: 10px 24px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+.btn-facil { color: #16a34a; border: 1px solid #bbf7d0; }
+.btn-facil:hover { background: #f0fdf4; }
+.btn-media { color: #ca8a04; border: 1px solid #fde68a; }
+.btn-media:hover { background: #fefce8; }
+.btn-dificil { color: #ef4444; border: 1px solid #fecaca; }
+.btn-dificil:hover { background: #fef2f2; }
+
+.estudo-fim, .estudo-vazio { text-align: center; padding: 50px 20px; }
+.estudo-fim-emoji { font-size: 48px; margin-bottom: 12px; }
+.estudo-fim h2 { margin: 0 0 8px; font-size: 24px; color: #0f172a; }
+.estudo-fim p, .estudo-vazio p { color: #64748b; font-size: 15px; margin: 0 0 24px; }
+.estudo-fim-botoes { display: flex; justify-content: center; gap: 12px; }
+.estudo-fim-botoes a.btn-criar-deck, .estudo-vazio a.btn-secundario { text-decoration: none; }
+
+
+/* Botão Excluir Deck (outline vermelho) */
+.btn-excluir-deck {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #fff;
+  color: #ef4444;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+.btn-excluir-deck:hover { background: #fef2f2; border-color: #fca5a5; }
+.deck-detalhe-acoes form { margin: 0; }
+
+/* Banner "Começar a estudar" */
+.estudar-banner {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: #eff6ff;
+  border: 1.5px solid #bfdbfe;
+  border-radius: 12px;
+  padding: 18px 20px;
+  margin-bottom: 18px;
+  text-decoration: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.estudar-banner:hover {
+  border-color: #3b82f6;
+  box-shadow: 0 4px 14px rgba(59, 130, 246, 0.12);
+}
+.estudar-banner-icone {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #3b82f6;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+.estudar-banner-texto { flex: 1; }
+.estudar-banner-texto h3 { margin: 0 0 2px; font-size: 16px; font-weight: 700; color: #0f172a; }
+.estudar-banner-texto p { margin: 0; font-size: 13px; color: #64748b; }
+.estudar-banner-seta { color: #94a3b8; font-size: 14px; flex-shrink: 0; }
+
+.busca-decks {
+  max-width: 1100px;
+  margin: 8px auto 0;
+  padding: 0 20px;
+  position: relative;
+}
+.busca-decks i {
+  position: absolute;
+  left: 38px;               /* 20px do padding + ~18px pra dentro do input */
+  top: 50%;
+  transform: translateY(-50%);
+  color: #94a3b8;
+  font-size: 14px;
+  pointer-events: none;
+}
+.busca-decks input {
   width: 100%;
-  padding: 12px;
-  font-size: 15px;
+  box-sizing: border-box;
+  padding: 14px 16px 14px 44px;   /* o 44px à esquerda abre espaço pra lupa */
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.busca-decks input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
+}
+
+.busca-vazio {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  text-align: center;
+  color: #94a3b8;
+  font-size: 14px;
 }

@@ -52,6 +52,13 @@ urlpatterns = [
     path('alunos/delete/<int:id>/', views.delete_aluno, name='delete_aluno'),
     
     path('flashcards/', views.paginaFlashcards, name='flashcards'),
+    path('flashcards/deck/<int:id>/', views.deck_detalhe, name='deck_detalhe'),
+    path('flashcards/deck/<int:id>/delete/', views.delete_deck, name='delete_deck'),
+    path('flashcards/deck/<int:id>/card/novo/', views.criar_card, name='criar_card'),
+    path('flashcards/card/<int:id>/update/', views.update_card, name='update_card'),
+    path('flashcards/card/<int:id>/delete/', views.delete_card, name='delete_card'),
+    path('flashcards/deck/<int:id>/estudar/', views.estudar_deck, name='estudar_deck'),
+
     path('duvidas/', views.paginaDuvidas, name='duvidas'),
     path('chat/', views.paginaChat, name='chat'),
     path('admin/', admin.site.urls),

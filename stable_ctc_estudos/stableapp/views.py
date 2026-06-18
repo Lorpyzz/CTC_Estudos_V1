@@ -21,7 +21,9 @@ from .models import (
     Topico,
     Conteudo,
     Monitoria,
-    Professor
+    Professor,
+    Deck,
+    Flashcard
 )
 
 from .forms import (
@@ -33,7 +35,9 @@ from .forms import (
     TopicoForm,
     ConteudoForm,
     MonitoriaForm,
-    ProfessorForm
+    ProfessorForm,
+    DeckForm,
+    FlashcardForm,
 )
 
 User = get_user_model()
@@ -190,13 +194,76 @@ def paginaTurmas(request):
     )
 
 
+#FLASHCARDS--------------------
 def paginaFlashcards(request):
+    if request.method == "POST":
+        form = DeckForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Deck criado com sucesso!')
+            return redirect('flashcards')
+        else:
+            messages.error(request, 'Preencha a disciplina e o nome do deck.')
+
+    decks = Deck.objects.select_related('disciplina').all()
     disciplinas = Disciplina.objects.all()
     return render(
         request,
         "flashcards.html",
-        {"disciplinas": disciplinas}
+        {"disciplinas": disciplinas, "decks": decks}
     )
+
+
+def deck_detalhe(request, id):
+    deck = get_object_or_404(Deck, id=id)
+    cards = deck.cards.all()
+    return render(
+        request,
+        "decks.html",
+        {"deck": deck, "cards": cards}
+    )
+
+
+def delete_deck(request, id):
+    deck = get_object_or_404(Deck, id=id)
+    deck.delete()
+    messages.success(request, 'Deck excluído.')
+    return redirect('flashcards')
+
+
+def criar_card(request, id):
+    deck = get_object_or_404(Deck, id=id)
+    if request.method == "POST":
+        form = FlashcardForm(request.POST)
+        if form.is_valid():
+            card = form.save(commit=False)
+            card.deck = deck
+            card.save()
+            messages.success(request, 'Card adicionado!')
+        else:
+            messages.error(request, 'Preencha pergunta e resposta.')
+    return redirect('deck_detalhe', id=deck.id)
+
+
+def update_card(request, id):
+    card = get_object_or_404(Flashcard, id=id)
+    if request.method == "POST":
+        form = FlashcardForm(request.POST, instance=card)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Card atualizado!')
+        else:
+            messages.error(request, 'Erro ao atualizar o card.')
+    return redirect('deck_detalhe', id=card.deck.id)
+
+
+def delete_card(request, id):
+    card = get_object_or_404(Flashcard, id=id)
+    deck_id = card.deck.id
+    card.delete()
+    messages.success(request, 'Card excluído.')
+    return redirect('deck_detalhe', id=deck_id)
+#-----------------------------
 
 
 def paginaDuvidas(request):
@@ -869,3 +936,12 @@ def ajuda_view(request):
         'perguntas': perguntas
     }
     return render(request, 'ajuda.html', context)
+
+def estudar_deck(request, id):
+    deck = get_object_or_404(Deck, id=id)
+    cards = list(deck.cards.values('id', 'pergunta', 'resposta'))
+    return render(
+        request,
+        "estudo.html",
+        {"deck": deck, "cards": cards}
+    )
