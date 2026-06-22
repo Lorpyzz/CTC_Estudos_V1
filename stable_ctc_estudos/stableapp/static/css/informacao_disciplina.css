@@ -1,0 +1,10 @@
+.titulo{
+    text-decoration: overline underline;
+    text-decoration-color: #3ea5ef;
+    padding-left: 180px;
+}
+
+.descricao{
+    text-align-last: start;
+    padding-left: 180px;
+}

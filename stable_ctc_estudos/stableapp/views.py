@@ -945,3 +945,11 @@ def estudar_deck(request, id):
         "estudo.html",
         {"deck": deck, "cards": cards}
     )
+
+def informacao_disciplina(request,nome):
+    disciplina = get_object_or_404(Disciplina, nome=nome)
+    
+    context = {
+        'disciplina': disciplina
+    }
+    return render(request,'informacao_disciplina.html',context)

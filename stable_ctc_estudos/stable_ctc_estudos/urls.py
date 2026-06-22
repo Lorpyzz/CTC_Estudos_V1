@@ -17,7 +17,8 @@ urlpatterns = [
     path('disciplinas/', views.paginaDisciplinas, name='disciplinas'),
     path('disciplinas/novo/', views.form_disciplina, name='form_disciplina'),
     path('disciplinas/update/<int:id>/', views.update_disciplina, name='update_disciplina'),
-    path('disciplinas/<str:nome>/', views.paginaDisciplinaDetalhe, name='disciplina_detalhe'),
+    path('disciplinas/busca/', views.paginaDisciplinaDetalhe, name='disciplina_detalhe'),
+    path('disciplinas/<str:nome>/', views.informacao_disciplina, name='informacao_disciplina'),
     
     path('turmas/', views.paginaTurmas, name='turmas'),
     path('turmas/nova/', views.form_turma, name='form_turma'),

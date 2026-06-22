@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ disciplina.nome }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/informacao_disciplina.css' %}">
+{% endblock %}
+
+{% block content %}
+        <div class="titulo">
+            <h1><b>{{ disciplina.nome }}</b></h1>
+        </div>
+        
+        <div class ="descricao">
+            {{ disciplina.descricao}}
+        </div>
+
+        <div class="lista_conteúdos">
+            
+        </div>
+
+{% endblock %}

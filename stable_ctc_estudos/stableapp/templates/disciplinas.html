@@ -21,7 +21,7 @@
     <div class="disciplinas">
         <div class="row">
             {% for disciplina in disciplinas %}
-            <button class="btn1" onclick="location.href='{% url 'disciplina_detalhe' nome=disciplina.nome %}'">
+            <button class="btn1" onclick="location.href='{% url 'informacao_disciplina' nome=disciplina.nome %}'">
                 <div class="card-top">
                     <span class="codigo">{{ disciplina.codigo }}</span>
                 </div>
