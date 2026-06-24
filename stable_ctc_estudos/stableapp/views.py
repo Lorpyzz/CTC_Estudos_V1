@@ -338,46 +338,60 @@ def responder_duvida(request, duvida_id):
 def paginaChat(request):
     usuario = request.user
 
-    disciplina_id = request.GET.get("disciplina") or request.POST.get("disciplina")
-    disciplina_atual = None
+    if 'meus_canais' not in request.session:
+        request.session['meus_canais'] = []
+    
+    canais_ids = request.session['meus_canais']
 
+    disciplina_id = request.GET.get("disciplina")
+    remover_id = request.GET.get("remover_disciplina")
+
+    if disciplina_id and int(disciplina_id) not in canais_ids:
+        canais_ids.append(int(disciplina_id))
+        request.session['meus_canais'] = canais_ids
+        request.session.modified = True
+
+
+    if remover_id:
+        remover_id = int(remover_id)
+        if remover_id in canais_ids:
+            canais_ids.remove(remover_id)
+            request.session['meus_canais'] = canais_ids
+            request.session.modified = True
+            return redirect('chat')
+
+    disciplina_atual = None
     if disciplina_id:
         disciplina_atual = get_object_or_404(Disciplina, id=disciplina_id)
 
-    pode_enviar = usuario.is_monitor or usuario.is_superuser
-
     if request.method == "POST":
+        pode_enviar = usuario.is_monitor or usuario.is_superuser
         if not pode_enviar:
             messages.error(request, "Apenas monitores podem enviar mensagens.")
-            if disciplina_id:
-                return redirect(f"{reverse('chat')}?disciplina={disciplina_id}")
-            return redirect("chat")
+            return redirect(f"{reverse('chat')}?disciplina={disciplina_id}" if disciplina_id else "chat")
 
         texto = request.POST.get("mensagem", "").strip()
         if texto:
             Mensagem.objects.create(
-                disciplina=disciplina_atual,  # None = Avisos Gerais
+                disciplina=disciplina_atual,
                 usuario=usuario,
                 conteudo=texto
             )
+        return redirect(f"{reverse('chat')}?disciplina={disciplina_id}" if disciplina_id else "chat")
 
-        if disciplina_id:
-            return redirect(f"{reverse('chat')}?disciplina={disciplina_id}")
-        return redirect("chat")
 
-    # Busca mensagens filtradas por disciplina (ou avisos gerais se None)
-    mensagens = Mensagem.objects.filter(
-        disciplina=disciplina_atual
-    ).select_related('usuario').order_by('enviado_em')
-
-    disciplinas = Disciplina.objects.all()
+    disciplinas_na_barra = Disciplina.objects.filter(id__in=canais_ids)
+    mensagens = Mensagem.objects.filter(disciplina=disciplina_atual).select_related('usuario').order_by('enviado_em')
+    todas_disciplinas = Disciplina.objects.all()
 
     return render(request, "chat.html", {
-    "mensagens": mensagens,
-    "disciplinas": disciplinas,
-    "disciplina_atual": disciplina_atual,
-    "pode_enviar": pode_enviar,
-})
+        "mensagens": mensagens,
+        "disciplinas": todas_disciplinas, 
+        "disciplinas_na_barra": disciplinas_na_barra, 
+        "disciplina_atual": disciplina_atual,
+        "pode_enviar": usuario.is_monitor or usuario.is_superuser,
+    })
+
 
 
 def paginaDisciplinaDetalhe(request, nome):
