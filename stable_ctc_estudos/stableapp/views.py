@@ -210,7 +210,7 @@ def paginaTurmas(request):
     sessoes = (
         SessaoEstudo.objects
         .filter(aluno=request.user)
-        .select_related('topico__disciplina')
+        .select_related('disciplina')
         .order_by('-id')
     )
 
@@ -714,7 +714,7 @@ def form_monitoria(request):
         
         form = MonitoriaForm(dados_formulario)
 
-        if form.is_valid():
+        if form.is_valid() and request.user.nota_final >6.0:
             monitoria = form.save(commit=False)
             monitoria.monitor = request.user
             monitoria.save()

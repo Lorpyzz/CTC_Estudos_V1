@@ -267,13 +267,39 @@ class MonitoriaForm(forms.ModelForm):
             for field_name, field in self.fields.items():
                 if field_name != 'online':  
                     field.widget.attrs.update({'class': 'form-input'})
+        
+        def clean(self):
+            cleaned_data = super().clean()
+            turma = cleaned_data.get("turma")
+
+            if turma:
+                aprovado = InscricaoTurma.objects.filter(
+                    user=self.user,
+                    turma=turma,
+                    nota_final__gt=6.0
+                ).exists()
+
+                if not aprovado:
+                    raise forms.ValidationError(
+                        "Você precisa ter concluído essa disciplina com nota superior a 6,0."
+                    )
+            return cleaned_data
+
 
 class SessaoEstudoForm(forms.ModelForm):
     class Meta:
         model = SessaoEstudo
-        fields = ['topico', 'duracao_minutos', 'observacoes']
+        fields = ['disciplina', 'metodo_revisao', 'duracao_minutos', 'observacoes']
+
+        
+        labels = {
+            'disciplina': 'Tópico / Disciplina',
+            'duracao_minutos': 'Duração (minutos)',
+            'observacoes': 'Observações',
+        }
+        
         widgets = {
-            'topico': forms.Select(attrs={'class': 'form-select'}),
+            'disciplina': forms.Select(attrs={'class': 'form-select'}),
             'duracao_minutos': forms.NumberInput(attrs={'class': 'form-input', 'placeholder': 'Duração (minutos)'}),
             'observacoes': forms.Textarea(attrs={'class': 'form-textarea', 'placeholder': 'Observações...', 'rows': 4}),
         }
@@ -282,6 +308,15 @@ class SessaoEstudoForm(forms.ModelForm):
         user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
         if user:
-            turmas_do_aluno = InscricaoTurma.objects.filter(user=user, status__in=['ATIVA', 'CONCLUIDA']).values_list('turma', flat=True)
-            disciplinas_do_aluno = Turma.objects.filter(id__in=turmas_do_aluno).values_list('disciplina', flat=True)
-            self.fields['topico'].queryset = Topico.objects.filter(disciplina__in=disciplinas_do_aluno)
+            turmas_do_aluno = InscricaoTurma.objects.filter(
+                user=user, 
+                status__in=['ATIVA', 'CONCLUIDA']
+            ).values_list('turma_id', flat=True).distinct()
+            
+            disciplinas_do_aluno = Turma.objects.filter(
+                id__in=turmas_do_aluno
+            ).values_list('disciplina_id', flat=True).distinct()
+            
+            self.fields['disciplina'].queryset = Disciplina.objects.filter(
+                id__in=disciplinas_do_aluno
+            )
