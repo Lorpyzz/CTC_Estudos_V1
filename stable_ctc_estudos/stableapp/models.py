@@ -411,6 +411,49 @@ class PerguntaFrequente(models.Model):
     def __str__(self):
         return self.pergunta
     
+class Duvida(models.Model):
+    titulo = models.CharField(max_length=200)
+    descricao = models.TextField()
+    disciplina = models.ForeignKey(
+        Disciplina,
+        on_delete=models.CASCADE,
+        related_name='duvidas'
+    )
+    autor = models.ForeignKey(
+        CtcEstudosUser,
+        on_delete=models.CASCADE,
+        related_name='duvidas'
+    )
+    criado_em = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-criado_em']
+        verbose_name = "Dúvida"
+
+    def __str__(self):
+        return self.titulo
+
+
+class RespostaDuvida(models.Model):
+    duvida = models.ForeignKey(
+        Duvida,
+        on_delete=models.CASCADE,
+        related_name='respostas'
+    )
+    autor = models.ForeignKey(
+        CtcEstudosUser,
+        on_delete=models.CASCADE,
+        related_name='respostas_duvidas'
+    )
+    conteudo = models.TextField()
+    criado_em = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['criado_em']
+        verbose_name = "Resposta"
+
+    def __str__(self):
+        return f"Resposta de {self.autor.nome} em '{self.duvida.titulo}'"
 
 class Deck(models.Model):
 

@@ -18,113 +18,107 @@
             </div>
             <p class="subtitle">Pergunte, responda e aprenda com a comunidade.</p>
         </div>
-        <button id="btn-toggle-form" class="btn-blue" onclick="toggleForm()">Nova Dúvida</button>
+        {% if user.is_authenticated %}
+            <button id="btn-toggle-form" class="btn-blue" onclick="toggleForm()">Nova Dúvida</button>
+        {% else %}
+            <a href="{% url 'login' %}" class="btn-blue" style="text-decoration:none;">Entrar para perguntar</a>
+        {% endif %}
     </header>
 
-    <section id="form-nova-duvida" class="form-card" style="display: none;">
-        <input type="text" placeholder="Título da dúvida" class="form-input">
-        <select class="form-select">
-            <option value="" disabled selected>Selecione a disciplina</option>
-            {% for disciplina in disciplinas %}
-                <option value="{{ disciplina.id }}">{{ disciplina.codigo }} — {{ disciplina.nome }}</option>
-            {% endfor %}
-        </select>
-        <textarea placeholder="Descreva sua dúvida..." class="form-textarea" rows="5"></textarea>
-        <button class="btn-publicar" onclick="showError()">
-            <span class="send-icon">➤</span> Publicar
-        </button>
-    </section>
+    {% if messages %}
+        {% for msg in messages %}
+            <div class="alert alert-{{ msg.tags }}" style="padding:12px 16px; border-radius:8px; margin-bottom:16px; background:#f0fdf4; border:1px solid #bbf7d0; color:#166534;">
+                {{ msg }}
+            </div>
+        {% endfor %}
+    {% endif %}
 
-    <div class="filter-row">
+    {% if user.is_authenticated %}
+    <section id="form-nova-duvida" class="form-card" style="display: none;">
+        <form method="POST">
+            {% csrf_token %}
+            <input type="text" name="titulo" placeholder="Título da dúvida" class="form-input" required>
+            <select name="disciplina_id" class="form-select" required>
+                <option value="" disabled selected>Selecione a disciplina</option>
+                {% for disciplina in disciplinas %}
+                    <option value="{{ disciplina.id }}">{{ disciplina.codigo }} — {{ disciplina.nome }}</option>
+                {% endfor %}
+            </select>
+            <textarea name="descricao" placeholder="Descreva sua dúvida..." class="form-textarea" rows="5" required></textarea>
+            <button type="submit" class="btn-publicar">
+                <span class="send-icon">➤</span> Publicar
+            </button>
+        </form>
+    </section>
+    {% endif %}
+
+    <form method="GET" class="filter-row">
         <span class="funnel-icon">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
         </span>
-        <select class="custom-select">
-            <option>Mais recentes</option>
-            <option>Mais avaliadas</option>
-            <option>Menos avaliadas</option>
+        <select name="ordem" class="custom-select" onchange="this.form.submit()">
+            <option value="recentes" {% if ordem == 'recentes' %}selected{% endif %}>Mais recentes</option>
+            <option value="mais_respostas" {% if ordem == 'mais_respostas' %}selected{% endif %}>Mais respondidas</option>
+            <option value="menos_respostas" {% if ordem == 'menos_respostas' %}selected{% endif %}>Menos respondidas</option>
         </select>
-        <select class="custom-select">
-            <option>Todas as disciplinas</option>
+        <select name="disciplina" class="custom-select" onchange="this.form.submit()">
+            <option value="">Todas as disciplinas</option>
             {% for disciplina in disciplinas %}
-                <option>{{ disciplina.codigo }}</option>
+                <option value="{{ disciplina.codigo }}" {% if disciplina_filtro == disciplina.codigo %}selected{% endif %}>
+                    {{ disciplina.codigo }}
+                </option>
             {% endfor %}
         </select>
-    </div>
+    </form>
 
     <div class="doubts-feed">
+        {% for duvida in duvidas %}
         <div class="doubt-card" onclick="toggleCard(this)">
             <div class="card-header">
                 <div class="meta-info">
-                    <span class="subject-tag">INF1007</span>
-                    <span class="post-date">2026-04-05</span>
+                    <span class="subject-tag">{{ duvida.disciplina.codigo }}</span>
+                    <span class="post-date">{{ duvida.criado_em|date:"Y-m-d" }}</span>
                 </div>
                 <div class="card-stats">
-                    <span class="resp-count">1 resp. <span class="arrow">⌄</span></span>
+                    <span class="resp-count">{{ duvida.respostas.count }} resp. <span class="arrow">⌄</span></span>
                 </div>
             </div>
-            <h2 class="card-title">Como funciona recursão em C?</h2>
-            <p class="card-description">Estou com dificuldade de entender como funciona a pilha de chamadas em funções recursivas.</p>
+            <h2 class="card-title">{{ duvida.titulo }}</h2>
+            <p class="card-description">{{ duvida.descricao|truncatechars:120 }}</p>
+
             <div class="card-expanded">
                 <div class="separator"></div>
-                <p class="full-text">Estou com dificuldade de entender como funciona a pilha de chamadas em funções recursivas.</p>
-                <span class="author-info">Perguntado por Aluno A</span>
+                <p class="full-text">{{ duvida.descricao }}</p>
+                <span class="author-info">Perguntado por {{ duvida.autor.nome|default:duvida.autor.username }}</span>
+
                 <h3>Respostas</h3>
-                <div class="response-bubble">
-                    <p>A cada chamada recursiva, um novo frame é empilhado na stack. Quando a função retorna, o frame é removido. Tente desenhar a pilha passo a passo!</p>
-                    <div class="response-footer"><span>— Monitor B</span></div>
-                </div>
-                <p class="login-footer">Faça login para responder e avaliar.</p>
-            </div>
-        </div>
+                {% for resposta in duvida.respostas.all %}
+                    <div class="response-bubble">
+                        <p>{{ resposta.conteudo }}</p>
+                        <div class="response-footer">
+                            <span>— {{ resposta.autor.nome|default:resposta.autor.username }} (Monitor)</span>
+                            <span>{{ resposta.criado_em|date:"d/m/Y" }}</span>
+                        </div>
+                    </div>
+                {% empty %}
+                    <p class="no-response">Nenhuma resposta ainda.</p>
+                {% endfor %}
 
-        <div class="doubt-card" onclick="toggleCard(this)">
-            <div class="card-header">
-                <div class="meta-info">
-                    <span class="subject-tag">MAT1161</span>
-                    <span class="post-date">2026-04-04</span>
-                </div>
-                <div class="card-stats">
-                    <span class="resp-count">0 resp. <span class="arrow">⌄</span></span>
-                </div>
-            </div>
-            <h2 class="card-title">Dúvida sobre o Teorema de Bolzano</h2>
-            <p class="card-description">Alguém pode explicar a intuição por trás do teorema do valor intermediário?</p>
-            <div class="card-expanded">
-                <div class="separator"></div>
-                <p class="full-text">Alguém pode explicar a intuição por trás do teorema do valor intermediário?</p>
-                <span class="author-info">Perguntado por Aluno C</span>
-                <p class="no-response">Nenhuma resposta ainda.</p>
-                <p class="login-footer">Faça login para responder e avaliar.</p>
+                {% if user.is_monitor or user.is_superuser %}
+                <form method="POST" action="{% url 'responder_duvida' duvida.id %}" onclick="event.stopPropagation()" style="margin-top:16px;">
+                    {% csrf_token %}
+                    <textarea name="conteudo" class="form-textarea" rows="3" placeholder="Escreva sua resposta..." required></textarea>
+                    <button type="submit" class="btn-publicar" style="margin-top:8px;">
+                        <span class="send-icon">➤</span> Responder
+                    </button>
+                </form>
+                {% endif %}
             </div>
         </div>
-
-        <div class="doubt-card" onclick="toggleCard(this)">
-            <div class="card-header">
-                <div class="meta-info">
-                    <span class="subject-tag">INF1636</span>
-                    <span class="post-date">2026-04-03</span>
-                </div>
-                <div class="card-stats">
-                    <span class="resp-count">0 resp. <span class="arrow">⌄</span></span>
-                </div>
-            </div>
-            <h2 class="card-title">Diferença entre ArrayList e LinkedList em Java</h2>
-            <p class="card-description">Quando devo usar cada uma? Qual é mais eficiente?</p>
-            <div class="card-expanded">
-                <div class="separator"></div>
-                <p class="full-text">Quando devo usar cada uma? Qual é mais eficiente?</p>
-                <span class="author-info">Perguntado por Aluno B</span>
-                <p class="no-response">Nenhuma resposta ainda.</p>
-                <p class="login-footer">Faça login para responder e avaliar.</p>
-            </div>
-        </div>
+        {% empty %}
+            <p style="color:#6b7280; text-align:center; margin-top:40px;">Nenhuma dúvida encontrada.</p>
+        {% endfor %}
     </div>
-</div>
-
-<div id="error-toast" class="error-toast">
-    <span>Faça login para publicar</span>
-    <button class="close-toast" onclick="hideError()">×</button>
 </div>
 
 <script>
@@ -142,17 +136,6 @@
 
     function toggleCard(card) {
         card.classList.toggle('active');
-    }
-
-    function showError() {
-        const toast = document.getElementById('error-toast');
-        toast.classList.add('show');
-        setTimeout(hideError, 4000);
-    }
-
-    function hideError() {
-        const toast = document.getElementById('error-toast');
-        toast.classList.remove('show');
     }
 </script>
 {% endblock %}

@@ -61,6 +61,7 @@ urlpatterns = [
     path('flashcards/deck/<int:id>/estudar/', views.estudar_deck, name='estudar_deck'),
 
     path('duvidas/', views.paginaDuvidas, name='duvidas'),
+    path('duvidas/responder/<int:duvida_id>/', views.responder_duvida, name='responder_duvida'),
     path('chat/', views.paginaChat, name='chat'),
     path('admin/', admin.site.urls),
     path('', views.paginaInicial, name='home'),

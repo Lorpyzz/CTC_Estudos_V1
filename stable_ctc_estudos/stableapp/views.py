@@ -8,6 +8,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 from .models import PerguntaFrequente
+from .models import Duvida, RespostaDuvida
 
 import json
 
@@ -268,11 +269,69 @@ def delete_card(request, id):
 
 def paginaDuvidas(request):
     disciplinas = Disciplina.objects.all()
-    return render(
-        request,
-        "duvidas.html",
-        {"disciplinas": disciplinas}
-    )
+    
+    disciplina_filtro = request.GET.get('disciplina')
+    ordem = request.GET.get('ordem', 'recentes')
+
+    duvidas = Duvida.objects.select_related('autor', 'disciplina').prefetch_related('respostas')
+
+    if disciplina_filtro:
+        duvidas = duvidas.filter(disciplina__codigo=disciplina_filtro)
+
+    if ordem == 'mais_respostas':
+        from django.db.models import Count
+        duvidas = duvidas.annotate(n=Count('respostas')).order_by('-n')
+    elif ordem == 'menos_respostas':
+        from django.db.models import Count
+        duvidas = duvidas.annotate(n=Count('respostas')).order_by('n')
+    # default: mais recentes 
+
+    if request.method == 'POST' and request.user.is_authenticated:
+        titulo = request.POST.get('titulo', '').strip()
+        descricao = request.POST.get('descricao', '').strip()
+        disc_id = request.POST.get('disciplina_id')
+
+        if titulo and descricao and disc_id:
+            disciplina_obj = get_object_or_404(Disciplina, id=disc_id)
+            Duvida.objects.create(
+                titulo=titulo,
+                descricao=descricao,
+                disciplina=disciplina_obj,
+                autor=request.user
+            )
+            messages.success(request, 'Dúvida publicada!')
+        else:
+            messages.error(request, 'Preencha todos os campos.')
+        return redirect('duvidas')
+
+    return render(request, 'duvidas.html', {
+        'disciplinas': disciplinas,
+        'duvidas': duvidas,
+        'disciplina_filtro': disciplina_filtro,
+        'ordem': ordem,
+    })
+
+
+@login_required
+def responder_duvida(request, duvida_id):
+    if not (request.user.is_monitor or request.user.is_superuser):
+        messages.error(request, 'Apenas monitores podem responder dúvidas.')
+        return redirect('duvidas')
+
+    if request.method == 'POST':
+        duvida = get_object_or_404(Duvida, id=duvida_id)
+        conteudo = request.POST.get('conteudo', '').strip()
+        if conteudo:
+            RespostaDuvida.objects.create(
+                duvida=duvida,
+                autor=request.user,
+                conteudo=conteudo
+            )
+            messages.success(request, 'Resposta publicada!')
+        else:
+            messages.error(request, 'A resposta não pode ser vazia.')
+
+    return redirect('duvidas')
 
 
 @login_required

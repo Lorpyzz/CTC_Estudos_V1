@@ -1,7 +1,7 @@
 html { overflow-y: scroll; }
 
 .main-container {
-    max-width: 900px; margin: 40px auto; padding: 0 20px;
+    max-width: 1200px; margin: 40px auto; padding: 0 20px;
     font-family: 'Inter', sans-serif;
 }
 
@@ -9,7 +9,7 @@ html { overflow-y: scroll; }
 .icon-title { display: flex; align-items: center; gap: 12px; }
 .blue-icon { background-color: #3b82f6; color: white; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; }
 .icon-title h1 { font-size: 32px; color: #111; margin: 0; font-weight: 700; }
-.subtitle { color: #666; margin-top: 8px; }
+.subtitle { color: #111; margin-top: 8px; }
 
 .btn-blue { background-color: #3b82f6; color: white; border: none; padding: 10px 22px; border-radius: 8px; font-weight: 600; cursor: pointer; }
 
@@ -17,30 +17,29 @@ html { overflow-y: scroll; }
 .form-card ul { list-style: none; display: flex; gap: 20px; padding: 5px 0; margin: 0 0 15px 0; justify-content: flex-start; }
 .form-card ul li { display: flex; align-items: center; gap: 8px; color: #374151; font-weight: 500; }
 .form-card input[type="radio"] { width: 18px; height: 18px; cursor: pointer; accent-color: #3b82f6; }
-.form-input, .form-select, .form-textarea { width: 100%; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px; margin-bottom: 15px; outline: none; font-family: inherit; }
+.form-input, .form-select, .form-textarea { width: 100%; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px; margin-bottom: 15px; outline: none; font-family: inherit; box-sizing: border-box; }
 .btn-publicar { background-color: #3b82f6; color: white; border: none; padding: 12px 25px; border-radius: 8px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; }
 .send-icon { transform: rotate(-45deg); display: inline-block; }
 
 .filter-row { display: flex; align-items: center; gap: 12px; margin-bottom: 30px; }
-.funnel-icon { color: #94a3b8; display: flex; }
+.funnel-icon { color: #374151; display: flex; }
 .custom-select { border: 1px solid #e2e8f0; padding: 8px 16px; border-radius: 8px; background-color: white; min-width: 160px; outline: none; }
 
 .doubt-card { border: 1px solid #e5e7eb; border-radius: 12px; padding: 24px; margin-bottom: 16px; cursor: pointer; background: white; }
 .card-header { display: flex; justify-content: space-between; margin-bottom: 12px; }
-.subject-tag { background-color: #f3f4f6; padding: 4px 10px; border-radius: 6px; font-weight: 700; font-size: 12px; color: #374151; }
-.post-date { color: #9ca3af; font-size: 13px; margin-left: 10px; }
-.card-stats { color: #6b7280; font-size: 14px; display: flex; gap: 15px; }
+.subject-tag { background-color: #f3f4f6; padding: 4px 10px; border-radius: 6px; font-weight: 700; font-size: 12px; color: #111; }
+.post-date { color: #374151; font-size: 13px; margin-left: 10px; }
+.card-stats { color: #111; font-size: 14px; display: flex; gap: 15px; }
 .card-title { font-size: 20px; color: #111; margin: 0 0 10px 0; font-weight: 700; }
-.card-description { color: #6b7280; font-size: 15px; margin: 0; }
+.card-description { color: #111; font-size: 15px; margin: 0; }
 
 .card-expanded { display: none; margin-top: 20px; }
 .doubt-card.active .card-expanded { display: block; }
 .doubt-card.active .card-description { display: none; }
 .separator { height: 1px; background-color: #e5e7eb; margin-bottom: 20px; }
+.full-text { color: #111; font-size: 15px; margin-bottom: 12px; }
+.author-info { color: #111; font-size: 14px; display: block; margin-bottom: 16px; }
 .response-bubble { background-color: #f0f7ff; border-radius: 12px; padding: 20px; margin: 15px 0; }
-.response-footer { display: flex; justify-content: space-between; margin-top: 15px; font-size: 13px; color: #64748b; }
-.login-footer { font-size: 12px; font-style: italic; color: #94a3b8; margin-top: 20px; }
-
-.error-toast { position: fixed; bottom: 25px; right: 25px; background-color: #ef4444; color: white; padding: 16px 24px; border-radius: 12px; display: flex; align-items: center; gap: 40px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); z-index: 1000; opacity: 0; visibility: hidden; transition: all 0.3s; transform: translateY(20px); }
-.error-toast.show { opacity: 1; visibility: visible; transform: translateY(0); }
-.close-toast { background: none; border: none; color: white; font-size: 20px; cursor: pointer; }
+.response-bubble p { color: #111; margin: 0; }
+.response-footer { display: flex; justify-content: space-between; margin-top: 15px; font-size: 13px; color: #111; }
+.no-response { color: #374151; font-style: italic; }
