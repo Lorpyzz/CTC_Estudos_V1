@@ -79,10 +79,7 @@ class Disciplina(models.Model):
                     
         super().save(*args, **kwargs)
 
-    def delete(self, *args, **kwargs):
-        raise ValidationError(
-            "Não é permitido excluir disciplinas."
-        )
+    
 
 
 class Turma(models.Model):
@@ -189,21 +186,29 @@ class Topico(models.Model):
 
 class Conteudo(models.Model):
 
-    topico = models.ForeignKey(
-        Topico,
+    disciplina = models.ForeignKey(
+        Disciplina,
         on_delete=models.CASCADE,
-        related_name='conteudos'
+        related_name='conteudos',
+        null=True, 
+        blank=True
     )
 
+    topico = models.CharField(max_length=100)
+
     titulo = models.CharField(max_length=100)
-
     descricao = models.TextField()
-
+    
     link_material = models.URLField(
         blank=True,
         null=True
     )
 
+    arquivo = models.FileField(
+        upload_to='arquivos_disciplinas/',
+        blank=True,
+        null=True
+    )
     class Meta:
         verbose_name = "Conteúdo"
 

@@ -14,10 +14,22 @@
             <p>Encontre materiais e recursos para suas disciplinas do CTC</p>
         </div>
         
-        {% if user.is_superuser %}
-        <a href="{% url 'form_disciplina' %}" class="btn-add">+ Adicionar Disciplina</a>
-        {% endif %}
+        <div style="display: flex; gap: 12px; align-items: center;">
+            
+            <a href="{% url 'disciplina_detalhe' %}" class="btn-buscar">
+                <i class="fa-solid fa-magnifying-glass"></i> Buscar
+            </a>
+
+            {% if user.is_superuser %}
+            <a href="{% url 'form_disciplina' %}" class="btn-add">+ Adicionar Disciplina</a>
+            {% endif %}
+            
+        </div>
+
     </div>
+    
+    
+
     <div class="disciplinas">
         <div class="row">
             {% for disciplina in disciplinas %}
@@ -35,6 +47,10 @@
                     
                     {% if disciplina.id in ids_disciplinas_monitoradas or user.is_superuser %}
                         <a href="{% url 'update_disciplina' id=disciplina.id %}" class="edit-link" onclick="event.stopPropagation()">Editar</a>
+                    {% endif %}
+                    
+                    {% if user.is_superuser %}
+                        <a href="{% url 'delete_disciplina' id=disciplina.id %}" class="delete-link" onclick="event.stopPropagation()">Deletar</a>
                     {% endif %}
                 </div>
             </button>

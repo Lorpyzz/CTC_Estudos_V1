@@ -394,7 +394,7 @@ def paginaChat(request):
 
 
 
-def paginaDisciplinaDetalhe(request, nome):
+def paginaDisciplinaDetalhe(request):
     disciplina = None
     topicos = []
     turmas = []
@@ -1026,3 +1026,48 @@ def informacao_disciplina(request,nome):
         'disciplina': disciplina
     }
     return render(request,'informacao_disciplina.html',context)
+
+@login_required
+def adicionar_conteudo(request, nome):
+    if not request.user.is_monitor:
+        messages.error(request, "Apenas monitores podem enviar materiais.")
+        return redirect('home')
+
+    disciplina = get_object_or_404(Disciplina, nome=nome)
+
+    if request.method == 'POST':
+        form = ConteudoForm(request.POST, request.FILES)
+        if form.is_valid():
+            conteudo = form.save(commit=False)
+            conteudo.disciplina = disciplina 
+            conteudo.save()
+            
+            messages.success(request, 'Material adicionado com sucesso!')
+            return redirect('informacao_disciplina', nome=disciplina.nome)
+    else:
+        form = ConteudoForm()
+
+    return render(request, 'form_conteudo.html', {'form': form, 'disciplina': disciplina})
+
+@login_required
+def delete_disciplina(request, id):
+    if not request.user.is_superuser:
+        messages.error(request, "Apenas administradores podem deletar disciplinas.")
+        return redirect('disciplinas') 
+
+    disciplina = get_object_or_404(Disciplina, id=id)
+
+    if request.method == 'POST':
+        if 'confirm' in request.POST:
+            try:
+                disciplina.delete()
+                messages.success(request, f'Disciplina "{disciplina.nome}" deletada com sucesso!')
+            except Exception as e:
+                messages.error(request, f'Erro ao deletar: {e}')
+        else:
+            messages.info(request, 'Exclusão cancelada.')
+            
+        return redirect('disciplinas')
+
+   
+    return render(request, 'are_you_sure.html', {'disciplina': disciplina})

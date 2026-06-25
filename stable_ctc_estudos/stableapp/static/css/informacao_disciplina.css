@@ -1,10 +1,160 @@
-.titulo{
+.titulo {
     text-decoration: overline underline;
     text-decoration-color: #3ea5ef;
     padding-left: 180px;
+    padding-right: 40px; 
+    display: flex;
+    justify-content: space-between;
+    align-items: center; 
+    margin-top: 40px;   
+    margin-bottom: 20px; 
+}
+
+.zona-monitor {
+    text-decoration: none;
+    margin-bottom: 0; 
 }
 
 .descricao{
     text-align-last: start;
     padding-left: 180px;
 }
+
+.titulo h1 {
+    margin: 0;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #111;
+    line-height: 1;
+}
+
+.descricao {
+    color: #555;
+    font-size: 0.95rem;
+    margin-top: 15px;
+    margin-bottom: 30px;
+}
+
+
+.lista_conteúdos {
+    padding-left: 180px; 
+    padding-right: 20px;
+    padding-bottom: 40px;
+}
+
+.lista_conteúdos h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #111;
+    margin-bottom: 20px;
+}
+
+
+.topico-secao {
+    margin-top: 30px;
+}
+
+.topico-titulo {
+    font-size: 1.1rem;
+    color: #475569; 
+    font-weight: 600;
+    border-bottom: 2px solid #e2e6e9; 
+    padding-bottom: 8px;
+    margin-bottom: 16px;
+    text-transform: uppercase;
+}
+
+
+.grid-conteudos {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.card-conteudo {
+    background-color: white;
+    border: 1px solid #e2e6e9; 
+    border-radius: 12px;       
+    padding: 20px;             
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+
+.card-conteudo:hover {
+    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+    transform: translateY(-2px);
+}
+
+.conteudo-detalhes {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.conteudo-detalhes i {
+    font-size: 24px;
+    color: #4A90D9; 
+}
+
+.conteudo-detalhes h4 {
+    margin: 0 0 6px 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #111;
+}
+
+.conteudo-detalhes p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+
+.conteudo-botoes {
+    display: flex;
+    gap: 12px;
+}
+
+.btn-add, .btn-link {
+    background-color: #4A90D9; 
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-add:hover {
+    background-color: #3a7bc8;
+    color: white;
+}
+
+.btn-link {
+    background-color: #f3f5f7;
+    color: #475569;
+}
+
+.btn-link:hover {
+    background-color: #e2e6e9;
+    color: #111;
+}
+
+
+.zona-monitor a {
+    margin-bottom: 20px;
+}
+
+.mensagem-vazia {
+    color: #666;
+    font-style: italic;
+    font-size: 0.95rem;
+}
+

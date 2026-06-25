@@ -137,3 +137,23 @@ p {
 }
 
 .delete-link:hover { color: #c62828; }
+
+.btn-buscar {
+    background-color: #f3f5f7; 
+    color: #475569;            
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid #e2e6e9;
+}
+
+.btn-buscar:hover {
+    background-color: #e2e6e9;
+    color: #111;
+}

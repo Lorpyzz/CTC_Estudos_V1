@@ -226,14 +226,15 @@ class TopicoForm(forms.ModelForm):
 class ConteudoForm(forms.ModelForm):
     class Meta:
         model = Conteudo
-        fields = ['topico', 'titulo', 'descricao', 'link_material']
+       
+        fields = ['topico', 'titulo', 'descricao', 'link_material', 'arquivo']
+        
         widgets = {
-            'topico': forms.Select(attrs={'class': 'form-select'}),
-            'titulo': forms.TextInput(attrs={'class': 'form-input', 'placeholder': 'Título do Conteúdo',
-                                              'style': 'text-transform: uppercase;'}),
-            'descricao': forms.Textarea(attrs={'class': 'form-textarea', 
-                                               'placeholder': 'Descrição...', 'rows': 4}),
-            'link_material': forms.URLInput(attrs={'class': 'form-input', 'placeholder': 'URL do Material'}),
+            'topico': forms.TextInput(attrs={'class': 'form-input', 'placeholder': 'Ex: Semana 1 - Introdução ou Revisão P1'}),
+            'titulo': forms.TextInput(attrs={'class': 'form-input', 'placeholder': 'Título do Conteúdo'}),
+            'descricao': forms.Textarea(attrs={'class': 'form-textarea', 'placeholder': 'Descrição...', 'rows': 4}),
+            'link_material': forms.URLInput(attrs={'class': 'form-input', 'placeholder': 'URL do Material (Opcional)'}),
+            'arquivo': forms.FileInput(attrs={'class': 'form-input'}),
         }
 
 class MonitoriaForm(forms.ModelForm):

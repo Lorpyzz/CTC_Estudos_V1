@@ -8,16 +8,60 @@
 {% endblock %}
 
 {% block content %}
+{% regroup disciplina.conteudos.all|dictsort:"topico" by topico as lista_por_topico %}
         <div class="titulo">
             <h1><b>{{ disciplina.nome }}</b></h1>
+            {% if request.user.is_monitor %}
+            <div class="zona-monitor">
+                <a href="{% url 'adicionar_conteudo' nome=disciplina.nome %}" class="btn-add">
+                    <i class="fa-solid fa-plus"></i> Adicionar Novo Material
+                </a>
+            </div>
+            {% endif %}
         </div>
         
         <div class ="descricao">
             {{ disciplina.descricao}}
         </div>
+        
+       <div class="lista_conteúdos">
+            <h2>Materiais de Estudo</h2>
+    
 
-        <div class="lista_conteúdos">
+        {% for grupo in lista_por_topico %}
+            <div class="topico-secao">
+                <h3 class="topico-titulo">{{ grupo.grouper }}</h3>
             
-        </div>
+                <div class="grid-conteudos">
+                    {% for conteudo in grupo.list %}
+                        <div class="card-conteudo">
+                            <div class="conteudo-detalhes">
+                                <i class="fa-solid fa-file-lines"></i>
+                                <div>
+                                    <h4>{{ conteudo.titulo }}</h4>
+                                    <p>{{ conteudo.descricao }}</p>
+                                </div>
+                            </div>
+                        
+                            <div class="conteudo-botoes">
+                                {% if conteudo.link_material %}
+                                    <a href="{{ conteudo.link_material }}" target="_blank" class="btn-link">
+                                        <i class="fa-solid fa-link"></i> Acessar Link
+                                    </a>
+                                {% endif %}
 
+                                {% if conteudo.arquivo %}
+                                    <a href="{{ conteudo.arquivo.url }}" target="_blank" class="btn-baixar" download>
+                                        <i class="fa-solid fa-download"></i> Baixar Arquivo
+                                    </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% empty %}
+            <p class="mensagem-vazia">Nenhum material cadastrado para esta disciplina ainda.</p>
+        {% endfor %}
+</div>
 {% endblock %}
