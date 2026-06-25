@@ -5,7 +5,6 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/index.css' %}">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 {% endblock %}
 
 {% block content %}
@@ -13,10 +12,8 @@
   <h1>Seu portal de estudos<br>do CTC – PUC-Rio</h1>
   <p>Materiais, resumos e uma comunidade colaborativa para você ir mais<br>longe nas suas disciplinas.</p>
   <div class="row">
-    <a href="{% url 'disciplinas' %}" class="btn-explorar">Explorar Disciplinas</a>
-    {% if not request.user.is_authenticated %}
-        <a href="{% url 'login' %}" class="btn-login-hero">Fazer login</a>
-    {% endif %}
+    <a href="{% url 'login' %}" class="btn-explorar">Fazer Login →</a>
+    <a href="{% url 'cadastro' %}" class="btn-login-hero">Criar conta</a>
   </div>
 </main>
 
@@ -26,23 +23,17 @@
 
 <div class="features">
   <div class="feature-card">
-    <div class="icon-wrapper">
-      <i class="fa-solid fa-book"></i>
-    </div>
+    <div class="icon-wrapper"><i class="fa-solid fa-book"></i></div>
     <h3>Disciplinas Organizadas</h3>
     <p>Acesse materiais, resumos e exercícios de todas as disciplinas do CTC.</p>
   </div>
   <div class="feature-card">
-    <div class="icon-wrapper">
-      <i class="fa-solid fa-users"></i>
-    </div>
+    <div class="icon-wrapper"><i class="fa-solid fa-users"></i></div>
     <h3>Comunidade Ativa</h3>
     <p>Conecte-se com colegas e monitores para aprender em conjunto.</p>
   </div>
   <div class="feature-card">
-    <div class="icon-wrapper">
-      <i class="fa-solid fa-circle-question"></i>
-    </div>
+    <div class="icon-wrapper"><i class="fa-solid fa-circle-question"></i></div>
     <h3>Central de Dúvidas</h3>
     <p>Tire suas dúvidas e ajude outros alunos com respostas verificadas.</p>
   </div>

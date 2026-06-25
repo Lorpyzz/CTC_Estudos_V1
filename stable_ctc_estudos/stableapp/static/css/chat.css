@@ -4,7 +4,7 @@
 
 .app-container {
     display: flex;
-    height: calc(100vh - 64px);
+    height: 100%;          /* antes: calc(100vh - 64px) — para de descontar a tela de novo */
     font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     background-color: #fff;
     overflow: hidden;

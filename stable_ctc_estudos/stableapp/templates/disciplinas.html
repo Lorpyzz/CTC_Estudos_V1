@@ -44,7 +44,7 @@
                     <a href="{% url 'form_inscricao' %}" class="btn-publicar" style="text-decoration: none; display: inline-block; margin-bottom: 20px;">
                         <span class="plus-icon"></span> Inscrever-se em uma Turma
                     </a>
-                    
+
                     {% if disciplina.id in ids_disciplinas_monitoradas or user.is_superuser %}
                         <a href="{% url 'update_disciplina' id=disciplina.id %}" class="edit-link" onclick="event.stopPropagation()">Editar</a>
                     {% endif %}
@@ -57,5 +57,4 @@
             {% endfor %}
         </div>
     </div>
-</div>
 {% endblock %}

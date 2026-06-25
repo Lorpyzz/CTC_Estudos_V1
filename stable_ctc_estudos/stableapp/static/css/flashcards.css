@@ -1,7 +1,7 @@
 html { overflow-y: scroll; }
 
 /* ===== Página inicial (lista de decks) ===== */
-header {
+.flashcards-header {
   max-width: 1100px;
   margin: 0 auto;
   padding: 40px 20px 16px;
@@ -9,7 +9,7 @@ header {
   align-items: center;
   justify-content: space-between;
 }
-header h1 {
+.flashcards-header h1 {
   display: flex;
   align-items: center;
   gap: 12px;
@@ -17,8 +17,8 @@ header h1 {
   font-size: 28px;
   margin: 0 0 6px 0;
 }
-header h1 i { color: #3b82f6; font-size: 24px; }
-header p { color: #6b7280; font-size: 15px; margin: 0; }
+.flashcards-header h1 i { color: #3b82f6; font-size: 24px; }
+.flashcards-header p { color: #6b7280; font-size: 15px; margin: 0; }
 
 .btn-criar-deck {
   display: flex;

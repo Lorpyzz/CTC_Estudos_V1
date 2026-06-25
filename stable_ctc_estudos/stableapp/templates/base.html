@@ -10,38 +10,97 @@
     {% block extra_css %}{% endblock %}
 </head>
 <body>
-    <nav>
-        <div class="logo">
-            <img src="{% static 'img/site-logo.png' %}" width="40px">
-            <span class="logo-nome">CTC Estudos</span>
-        </div>
-        <ul>
-            <li><a href="{% url 'home' %}">Inicio</a></li>
-            <li><a href="{% url 'disciplinas' %}">Disciplina</a></li>
-            <li><a href="{% url 'turmas' %}">Minhas Turmas</a></li>
-            <li><a href="/monitoria/">Monitoria</a></li>
-            <li><a href="{% url 'flashcards' %}">Flashcards</a></li>
-            <li><a href="{% url 'duvidas' %}">Central de Dúvidas</a></li>
-            <li><a href="{% url 'chat' %}">Chat</a></li>
-        </ul>
 
-        {% if user.is_authenticated %}
-        <a href="{% url 'config' %}" class="user-avatar-btn">
-            <div class="avatar-circle">
-                {{ user.nome|slice:":1"|upper }}
+    <!-- TOPBAR (sempre visível) -->
+    <header class="topbar">
+        <div class="topbar-left">
+            {% if user.is_authenticated %}
+            <button class="topbar-icone" id="toggleSidebar" title="Recolher menu">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+            {% endif %}
+            <div class="logo">
+                <img src="{% static 'img/site-logo.png' %}" width="32px">
+                <span class="logo-nome">CTC Estudos</span>
             </div>
-        </a>
-        {% else %}
-        <a href="{% url 'login' %}" class="btn-login">Entrar</a>
+        </div>
+
+        <div class="topbar-right">
+            {% if user.is_authenticated %}
+                <button class="topbar-icone" title="Notificações">
+                    <i class="fa-regular fa-bell"></i>
+                </button>
+                <a href="{% url 'config' %}" class="avatar-circle">
+                    {{ user.nome|slice:":1"|upper }}
+                </a>
+            {% else %}
+                <a href="{% url 'login' %}" class="btn-login">Entrar</a>
+            {% endif %}
+        </div>
+    </header>
+
+    <!-- CORPO -->
+    <div class="layout">
+        {% if user.is_authenticated %}
+        <aside class="sidebar">
+            <p class="sidebar-label">Navegação</p>
+            <nav class="sidebar-nav">
+                <a href="{% url 'disciplinas' %}" title="Disciplinas"
+                   class="sidebar-link {% if request.resolver_match.url_name == 'disciplinas' %}active{% endif %}">
+                    <i class="fa-solid fa-book-open"></i> <span>Disciplinas</span>
+                </a>
+                <a href="{% url 'turmas' %}" title="Minhas Turmas"
+                   class="sidebar-link {% if request.resolver_match.url_name == 'turmas' %}active{% endif %}">
+                    <i class="fa-solid fa-graduation-cap"></i> <span>Minhas Turmas</span>
+                </a>
+                <a href="{% url 'monitoria' %}" title="Monitoria"
+                   class="sidebar-link {% if request.resolver_match.url_name == 'monitoria' %}active{% endif %}">
+                    <i class="fa-solid fa-chalkboard-user"></i> <span>Monitoria</span>
+                </a>
+                <a href="{% url 'flashcards' %}" title="Flashcards"
+                   class="sidebar-link {% if request.resolver_match.url_name == 'flashcards' %}active{% endif %}">
+                    <i class="fa-solid fa-layer-group"></i> <span>Flashcards</span>
+                </a>
+                <a href="{% url 'duvidas' %}" title="Central de Dúvidas"
+                   class="sidebar-link {% if request.resolver_match.url_name == 'duvidas' %}active{% endif %}">
+                    <i class="fa-solid fa-circle-question"></i> <span>Central de Dúvidas</span>
+                </a>
+                <a href="{% url 'chat' %}" title="Chat"
+                   class="sidebar-link {% if request.resolver_match.url_name == 'chat' %}active{% endif %}">
+                    <i class="fa-solid fa-comment"></i> <span>Chat</span>
+                </a>
+            </nav>
+        </aside>
         {% endif %}
-    </nav>
 
-    {% block content %}
-    {% endblock %}
+        <main class="conteudo {% if not user.is_authenticated %}sem-sidebar{% endif %}">
+            {% block content %}{% endblock %}
+        </main>
+    </div>
 
+    <!-- FOOTER (fora do layout, largura total) -->
     <footer>
-        <img src="{% static 'img/logo-puc-rio.png' %}" alt="Logo PUC-Rio" class="footer-logo">
         <p>© 2026 CTC Estudos – PUC-Rio. Feito por alunos, para alunos.</p>
     </footer>
+
+    <script>
+        (function () {
+            const toggle = document.getElementById('toggleSidebar');
+            if (!toggle) return;
+
+            if (localStorage.getItem('sidebarColapsada') === '1') {
+                document.body.classList.add('sidebar-colapsada');
+            }
+
+            toggle.addEventListener('click', function () {
+                document.body.classList.toggle('sidebar-colapsada');
+                localStorage.setItem(
+                    'sidebarColapsada',
+                    document.body.classList.contains('sidebar-colapsada') ? '1' : '0'
+                );
+            });
+        })();
+    </script>
+
 </body>
 </html>
