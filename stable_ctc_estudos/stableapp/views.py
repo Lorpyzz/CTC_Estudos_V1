@@ -119,12 +119,7 @@ def paginaCadastro(request):
  
             login(request, user)
    
-
-            messages.success(
-                request,
-                'Cadastro realizado com sucesso! Bem-vindo(a).'
-            )
-            
+            request.session['cadastro_sucesso'] = True
 
             return redirect("disciplinas")
         else:
@@ -163,13 +158,18 @@ def paginaDisciplinas(request):
         form = DisciplinaForm()
 
     disciplinas = Disciplina.objects.all()
+
+    mostrar_mensagem_cadastro = request.session.pop('cadastro_sucesso', False)
+
+    context = {
+        'disciplinas': disciplinas,
+        "form": form,
+        'mostrar_mensagem_cadastro': mostrar_mensagem_cadastro, 
+    }
     return render(
         request,
         "disciplinas.html",
-        {
-            "disciplinas": disciplinas,
-            "form": form
-        }
+        context
     )
 
 

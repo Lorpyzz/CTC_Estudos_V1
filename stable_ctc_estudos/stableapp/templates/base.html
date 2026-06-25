@@ -25,6 +25,16 @@
             </div>
         </div>
 
+        {% if messages %}
+            {% for message in messages %}
+                {% if 'mensagem-cadastro' not in message.tags %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+
         <div class="topbar-right">
             {% if user.is_authenticated %}
                 <button class="topbar-icone" title="Notificações">

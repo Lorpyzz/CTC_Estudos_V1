@@ -5,9 +5,25 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/disciplinas.css' %}">
+<style>
+    .alerta-cadastro-sucesso {
+        background-color: #d4edda;
+        color: #3ea5ef;
+        border: 1px solid white;
+        padding: 15px;
+        margin-bottom: 20px;
+        border-radius: 8px;
+        font-weight: 500;
+    }
+</style>
 {% endblock %}
 
 {% block content %}
+    {% if mostrar_mensagem_cadastro %}
+        <div class="alerta-cadastro-sucesso">
+            <i class="fa-solid fa-circle-check"></i> Cadastro realizado com sucesso! Bem-vindo(a).
+        </div>
+    {% endif %}
     <div class="titulo">
         <div>
             <h1>Disciplinas</h1>
