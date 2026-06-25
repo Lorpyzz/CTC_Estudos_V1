@@ -45,13 +45,15 @@ User = get_user_model()
 
 
 def paginaInicial(request):
+    if request.user.is_authenticated:
+        return redirect("disciplinas")
     return render(request, "home.html")
 
 
 def loginAluno(request):
     if request.user.is_authenticated:
-        return redirect("home")
-
+        return redirect("disciplinas")
+    
     if request.method == 'POST':
         form = AuthenticationForm(request, data=request.POST)
 

@@ -1,26 +1,38 @@
+.conteudo { 
+    background: #fff;
+    padding: 0;        /* remove respiro ao redor do main */
+}
+
 main {
+    width: 100%;
+    box-sizing: border-box;
+    margin: 0;
     background: linear-gradient(135deg, #000000 0%, #0f2638 40%, #175a6e 70%, #1590c0 100%);
     text-align: center;
-    padding: 180px 40px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
+    padding: 140px 40px;   /* só padding interno (texto), 0 nas bordas externas */
+    display: block;
 }
+
 
 main h1 {
     font-size: 52px;
     font-weight: 800;
     line-height: 1.2;
-    margin: 0;
+    margin: 0 0 20px;
     color: white;
 }
 
 main p {
     font-size: 20px;
     line-height: 1.6;
-    margin: 0;
+    margin: 0 0 24px;
     color: lightgray;
+}
+
+main .row {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
 }
 
 .btn-explorar {
@@ -43,11 +55,6 @@ main p {
     font-size: 1rem;
     font-weight: 600;
     text-decoration: none;
-}
-
-.row {
-    display: flex;
-    gap: 12px;
 }
 
 h2 {

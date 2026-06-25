@@ -40,7 +40,7 @@
     </header>
 
     <!-- CORPO -->
-    <div class="layout">
+    <div class="layout {% if not user.is_authenticated %}sem-sidebar{% endif %}">
         {% if user.is_authenticated %}
         <aside class="sidebar">
             <p class="sidebar-label">Navegação</p>

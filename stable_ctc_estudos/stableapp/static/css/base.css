@@ -55,6 +55,10 @@ body {
     margin-left: 248px;          /* empurra TODO o corpo pra direita da sidebar fixa */
 }
 
+.layout.sem-sidebar {
+    margin-left: 0 !important;
+}
+
 .sidebar {
     width: 248px;
     border-right: 1px solid #e5e7eb;
