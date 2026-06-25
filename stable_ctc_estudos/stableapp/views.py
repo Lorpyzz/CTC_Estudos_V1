@@ -116,11 +116,17 @@ def paginaCadastro(request):
             user.set_password(form.cleaned_data['password'])
             user.save()
 
+ 
+            login(request, user)
+   
+
             messages.success(
                 request,
-                'Cadastro realizado com sucesso!'
+                'Cadastro realizado com sucesso! Bem-vindo(a).'
             )
-            return redirect("login")
+            
+
+            return redirect("disciplinas")
         else:
             messages.error(
                 request,
@@ -132,13 +138,12 @@ def paginaCadastro(request):
     alunos = User.objects.all()
     return render(
         request,
-        "form_aluno.html",
+        "form_aluno.html", 
         {
             "form": form,
             "alunos": alunos
         }
     )
-
 
 def paginaDisciplinas(request):
     if request.method == "POST":

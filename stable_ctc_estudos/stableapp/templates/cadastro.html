@@ -1,13 +1,16 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    {% load static %}
     <title>Cadastro</title>
     <link rel="stylesheet" href="{% static 'css/cadastro.css' %}">
+
 </head>
+    
 <body>
+    {% block content %}
     <div class="login-box">
         <img src="{% static 'img/logo-puc-rio.png' %}" width="60px">
         <h2>Criar conta no CTC Estudos</h2>
@@ -41,5 +44,6 @@
 
         <p class="login-link">Já tem conta? <a href="{% url 'login' %}">Entrar</a></p>
     </div>
+    {% endblock %}
 </body>
 </html>

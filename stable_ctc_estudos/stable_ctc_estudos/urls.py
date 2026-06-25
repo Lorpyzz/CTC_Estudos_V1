@@ -76,3 +76,4 @@ urlpatterns = [
 
 urlpatterns += static('/assets/', document_root=os.path.join(settings.BASE_DIR, 'dist', 'assets'))
 urlpatterns += static('/static/', document_root=settings.BASE_DIR)
+
