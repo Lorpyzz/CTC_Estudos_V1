@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     "django.contrib.humanize",
     'stableapp'
     
+    'stableapp',
+    'django_seed'
 ]
 LOGOUT_REDIRECT_URL = '/'  # ou '/login/' ou qualquer página
 

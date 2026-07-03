@@ -308,6 +308,24 @@ class MonitoriaForm(forms.ModelForm):
             for field_name, field in self.fields.items():
                 if field_name != 'online':  
                     field.widget.attrs.update({'class': 'form-input'})
+        
+        def clean(self):
+            cleaned_data = super().clean()
+            turma = cleaned_data.get("turma")
+
+            if turma:
+                aprovado = InscricaoTurma.objects.filter(
+                    user=self.user,
+                    turma=turma,
+                    nota_final__gt=6.0
+                ).exists()
+
+                if not aprovado:
+                    raise forms.ValidationError(
+                        "Você precisa ter concluído essa disciplina com nota superior a 6,0."
+                    )
+            return cleaned_data
+
 
 class SessaoEstudoForm(forms.ModelForm):
     METODO_CHOICES = [
@@ -325,10 +343,9 @@ class SessaoEstudoForm(forms.ModelForm):
 
     class Meta:
         model = SessaoEstudo
-        # Usando 'disciplina' que é o campo real do seu modelo atual
         fields = ['disciplina', 'metodo_revisao', 'duracao_minutos', 'observacoes']
+
         
-        # Labels acentuados corretamente
         labels = {
             'disciplina': 'Tópico / Disciplina',
             'duracao_minutos': 'Duração (minutos)',
@@ -346,18 +363,15 @@ class SessaoEstudoForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         
         if user:
-            # 1. Mapeia os IDs das turmas onde o aluno está matriculado
             turmas_do_aluno = InscricaoTurma.objects.filter(
                 user=user, 
                 status__in=['ATIVA', 'CONCLUIDA']
             ).values_list('turma_id', flat=True).distinct()
             
-            # 2. Mapeia os IDs das disciplinas vinculadas a essas turmas
             disciplinas_do_aluno = Turma.objects.filter(
                 id__in=turmas_do_aluno
             ).values_list('disciplina_id', flat=True).distinct()
             
-            # 3. Alimenta o queryset do campo 'disciplina' com as disciplinas corretas
             self.fields['disciplina'].queryset = Disciplina.objects.filter(
                 id__in=disciplinas_do_aluno
             )

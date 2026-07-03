@@ -117,7 +117,8 @@ class InscricaoTurma(models.Model):
     STATUS_CHOICES = [
         ('ATIVA', 'Ativa'),
         ('CANCELADA', 'Cancelada'),
-        ('CONCLUIDA', 'Concluída'),
+        ('CONCLUIDA', 'Aprovada'),
+        ('REPROVADA', 'Reprovada')
     ]
 
     status = models.CharField(
@@ -125,7 +126,7 @@ class InscricaoTurma(models.Model):
         choices=STATUS_CHOICES,
         default='ATIVA'
     )
-    
+
     user = models.ForeignKey(
         CtcEstudosUser,
         on_delete=models.CASCADE,
@@ -147,21 +148,45 @@ class InscricaoTurma(models.Model):
 
     class Meta:
         unique_together = ('user', 'turma')
-
-    verbose_name = "Inscrição em Turma"
-
-    verbose_name_plural = "Inscrições em Turmas"
+        verbose_name = "Inscrição em Turma"
+        verbose_name_plural = "Inscrições em Turmas"
 
     def __str__(self):
-
-        status = (
-            "Concluída"
-            if self.concluida
-            else "Em Andamento"
+        return (
+            f"{self.user.username} em "
+            f"{self.turma} "
+            f"({self.get_status_display()})"
         )
 
-        return f"{self.user.username} em {self.turma} ({status})"
+    def clean(self):
+        super().clean()
 
+        if self.status == "CONCLUIDA":
+            if self.nota_final is None:
+                raise ValidationError(
+                    "Uma disciplina concluída deve possuir nota final."
+                )
+
+            if self.nota_final < 5:
+                raise ValidationError(
+                    "O aluno não pode marcar como concluído "
+                    "com nota inferior ao critério de aprovação da PUC."
+                )
+            
+        if self.status == "REPROVADA":
+            if self.nota_final is None:
+                raise ValidationError(
+                    "Uma disciplina reprovada deve possuir nota final."
+                )
+
+            if self.nota_final >= 5:
+                raise ValidationError(
+                    "Um aluno reprovado deve possuir nota inferior a 5,0."
+                )
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        super().save(*args, **kwargs)
 
 class Topico(models.Model):
 
@@ -274,18 +299,17 @@ class Monitoria(models.Model):
 
         super().clean()
           
-        user = self.monitor
-
         ja_cursou = InscricaoTurma.objects.filter(
             user=self.monitor,
             turma__disciplina=self.disciplina,
-            status='CONCLUIDA'
+            status='CONCLUIDA',
+            nota_final__gt=6
         ).exists()
 
         if not ja_cursou:
             raise ValidationError(
-                f"O aluno '{self.monitor.nome}' não concluiu "
-                f"'{self.disciplina.nome}'."
+                f"O aluno '{self.monitor.nome}' precisa ter obtido nota superior a 6,0 "
+                f"em '{self.disciplina.nome}' para ser monitor."
             )
 
         if self.online and not self.link_reuniao:
@@ -311,15 +335,27 @@ class SessaoEstudo(models.Model):
         on_delete=models.CASCADE,
         related_name='sessoes_estudo'
     )
+
     disciplina = models.ForeignKey(
         Disciplina,
-        on_delete=models.SET_NULL,
+        on_delete=models.CASCADE, 
+        related_name='sessoes_estudo',
         null=True,
-        related_name='sessoes_direcionadas'
+        blank=True
     )
-    data_estudo = models.DateField(auto_now_add=True)
+
+    metodo_revisao = models.CharField(
+        max_length=100, 
+        blank=True, 
+        null=True
+    )
+    data_estudo = models.DateField(
+        auto_now_add=True
+    )
+
     duracao_minutos = models.PositiveIntegerField()
     observacoes = models.TextField(blank=True, null=True)
+
 
     class Meta:
         verbose_name = "Sessão de Estudo"
@@ -331,11 +367,12 @@ class SessaoEstudo(models.Model):
             if self.aluno.first_name
             else self.aluno.username
         )
-        
+
+
         disciplina_nome = (
-            self.disciplina.nome  
+            self.disciplina.nome
             if self.disciplina
-            else "Disciplina Removida"
+            else "Disciplina Geral"
         )
 
         return (

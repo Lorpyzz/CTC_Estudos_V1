@@ -847,7 +847,7 @@ def form_monitoria(request):
         
         form = MonitoriaForm(dados_formulario)
 
-        if form.is_valid():
+        if form.is_valid() and request.user.nota_final >6.0:
             monitoria = form.save(commit=False)
             monitoria.monitor = request.user
             monitoria.save()
