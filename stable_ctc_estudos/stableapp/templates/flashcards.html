@@ -12,14 +12,16 @@
         <h1><i class="fa-solid fa-layer-group"></i> Flashcards</h1>
         <p>Crie decks por disciplina e revise com repetição espaçada inteligente.</p>
     </div>
-    <button class="btn-criar-deck" onclick="abrirModal()">+ Criar Deck</button>
 </header>
 
-<div class="busca-decks">
-    <i class="fa-solid fa-magnifying-glass"></i>
-    <input type="text" id="buscaInput"
-           placeholder="Pesquisar decks por nome, código ou disciplina..."
-           onkeyup="filtrarDecks()" autocomplete="off">
+<div class="busca-linha">
+    <div class="busca-decks">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" id="buscaInput"
+               placeholder="Pesquisar decks por nome, código ou disciplina..."
+               onkeyup="filtrarDecks()" autocomplete="off">
+    </div>
+    <button class="btn-criar-deck" onclick="abrirModal()">+ Criar Deck</button>
 </div>
 
 <div class="decks-container" id="decksContainer">

@@ -1,5 +1,9 @@
 from django.contrib import admin
-from .models import CtcEstudosUser, Professor, Disciplina, Turma, InscricaoTurma, Topico, Conteudo, Monitoria, SessaoEstudo, Chat, Mensagem, PerguntaFrequente
+from .models import (
+    CtcEstudosUser, Professor, Disciplina, Turma, InscricaoTurma,
+    Topico, Conteudo, Monitoria, SessaoEstudo, Chat, Mensagem,
+    PerguntaFrequente, Duvida, RespostaDuvida, Deck, Flashcard
+)
 
 # Register your models here.
 
@@ -15,3 +19,7 @@ admin.site.register(SessaoEstudo)
 admin.site.register(Chat)
 admin.site.register(Mensagem)
 admin.site.register(PerguntaFrequente)
+admin.site.register(Duvida)
+admin.site.register(RespostaDuvida)
+admin.site.register(Deck)
+admin.site.register(Flashcard)

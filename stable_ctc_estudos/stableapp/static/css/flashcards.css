@@ -3,8 +3,8 @@ html { overflow-y: scroll; }
 /* ===== Página inicial (lista de decks) ===== */
 .flashcards-header {
   max-width: 1100px;
-  margin: 0 auto;
-  padding: 40px 20px 16px;
+  margin: 0;                 /* antes 0 auto — agora encosta à esquerda */
+  padding: 40px 32px 16px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -117,52 +117,98 @@ html { overflow-y: scroll; }
   display: none;
   position: fixed;
   inset: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(2px);
   justify-content: center;
   align-items: center;
   z-index: 100;
+  padding: 20px;
 }
 .modal-overlay.ativo { display: flex; }
+
 .modal {
-  background: white;
-  border-radius: 12px;
-  padding: 32px;
+  background: #fff;
+  border-radius: 18px;
+  padding: 34px 34px 30px;
   width: 100%;
   max-width: 440px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
   position: relative;
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.28);
+  animation: modalPop 0.2s ease;
 }
-.modal h2 { margin: 0 0 8px 0; color: black; font-size: 20px; }
-.modal label { font-size: 13px; font-weight: 600; color: #333; }
+@keyframes modalPop {
+  from { opacity: 0; transform: translateY(10px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.modal h2 {
+  margin: 0 0 26px;
+  color: #0f172a;
+  font-size: 23px;
+  font-weight: 700;
+}
+
+.modal label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: #475569;
+  margin-bottom: 8px;
+}
+
 .modal select,
 .modal input,
 .modal textarea {
-  padding: 10px 12px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
+  padding: 13px 15px;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
   font-size: 14px;
   font-family: inherit;
+  color: #0f172a;
+  background: #fff;
   outline: none;
   width: 100%;
   box-sizing: border-box;
+  margin-bottom: 22px;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
-.modal textarea { resize: vertical; }
+.modal textarea { resize: vertical; min-height: 90px; margin-bottom: 22px; }
 .modal select:focus,
 .modal input:focus,
-.modal textarea:focus { border-color: #3b82f6; }
+.modal textarea:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
+}
+
 .modal-fechar {
   position: absolute;
-  top: 16px;
-  right: 16px;
+  top: 20px;
+  right: 20px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background: none;
   border: none;
-  font-size: 16px;
+  border-radius: 8px;
+  font-size: 17px;
   cursor: pointer;
-  color: #888;
+  color: #94a3b8;
+  transition: background 0.15s ease, color 0.15s ease;
 }
-.btn-modal { margin-top: 8px; justify-content: center; width: 100%; padding: 12px; font-size: 15px; }
+.modal-fechar:hover { background: #f1f5f9; color: #475569; }
+
+.btn-modal {
+  margin-top: 4px;
+  justify-content: center;
+  width: 100%;
+  padding: 14px;
+  font-size: 15px;
+  border-radius: 10px;
+}
 
 /* ===== Detalhe do deck (decks.html) ===== */
 .deck-detalhe { max-width: 900px; margin: 8px auto 80px; padding: 0 24px; }
@@ -419,31 +465,41 @@ html { overflow-y: scroll; }
 .estudar-banner-texto p { margin: 0; font-size: 13px; color: #64748b; }
 .estudar-banner-seta { color: #94a3b8; font-size: 14px; flex-shrink: 0; }
 
+.busca-linha {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 8px 0 24px;
+  margin-left: 32px;
+}
 .busca-decks {
-  max-width: 1100px;
-  margin: 8px auto 0;
-  padding: 0 20px;
+  max-width: 460px;
+  flex: 1;
+  margin: 0;
+  padding: 0;
   position: relative;
+}
+.busca-linha .btn-criar-deck { flex-shrink: 0; }
+
+.busca-decks input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px 16px 12px 42px;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 14px;
+  outline: none;
 }
 .busca-decks i {
   position: absolute;
-  left: 38px;               /* 20px do padding + ~18px pra dentro do input */
+  left: 16px;                /* dentro do input, à esquerda */
   top: 50%;
   transform: translateY(-50%);
   color: #94a3b8;
   font-size: 14px;
   pointer-events: none;
 }
-.busca-decks input {
-  width: 100%;
-  box-sizing: border-box;
-  padding: 14px 16px 14px 44px;   /* o 44px à esquerda abre espaço pra lupa */
-  border: 1px solid #e2e8f0;
-  border-radius: 10px;
-  font-size: 14px;
-  outline: none;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
+
 .busca-decks input:focus {
   border-color: #3b82f6;
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
